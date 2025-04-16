@@ -13,3 +13,4 @@ jobs:
           github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           assignees: ${{ github.actor }} # PR 작성자 자동 지정
           reviewers: gyoyeon-kim, ozen0718 # 리뷰어 리스트
+
