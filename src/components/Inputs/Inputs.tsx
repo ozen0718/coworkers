@@ -10,13 +10,12 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 
 const InputStyle =
-  "w-full h-12 mobile:h-11 bg-[var(--color-bg200)] border border-[var(--color-gray100)]/10 rounded-xl px-4 focus:outline-none focus:border-[var(--color-primary)] hover:border-[var(--color-primary-hover)] text-[var(--color-gray100)] text-4 text-lg-regular mobile:text-md-regular mobile:text-3.5 placeholder:text-[var(--color-gray500)]";
+  "w-full h-12 mobile:h-11 bg-bg200 border border-gray100/10 rounded-xl px-4 focus:outline-none focus:border-primary hover:border-primary-hover text-gray100 text-4 text-lg-regular mobile:text-md-regular mobile:text-3.5 placeholder:text-gray500";
 
 const CurrentValueStyle =
-  "w-full h-12 mobile:h-11 bg-[var(--color-bg100)] border border-[var(--color-gray100)]/10 rounded-xl px-4 text-[var(--color-gray500)] text-4 mobile:text-3.5";
+  "w-full h-12 mobile:h-11 bg-bg100 border border-gray100/10 rounded-xl px-4 text-gray500 text-4 mobile:text-3.5";
 
-const InvalidMessageStyle =
-  "text-md-medium/[17px] text-[var(--color-danger)] mt-2";
+const InvalidMessageStyle = "text-md-medium/[17px] text-danger mt-2";
 
 export function EmailInput() {
   const [value, setValue] = useState("");
@@ -108,7 +107,7 @@ export function CurrentPassword() {
   return (
     <div className={`${CurrentValueStyle} flex items-center justify-between`}>
       <div className="">{"•".repeat(8)}</div>
-      <button className="bg-[var(--color-primary)] w-content h-8 px-3 rounded-xl text-white">
+      <button className="bg-primary w-content h-8 px-3 rounded-xl text-white">
         변경하기(임시버튼)
       </button>
     </div>
@@ -147,7 +146,7 @@ export function ToggleInput({ options, onSelect }: ToggleInputProps) {
       className="relative w-full h-12 mobile:h-11 cursor-pointer"
     >
       <div
-        className={`${InputStyle} flex items-center text-[var(--color-gray500)] hover:border-[var(--color-primary-hover)]`}
+        className={`${InputStyle} flex items-center text-gray500 hover:border-primary-hover`}
         onClick={() => setIsOpen(!isOpen)}
       >
         {selectedOption}
@@ -160,12 +159,12 @@ export function ToggleInput({ options, onSelect }: ToggleInputProps) {
         className="absolute top-3 right-4"
       />
       {isOpen && (
-        <div className="w-full h-content bg-[var(--color-bg200)] rounded-xl border border-[var(--color-gray100)]/10 text-md-regular overflow-hidden z-10 absolute mt-1">
+        <div className="w-full h-content bg-bg200 rounded-xl border border-gray100/10 text-md-regular overflow-hidden z-10 absolute mt-1">
           {options.map((option) => (
             <div
               key={option}
               onClick={() => handleSelect(option)}
-              className="w-full h-10 px-4 py-[11.5px] text-left hover:bg-[var(--color-primary-hover)]"
+              className="w-full h-10 px-4 py-[11.5px] text-left hover:bg-primary-hover"
             >
               {option}
             </div>
@@ -221,7 +220,7 @@ export function TextInput({ placeholder }: TextInputProps) {
 export function TextAreaInput({ placeholder, height }: TextAreaInputProps) {
   return (
     <textarea
-      className={`w-full bg-[var(--color-bg200)] border border-[var(--color-gray100)]/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[var(--color-primary)] hover:border-[var(--color-primary-hover)] text-[var(--color-gray100)] text-4 text-lg-regular placeholder:text-[var(--color-gray500)] resize-none ${height}`}
+      className={`w-full bg-bg200 border border-gray100/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary hover:border-primary-hover text-gray100 text-4 text-lg-regular placeholder:text-gray500 resize-none ${height}`}
       placeholder={placeholder}
     />
   );
