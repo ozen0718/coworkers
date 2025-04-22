@@ -6,6 +6,7 @@ import {
   TextInputProps,
   TextAreaInputProps,
 } from "@/types/inputtypes";
+import Button from "@/components/Button/Button";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 
@@ -13,7 +14,7 @@ const InputStyle =
   "w-full h-12 mobile:h-11 bg-bg200 border border-gray100/10 rounded-xl px-4 focus:outline-none focus:border-primary hover:border-primary-hover text-gray100 text-4 text-lg-regular mobile:text-md-regular mobile:text-3.5 placeholder:text-gray500";
 
 const CurrentValueStyle =
-  "w-full h-12 mobile:h-11 bg-bg100 border border-gray100/10 rounded-xl px-4 text-gray500 text-4 mobile:text-3.5";
+  "w-full h-12 mobile:h-11 bg-bg100 border border-gray100/10 rounded-xl px-4 text-gray500 text-4 mobile:text-3.5 text-lg-regular mobile:text-md-regular";
 
 const InvalidMessageStyle = "text-md-medium/[17px] text-danger mt-2";
 
@@ -107,9 +108,7 @@ export function CurrentPassword() {
   return (
     <div className={`${CurrentValueStyle} flex items-center justify-between`}>
       <div className="">{"•".repeat(8)}</div>
-      <button className="bg-primary w-content h-8 px-3 rounded-xl text-white">
-        변경하기(임시버튼)
-      </button>
+      <Button size="small">변경하기</Button>
     </div>
   );
 }
@@ -183,7 +182,7 @@ export function TodoCardReplyInput() {
   return (
     <div className="w-full border border-x-0 border-y-gray100/10 py-3.25 text-3.5 flex items-center gap-3">
       <textarea
-        className="w-full resize-none overflow-hidden focus:outline-none"
+        className="w-full resize-none overflow-hidden focus:outline-none text-md-regular"
         style={{ minHeight: "24px", height: "24px", maxHeight: "30dvh" }}
         placeholder="댓글을 달아주세요"
         value={value}
