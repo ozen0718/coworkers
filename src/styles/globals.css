@@ -14,7 +14,6 @@
   --color-primary: #10b981;
   --color-secondary: #34d399;
   --color-tertiary: #a3e635;
-
   --color-purple: #a855f7;
   --color-blue: #3b82f6;
   --color-cyan: #06b6d4;
@@ -23,22 +22,17 @@
   --color-orange: #f97316;
   --color-yellow: #eab308;
   --color-white: #ffffff;
-
   --color-bg100: #334155;
   --color-bg200: #1e293b;
   --color-bg300: #0f172a;
-
   --color-primary-hover: #059669;
   --color-primary-pressed: #047857;
-
   --color-border: rgba(248, 250, 252, 0.5);
-
   --color-gray100: #f8fafc;
   --color-gray200: #e2e8f0;
   --color-gray300: #cbd5e1;
   --color-gray400: #94a3b8;
   --color-gray500: #64748b;
-
   --color-danger: #dc2626;
 }
 
