@@ -5,8 +5,7 @@ import clsx from "clsx";
 import IconPlus from "../../assets/icons/IconPlus";
 import IconCheck from "../../assets/icons/IconCheck";
 
-export interface ButtonProps {
-  children: React.ReactNode;
+export interface ButtonProps extends React.ComponentPropsWithoutRef<"button"> {
   variant?:
     | "primary"
     | "inverse"
@@ -20,10 +19,6 @@ export interface ButtonProps {
     | "grayfilled"
     | "textgraySmall";
   size?: "small" | "large" | "plus" | "complete" | "cancel";
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  disabled?: boolean;
-  className?: string;
-  type?: "reset" | "button" | "submit";
   icon?: "plus" | "check";
 }
 
@@ -31,11 +26,11 @@ function Button({
   children,
   variant = "primary",
   size = "large",
-  onClick,
   disabled = false,
   className,
   type = "button",
   icon,
+  ...rest
 }: ButtonProps) {
   const baseStyles =
     "flex items-center justify-center font-pretendard font-medium";
@@ -103,8 +98,8 @@ function Button({
         !disabled ? variantStyles[variant] : disabledStyles[variant],
         className
       )}
-      onClick={onClick}
       disabled={disabled}
+      {...rest}
     >
       <span className="flex items-center justify-center gap-1">
         {icon && iconMap[icon]}
