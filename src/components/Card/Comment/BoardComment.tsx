@@ -9,8 +9,7 @@ export default function BoardComment() {
       <div className="flex justify-between items-start w-full text-base">
         <div className="flex items-start w-full relative">
           {/* 텍스트 내용 */}
-          <span className="block max-h-[45px] overflow-y-auto overflow-x-hidden scroll-area mr-2 pr-6">
-            댓글 영역입니다. 댓글 영역입니다. 댓글 영역입니다. 댓글 영역입니다.
+          <span className="block min-h-[40px] max-h-[50px] overflow-y-auto overflow-x-hidden scroll-area mr-2 pr-6">
             댓글 영역입니다. 댓글 영역입니다. 댓글 영역입니다. 댓글 영역입니다.
             댓글 영역입니다. 댓글 영역입니다. 댓글 영역입니다. 댓글 영역입니다.
             댓글 영역입니다. 댓글 영역입니다. 댓글 영역입니다. 댓글 영역입니다.
@@ -25,8 +24,9 @@ export default function BoardComment() {
           />
         </div>
       </div>
-
-      <AuthorInfo />
+      <div className="flex-grow">
+        <AuthorInfo />
+      </div>
     </div>
   );
 }
