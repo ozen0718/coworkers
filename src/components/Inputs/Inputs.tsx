@@ -1,7 +1,7 @@
 "use client";
 
-import { ToggleInputProps } from "@/types/types";
-import { useState } from "react";
+import { ToggleInputProps, CurrentEmailProp } from "@/types/inputtypes";
+import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 
 const InputStyle =
@@ -11,19 +11,22 @@ const CurrentValueStyle =
   "w-full h-12 mobile:h-11 bg-[var(--color-bg100)] border border-[var(--color-gray100)]/10 rounded-xl px-4 text-[var(--color-gray500)] text-4 mobile:text-3.5";
 
 const InvalidMessageStyle =
-  "text-md-medium/[17px] text-[var(--color-danger)] invisible peer-invalid:visible peer-placeholder-shown:invisible mt-2";
+  "text-md-medium/[17px] text-[var(--color-danger)] mt-2";
 
 export function EmailInput() {
   const [value, setValue] = useState("");
   const [touched, setTouched] = useState(false);
 
-  const isInvalid = touched && value.length > 0;
+  const isValidEmail = (email: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const isInvalid = touched && value.length > 0 && !isValidEmail(value);
 
   return (
-    <>
+    <div>
       <input
         type="email"
-        className={`${InputStyle} peer ${isInvalid ? "invalid:border-[var(--color-danger)]" : ""}`}
+        className={`${InputStyle} peer ${isInvalid ? "border-red-500" : ""}`}
         placeholder="이메일을 입력하세요."
         value={value}
         onChange={(e) => setValue(e.target.value)}
@@ -33,21 +36,26 @@ export function EmailInput() {
       {isInvalid && (
         <p className={InvalidMessageStyle}>유효한 이메일이 아닙니다.</p>
       )}
-    </>
+    </div>
   );
 }
 
 export function PasswordInput() {
   const [value, setValue] = useState("");
   const [touched, setTouched] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const isInvalid = touched && value.length > 0;
+  // 유효성 검사: 영문 + 숫자 포함, 4~12자
+  const isValidPassword = (password: string) =>
+    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,12}$/.test(password);
+
+  const isInvalid = touched && value.length > 0 && !isValidPassword(value);
 
   return (
     <>
       <div className="relative w-full h-12 mobile:h-11">
         <input
-          type="password"
+          type={showPassword ? "text" : "password"}
           className={`${InputStyle} peer ${isInvalid ? "border-red-500" : ""}`}
           placeholder="비밀번호를 입력하세요."
           value={value}
@@ -55,14 +63,27 @@ export function PasswordInput() {
           onBlur={() => setTouched(true)}
           required
         />
-        <Image
-          src="/icons/visibility_off.svg"
-          alt=""
-          width={24}
-          height={24}
-          className="absolute top-3 right-4"
-        />
+        {showPassword ? (
+          <Image
+            src="/icons/visibility_on.svg"
+            alt="비밀번호 숨기기"
+            width={24}
+            height={24}
+            className="absolute top-3 right-4 cursor-pointer"
+            onClick={() => setShowPassword(false)}
+          />
+        ) : (
+          <Image
+            src="/icons/visibility_off.svg"
+            alt="비밀번호 보기"
+            width={24}
+            height={24}
+            className="absolute top-3 right-4 cursor-pointer"
+            onClick={() => setShowPassword(true)}
+          />
+        )}
       </div>
+
       {isInvalid && (
         <p className={InvalidMessageStyle}>
           비밀번호는 영문과 숫자를 포함한 4~12자로 입력해주세요.
@@ -72,16 +93,21 @@ export function PasswordInput() {
   );
 }
 
-export function CurrentEmail() {
+export function CurrentEmail({ email }: CurrentEmailProp) {
   return (
-    <div className={`${CurrentValueStyle} flex items-center`}>현재 이메일</div>
+    <div className={`${CurrentValueStyle} flex items-center`}>{email}</div>
   );
 }
 
 export function CurrentPassword() {
   return (
-    <div className={`${CurrentValueStyle} flex items-center`}>
-      {"•".repeat(8)}
+    <div className="relative w-full h-12 mobile:h-11">
+      <div className={`${CurrentValueStyle} flex items-center`}>
+        {"•".repeat(8)}
+      </div>
+      <button className="absolute top-3 right-4 bg-[var(--color-primary)] w-content h-8 px-3 rounded-xl">
+        변경하기(임시버튼)
+      </button>
     </div>
   );
 }
@@ -90,29 +116,46 @@ export function ToggleInput({ options, onSelect }: ToggleInputProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(options[0]);
 
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
   const handleSelect = (option: string) => {
     setSelectedOption(option);
     setIsOpen(false);
     onSelect?.(option);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        wrapperRef.current &&
+        !wrapperRef.current.contains(event.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
-    <>
-      <div className="relative w-full h-12 mobile:h-11">
-        <div
-          className={`${InputStyle} flex items-center text-[var(--color-gray500)]`}
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {selectedOption}
-        </div>
-        <Image
-          src="/icons/toggle.svg"
-          alt=""
-          width={24}
-          height={24}
-          className="absolute top-3 right-4"
-        />
+    <div
+      ref={wrapperRef}
+      className="relative w-full h-12 mobile:h-11 cursor-pointer"
+    >
+      <div
+        className={`${InputStyle} flex items-center text-[var(--color-gray500)]`}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {selectedOption}
       </div>
+      <Image
+        src="/icons/toggle.svg"
+        alt=""
+        width={24}
+        height={24}
+        className="absolute top-3 right-4"
+      />
       {isOpen && (
         <div className="w-full h-content bg-[var(--color-bg200)] rounded-xl border border-[var(--color-gray100)]/10 text-md-regular overflow-hidden z-10 absolute mt-1">
           {options.map((option) => (
@@ -126,6 +169,6 @@ export function ToggleInput({ options, onSelect }: ToggleInputProps) {
           ))}
         </div>
       )}
-    </>
+    </div>
   );
 }
