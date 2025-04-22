@@ -2,8 +2,8 @@
 
 import React from "react";
 import clsx from "clsx";
-import IconPlus from "../../../public/icons/IconPlus";
-import IconCheck from "../../../public/icons/IconCheck";
+import IconPlus from "../../assets/icons/IconPlus";
+import IconCheck from "../../assets/icons/IconCheck";
 
 export interface ButtonProps {
   children: React.ReactNode;
