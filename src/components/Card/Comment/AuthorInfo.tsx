@@ -2,20 +2,16 @@ import Image from "next/image";
 
 export default function AuthorInfo() {
   return (
-    <div className="flex flex-col w-full lg:w-[311px] lg:h-[32px] bg-bg200 p-5 rounded-lg ">
-      <div className="flex justify-between items-center w-full text-xs">
-        <Image
-          src="/icons/profile-member-lg"
-          alt="프로필 사진"
-          width={32}
-          height={32}
-        />
-        <span className="block max-h-[45px] overflow-y-auto overflow-x-hidden scroll-area">
-          우지은
-        </span>
-
-        <span>날짜</span>
-      </div>
+    <div className="flex items-center w-full text-xs space-x-[6px] mt-3">
+      <Image
+        src="/icons/profile-member-lg.svg"
+        alt="프로필 사진"
+        width={32}
+        height={32}
+      />
+      <span className="block">우지은</span>
+      <div className="border-l-2 border-slate-700 h-[12px]"></div>
+      <span className="text-gray400">2024.07.25</span>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import AuthorInfo from "./AuthorInfo";
 
 export default function BoardComment() {
   return (
@@ -6,17 +7,17 @@ export default function BoardComment() {
       {/* 댓글 내용 + 아이콘 */}
 
       <div className="flex justify-between items-start w-full text-base">
-        <div className="flex items-start">
+        <div className="flex items-start w-full relative">
           {/* 텍스트 내용 */}
-          <span className="block max-h-[45px] overflow-y-auto overflow-x-hidden scroll-area mr-2">
+          <span className="block max-h-[45px] overflow-y-auto overflow-x-hidden scroll-area mr-2 pr-6">
             댓글 영역입니다. 댓글 영역입니다. 댓글 영역입니다. 댓글 영역입니다.
-            ee 댓글 영역입니다. 댓글 영역입니다. 댓글 영역입니다. 댓글
-            영역입니다. ee 댓글 영역입니다. 댓글 영역입니다. 댓글 영역입니다.
-            댓글 영역입니다. ee
+            댓글 영역입니다. 댓글 영역입니다. 댓글 영역입니다. 댓글 영역입니다.
+            댓글 영역입니다. 댓글 영역입니다. 댓글 영역입니다. 댓글 영역입니다.
+            댓글 영역입니다. 댓글 영역입니다. 댓글 영역입니다. 댓글 영역입니다.
           </span>
           {/* 이미지 */}
           <Image
-            className="flex items-start cursor-pointer"
+            className="absolute right-0 top-0 cursor-pointer"
             src="/icons/kebab-sm.svg"
             alt="Kebab Icon"
             width={16}
@@ -24,6 +25,8 @@ export default function BoardComment() {
           />
         </div>
       </div>
+
+      <AuthorInfo />
     </div>
   );
 }
