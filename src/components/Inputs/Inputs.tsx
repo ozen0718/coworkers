@@ -172,3 +172,28 @@ export function ToggleInput({ options, onSelect }: ToggleInputProps) {
     </div>
   );
 }
+
+export function TodoCardReplyInput() {
+  return (
+    <div className="w-full border border-x-0 border-y-gray100/10 py-3.25 text-3.5 flex items-center gap-3">
+      <textarea
+        className="w-full resize-none overflow-hidden"
+        style={{ minHeight: "24px", height: "24px", maxHeight: "30dvh" }}
+        placeholder="댓글을 달아주세요"
+        onInput={(e) => {
+          const target = e.target as HTMLTextAreaElement;
+          target.style.height = "24px";
+          target.style.height = `${target.scrollHeight}px`;
+        }}
+      />
+      <button className="w-6 h-6 bg-primary rounded-xl flex items-center justify-center">
+        <Image
+          src="/icons/arrow_up.svg"
+          width={16}
+          height={16}
+          alt="댓글 달기"
+        />
+      </button>
+    </div>
+  );
+}
