@@ -20,6 +20,11 @@ export interface ButtonProps extends React.ComponentPropsWithoutRef<"button"> {
     | "textgraySmall";
   size?: "small" | "large" | "plus" | "complete" | "cancel";
   icon?: "plus" | "check";
+  iconProps?: {
+    width?: number | string;
+    height?: number | string;
+    color?: string;
+  };
 }
 
 function Button({
@@ -28,6 +33,7 @@ function Button({
   disabled = false,
   className,
   icon,
+  iconProps,
   ...props
 }: ButtonProps) {
   const baseStyles =
@@ -81,9 +87,12 @@ function Button({
     cancel: "text-md-medium w-[138px] h-10 rounded-full",
   };
 
-  const iconMap: Record<NonNullable<ButtonProps["icon"]>, React.ReactNode> = {
-    plus: <IconPlus />,
-    check: <IconCheck />,
+  const iconMap: Record<
+    NonNullable<ButtonProps["icon"]>,
+    (props?: ButtonProps["iconProps"]) => React.ReactNode
+  > = {
+    plus: (p) => <IconPlus {...p} />,
+    check: (p) => <IconCheck {...p} />,
   };
 
   return (
@@ -98,7 +107,7 @@ function Button({
       {...props}
     >
       <span className="flex items-center justify-center gap-1">
-        {icon && iconMap[icon]}
+        {icon && iconMap[icon](iconProps)}
         {props.children}
       </span>
     </button>
