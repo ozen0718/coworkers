@@ -10,6 +10,10 @@
   }
 }
 
+.scroll-area::-webkit-scrollbar {
+  display: none;
+}
+
 @theme {
   --color-primary: #10b981;
   --color-secondary: #34d399;
