@@ -8,12 +8,8 @@ jobs:
   assign:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-
       - uses: hkusu/review-assign-action@v1
         with:
           github-token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          assignees: ${{ github.actor }}
-          reviewers: gyoyeon-kim, ozen0718, doctor-taco
+          assignees: ${{ github.actor }} # PR 작성자 자동 지정
+          reviewers: gyoyeon-kim, ozen0718, doctor-taco # 리뷰어  리스트
