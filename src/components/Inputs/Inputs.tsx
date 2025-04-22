@@ -1,6 +1,11 @@
 "use client";
 
-import { ToggleInputProps, CurrentEmailProp } from "@/types/inputtypes";
+import {
+  ToggleInputProps,
+  CurrentEmailProp,
+  TextInputProps,
+  TextAreaInputProps,
+} from "@/types/inputtypes";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 
@@ -53,10 +58,10 @@ export function PasswordInput() {
 
   return (
     <>
-      <div className="relative w-full h-12 mobile:h-11">
+      <div className={`${InputStyle} flex items-center justify-between gap-3`}>
         <input
           type={showPassword ? "text" : "password"}
-          className={`${InputStyle} peer ${isInvalid ? "border-red-500" : ""}`}
+          className={`w-full focus:outline-none ${isInvalid ? "border-red-500" : ""}`}
           placeholder="비밀번호를 입력하세요."
           value={value}
           onChange={(e) => setValue(e.target.value)}
@@ -69,7 +74,7 @@ export function PasswordInput() {
             alt="비밀번호 숨기기"
             width={24}
             height={24}
-            className="absolute top-3 right-4 cursor-pointer"
+            className="cursor-pointer"
             onClick={() => setShowPassword(false)}
           />
         ) : (
@@ -78,7 +83,7 @@ export function PasswordInput() {
             alt="비밀번호 보기"
             width={24}
             height={24}
-            className="absolute top-3 right-4 cursor-pointer"
+            className="cursor-pointer"
             onClick={() => setShowPassword(true)}
           />
         )}
@@ -101,11 +106,9 @@ export function CurrentEmail({ email }: CurrentEmailProp) {
 
 export function CurrentPassword() {
   return (
-    <div className="relative w-full h-12 mobile:h-11">
-      <div className={`${CurrentValueStyle} flex items-center`}>
-        {"•".repeat(8)}
-      </div>
-      <button className="absolute top-3 right-4 bg-[var(--color-primary)] w-content h-8 px-3 rounded-xl">
+    <div className={`${CurrentValueStyle} flex items-center justify-between`}>
+      <div className="">{"•".repeat(8)}</div>
+      <button className="bg-[var(--color-primary)] w-content h-8 px-3 rounded-xl text-white">
         변경하기(임시버튼)
       </button>
     </div>
@@ -144,7 +147,7 @@ export function ToggleInput({ options, onSelect }: ToggleInputProps) {
       className="relative w-full h-12 mobile:h-11 cursor-pointer"
     >
       <div
-        className={`${InputStyle} flex items-center text-[var(--color-gray500)]`}
+        className={`${InputStyle} flex items-center text-[var(--color-gray500)] hover:border-[var(--color-primary-hover)]`}
         onClick={() => setIsOpen(!isOpen)}
       >
         {selectedOption}
@@ -174,19 +177,32 @@ export function ToggleInput({ options, onSelect }: ToggleInputProps) {
 }
 
 export function TodoCardReplyInput() {
+  const [value, setValue] = useState("");
+
+  const isEmpty = value.trim() === "";
+
   return (
     <div className="w-full border border-x-0 border-y-gray100/10 py-3.25 text-3.5 flex items-center gap-3">
       <textarea
-        className="w-full resize-none overflow-hidden"
+        className="w-full resize-none overflow-hidden focus:outline-none"
         style={{ minHeight: "24px", height: "24px", maxHeight: "30dvh" }}
         placeholder="댓글을 달아주세요"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
         onInput={(e) => {
           const target = e.target as HTMLTextAreaElement;
           target.style.height = "24px";
           target.style.height = `${target.scrollHeight}px`;
         }}
       />
-      <button className="w-6 h-6 bg-primary rounded-xl flex items-center justify-center">
+      <button
+        disabled={isEmpty}
+        className={`w-6 h-6 rounded-xl flex items-center justify-center ${
+          value.trim() === ""
+            ? "bg-gray500 cursor-not-allowed"
+            : "bg-primary hover:bg-primary-hover"
+        }`}
+      >
         <Image
           src="/icons/arrow_up.svg"
           width={16}
@@ -195,5 +211,18 @@ export function TodoCardReplyInput() {
         />
       </button>
     </div>
+  );
+}
+
+export function TextInput({ placeholder }: TextInputProps) {
+  return <input type="text" className={InputStyle} placeholder={placeholder} />;
+}
+
+export function TextAreaInput({ placeholder, height }: TextAreaInputProps) {
+  return (
+    <textarea
+      className={`w-full bg-[var(--color-bg200)] border border-[var(--color-gray100)]/10 rounded-xl px-4 py-3 focus:outline-none focus:border-[var(--color-primary)] hover:border-[var(--color-primary-hover)] text-[var(--color-gray100)] text-4 text-lg-regular placeholder:text-[var(--color-gray500)] resize-none ${height}`}
+      placeholder={placeholder}
+    />
   );
 }

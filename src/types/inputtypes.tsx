@@ -6,3 +6,12 @@ export type ToggleInputProps = {
 export interface CurrentEmailProp {
   email: string;
 }
+
+export interface TextInputProps {
+  placeholder?: string;
+}
+
+export type TextAreaInputProps = {
+  placeholder?: string;
+  height?: string;
+};
