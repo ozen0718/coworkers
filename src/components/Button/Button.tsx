@@ -23,21 +23,18 @@ export interface ButtonProps extends React.ComponentPropsWithoutRef<"button"> {
 }
 
 function Button({
-  children,
   variant = "primary",
   size = "large",
   disabled = false,
   className,
-  type = "button",
   icon,
-  ...rest
+  ...props
 }: ButtonProps) {
   const baseStyles =
     "flex items-center justify-center font-pretendard font-medium";
 
   const filledGreen =
     "bg-primary text-white hover:bg-primary-hover active:bg-primary-pressed";
-
   const disabledGreen = "bg-gray400 text-white cursor-not-allowed";
 
   const variantStyles: Record<NonNullable<ButtonProps["variant"]>, string> = {
@@ -91,7 +88,6 @@ function Button({
 
   return (
     <button
-      type={type}
       className={clsx(
         baseStyles,
         sizeStyles[size],
@@ -99,11 +95,11 @@ function Button({
         className
       )}
       disabled={disabled}
-      {...rest}
+      {...props}
     >
       <span className="flex items-center justify-center gap-1">
         {icon && iconMap[icon]}
-        {children}
+        {props.children}
       </span>
     </button>
   );
