@@ -15,3 +15,10 @@ export type TextAreaInputProps = {
   placeholder?: string;
   height?: string;
 };
+
+export type ReplyItemProps = {
+  comment: string;
+  profileImageUrl?: string;
+  name?: string;
+  date?: string;
+};

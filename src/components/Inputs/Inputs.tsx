@@ -197,7 +197,7 @@ export function TodoCardReplyInput() {
       />
       <button
         disabled={isEmpty}
-        className={`w-6 h-6 rounded-xl flex items-center justify-center ${
+        className={`w-6 h-6 rounded-full flex items-center justify-center ${
           value.trim() === ""
             ? "bg-gray500 cursor-not-allowed"
             : "bg-primary hover:bg-primary-hover"
