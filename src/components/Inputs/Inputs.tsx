@@ -50,7 +50,6 @@ export function PasswordInput() {
   const [touched, setTouched] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // 유효성 검사: 영문 + 숫자 포함, 4~12자
   const isValidPassword = (password: string) =>
     /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,12}$/.test(password);
 
