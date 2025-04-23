@@ -8,7 +8,7 @@ import {
 } from '@/types/inputtypes';
 import useClickOutside from '@/hooks/useClickOutside';
 import useValidatedInput from '@/hooks/useValidatedInput';
-import Button from '@/components/Button/Button';
+import Button from '@/components/common/Button/Button';
 import { useState, useRef } from 'react';
 import Image from 'next/image';
 
