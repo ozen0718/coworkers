@@ -6,6 +6,7 @@ import {
   TextInputProps,
   TextAreaInputProps,
 } from "@/types/inputtypes";
+import useClickOutside from "@/hooks/useClickOutside";
 import Button from "@/components/Button/Button";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
@@ -124,19 +125,7 @@ export function ToggleInput({ options, onSelect }: ToggleInputProps) {
     onSelect?.(option);
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        wrapperRef.current &&
-        !wrapperRef.current.contains(event.target as Node)
-      ) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  useClickOutside(wrapperRef, () => setIsOpen(false));
 
   return (
     <div
