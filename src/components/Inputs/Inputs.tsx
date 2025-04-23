@@ -7,8 +7,9 @@ import {
   TextAreaInputProps,
 } from "@/types/inputtypes";
 import useClickOutside from "@/hooks/useClickOutside";
+import useValidatedInput from "@/hooks/useValidatedInput";
 import Button from "@/components/Button/Button";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import Image from "next/image";
 
 const InputStyle =
@@ -20,13 +21,9 @@ const CurrentValueStyle =
 const InvalidMessageStyle = "text-md-medium/[17px] text-danger mt-2";
 
 export function EmailInput() {
-  const [value, setValue] = useState("");
-  const [touched, setTouched] = useState(false);
-
-  const isValidEmail = (email: string) =>
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-  const isInvalid = touched && value.length > 0 && !isValidEmail(value);
+  const { value, isInvalid, onChange, onBlur } = useValidatedInput((email) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  );
 
   return (
     <div>
@@ -35,8 +32,8 @@ export function EmailInput() {
         className={`${InputStyle} peer ${isInvalid ? "border-red-500" : ""}`}
         placeholder="이메일을 입력하세요."
         value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onBlur={() => setTouched(true)}
+        onChange={onChange}
+        onBlur={onBlur}
         required
       />
       {isInvalid && (
@@ -47,14 +44,11 @@ export function EmailInput() {
 }
 
 export function PasswordInput() {
-  const [value, setValue] = useState("");
-  const [touched, setTouched] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const isValidPassword = (password: string) =>
-    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,12}$/.test(password);
-
-  const isInvalid = touched && value.length > 0 && !isValidPassword(value);
+  const { value, isInvalid, onChange, onBlur } = useValidatedInput((pw) =>
+    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,12}$/.test(pw)
+  );
 
   return (
     <>
@@ -64,8 +58,8 @@ export function PasswordInput() {
           className={`w-full focus:outline-none ${isInvalid ? "border-red-500" : ""}`}
           placeholder="비밀번호를 입력하세요."
           value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onBlur={() => setTouched(true)}
+          onChange={onChange}
+          onBlur={onBlur}
           required
         />
         {showPassword ? (
