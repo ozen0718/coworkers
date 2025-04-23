@@ -25,6 +25,7 @@ export interface ButtonProps extends React.ComponentPropsWithoutRef<"button"> {
     height?: number | string;
     color?: string;
   };
+  fullWidth?: boolean;
 }
 
 function Button({
@@ -34,10 +35,13 @@ function Button({
   className,
   icon,
   iconProps,
+  fullWidth = false,
   ...props
 }: ButtonProps) {
-  const baseStyles =
-    "flex items-center justify-center font-pretendard font-medium";
+  const baseStyles = clsx(
+    "flex items-center justify-center font-pretendard font-medium",
+    fullWidth && "w-full"
+  );
 
   const filledGreen =
     "bg-primary text-white hover:bg-primary-hover active:bg-primary-pressed";

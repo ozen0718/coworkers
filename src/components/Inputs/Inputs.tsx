@@ -6,7 +6,7 @@ import {
   TextInputProps,
   TextAreaInputProps,
 } from "@/types/inputtypes";
-import Button from "@/components/Button/Button";
+import Button from "@/components/Button/";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 
