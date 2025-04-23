@@ -1,5 +1,5 @@
-import Image from "next/image";
-import Link from "next/link";
+import Image from 'next/image';
+import Link from 'next/link';
 
 interface GroupOptionProps {
   group: {
@@ -17,18 +17,14 @@ export default function DropDownGroupsItem({ group }: GroupOptionProps) {
 
   return (
     <div className="hover:bg-bg100 flex w-[186px] cursor-pointer items-center justify-between rounded-lg px-2 py-[7px]">
-      <Link
-        href={`/${id}`}
-        className="text-lg-md text-gray400 flex items-center gap-3"
-      >
-        {/* ✅ image가 없으면 렌더링하지 않도록 수정 */}
+      <Link href={`/${id}`} className="text-lg-md text-gray400 flex items-center gap-3">
         {image && (
           <Image
             src={image}
             width={32}
             height={32}
             alt="팀 이미지"
-            className="rounded-md w-[32px] h-[32px] object-cover"
+            className="h-[32px] w-[32px] rounded-md object-cover"
           />
         )}
         <p className="w-[110px] truncate">{name}</p>
