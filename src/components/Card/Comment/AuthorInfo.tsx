@@ -1,29 +1,51 @@
-import Image from "next/image";
+"use client";
 
-export default function AuthorInfo() {
+import Image from "next/image";
+import { useState } from "react";
+
+// 임시 데이터
+export default function AuthorInfo({
+  showDivider = true, // 선 유무
+  showLike = true,
+  authorName = "우지은",
+  date = "2024.07.25",
+  profileSpacing = "6px", // 프로필, 이름, 선 간격
+}) {
+  const [isLiked, setIsLiked] = useState(false);
+
+  const toggleLike = () => {
+    setIsLiked(!isLiked);
+  };
+
   return (
-    <div className="flex items-center w-full text-xs space-x-[6px] mt-3 justify-between">
-      <div className="flex items-center space-x-[6px]">
+    <div className="flex items-center w-full text-xs mt-3 justify-between">
+      <div className="flex items-center" style={{ columnGap: profileSpacing }}>
         <Image
-          src="/icons/profile-member-lg.svg"
+          src="/icons/initialprofile.svg"
           alt="프로필 사진"
           width={32}
           height={32}
         />
-        <span className="block">우지은</span>
-        <div className="border-l-2 border-slate-700 h-[12px]"></div>
-        <span className="text-gray400">2024.07.25</span>
+        <span className="block">{authorName}</span>
+        {showDivider && (
+          <div className="border-l-2 border-slate-700 h-[12px]"></div>
+        )}
+        <span className="text-gray400">{date}</span>
       </div>
-      <div className="flex space-x-[6px]">
-        <Image
-          className="cursor-pointer"
-          src="/icons/heart.svg"
-          alt="좋아요"
-          width={16}
-          height={16}
-        />
-        <span className="text-gray400">9999+</span>
-      </div>
+
+      {showLike && (
+        <div className="flex items-center">
+          <Image
+            className="cursor-pointer mr-1"
+            src={isLiked ? "/icons/heart-filled.svg" : "/icons/heart.svg"}
+            alt="좋아요"
+            width={16}
+            height={16}
+            onClick={toggleLike}
+          />
+          <span className="text-gray400">9999+</span>
+        </div>
+      )}
     </div>
   );
 }
