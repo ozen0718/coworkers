@@ -1,8 +1,7 @@
 export default function Home() {
   return (
-    <div>
-      <h1>Test Page</h1>
-      <span>test</span>
+    <div className="min-h-screen p-10 bg-bg200">
+      <h1 className="text-xl-semibold text-blue">Test Page</h1>
     </div>
   );
 }
