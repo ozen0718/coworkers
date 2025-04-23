@@ -1,33 +1,46 @@
-"use client";
+'use client';
 
-import React, { useState } from "react";
-import Header from "@/components/Gnb/Header";
-import SideMenu from "@/components/Gnb/SideMenu";
+import React, { useEffect, useState } from 'react';
+import SideMenu from '@/components/Gnb/SideMenu';
+import Header from '@/components/Gnb/Header';
+import { HeaderProvider, useHeader } from '@/components/Gnb/HeaderContext';
 
 const USER_DATA = {
-  name: "안혜나",
+  name: '안혜나',
   teams: [
-    { id: 1, name: "경영관리팀" },
-    { id: 2, name: "프로젝트팀" },
+    { id: 1, name: '경영관리팀' },
+    { id: 2, name: '프로젝트팀' },
   ],
 };
 
-export default function TestHeaderPage() {
+function PageContent() {
   const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);
+  const { setHeaderState } = useHeader();
+
+  useEffect(() => {
+    setHeaderState({
+      showTeamSelector: true, //팀선택 드롭다운
+      showFreeBoardLink: true, //자유게시판
+      showProfile: true, //프로필
+    });
+  }, []);
 
   return (
-    <div className="min-h-screen bg-bg200 text-white">
-      {/* ✅ 사이드 메뉴 열기 함수 전달 */}
+    <div className="bg-bg200 min-h-screen text-white">
       <Header onOpenSideMenu={() => setIsSideMenuOpen(true)} />
-
-      {/* ✅ 테스트용 버튼 생략 가능 */}
-      {/* <button onClick={() => setIsSideMenuOpen(true)}>사이드 메뉴 열기</button> */}
-
       <SideMenu
         teams={USER_DATA.teams}
         isOpen={isSideMenuOpen}
         onClose={() => setIsSideMenuOpen(false)}
       />
     </div>
+  );
+}
+
+export default function TestPage() {
+  return (
+    <HeaderProvider>
+      <PageContent />
+    </HeaderProvider>
   );
 }
