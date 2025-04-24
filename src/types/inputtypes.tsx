@@ -23,6 +23,12 @@ export type ReplyItemProps = {
   date?: string;
 };
 
+export interface BaseProfileProps {
+  imageUrl: string;
+  width: number;
+  showEditIcon?: boolean;
+}
+
 export type ProfileProps = {
   profileUrl?: string;
   width: number;
