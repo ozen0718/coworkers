@@ -3,10 +3,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import Logo from './Logo';
-import { OptionSelector } from '@/components/dropdown/OptionItem';
-import DropDownProfileItemList from '@/components/dropdown/ProfileItem';
-import DropDownGroupsItem from '@/components/dropdown/Groups';
-import DropDown from '@/components/dropdown/index';
+import SideMenu from './SideMenu';
+import TeamSelector from './TeamSelector';
+import ProfileDropdown from './profileDropdown';
 import { useHeader } from './HeaderContext';
 
 const USER_DATA = {
@@ -55,51 +54,24 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
           <div className="text-lg-md hidden items-center gap-8 md:flex lg:gap-10">
             {showTeamSelector && (
               <div className="relative">
-                <OptionSelector
-                  placement="top-10 mt-2"
-                  size="xl"
-                  defaultValue={selectedTeam}
-                  options={USER_DATA.teams.map((group) => (
-                    <DropDownGroupsItem key={group.id} group={group} />
-                  ))}
-                  onSelect={() => {}}
-                  footerBtn={
-                    <Link
-                      href={`/groups`}
-                      className="flex h-12 w-46 items-center justify-center rounded-xl border border-white text-white"
-                    >
-                      + 팀 추가하기
-                    </Link>
-                  }
-                />
+                <TeamSelector teams={USER_DATA.teams} defaultTeamName={selectedTeam} />
               </div>
             )}
 
             {showFreeBoardLink && (
-              <Link href={`/articles`} className="mt-0 cursor-pointer">
+              <Link href="/articles" className="mt-0 cursor-pointer">
                 자유게시판
               </Link>
             )}
           </div>
         </div>
 
-        {showProfile && (
-          <div className="relative ml-auto">
-            <DropDown
-              size="lg"
-              placement="top-6 mt-2 right-0"
-              dropDownOpenBtn={
-                <button className="flex items-center gap-2">
-                  <Image src="/icons/profile.svg" alt="유저 아이콘" width={24} height={24} />
-                  <span className="text-md-md hidden lg:inline">{userName}</span>
-                </button>
-              }
-              options={DropDownProfileItemList}
-              onSelect={() => {}}
-            />
-          </div>
-        )}
+        <div className="relative ml-auto">
+          {showProfile && <ProfileDropdown userName={userName} />}
+        </div>
       </div>
+
+      <SideMenu teams={USER_DATA.teams} isOpen={false} onClose={() => {}} />
     </header>
   );
 }
