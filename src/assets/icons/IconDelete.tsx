@@ -2,7 +2,7 @@ interface IconDeleteProps {
   width?: number;
   height?: number;
   className?: string;
-  onClick?: () => void;
+  onClick?: (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => void;
 }
 
 export default function IconDelete({

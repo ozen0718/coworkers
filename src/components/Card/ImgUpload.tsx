@@ -25,7 +25,10 @@ export default function ImgUpload() {
             width={40}
             height={40}
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform cursor-pointer text-white"
-            onClick={handleDeleteImage}
+            onClick={(e) => {
+              e.stopPropagation(); // 상위 이벤트 전파 막기
+              handleDeleteImage();
+            }}
           />
         </div>
       ) : (
