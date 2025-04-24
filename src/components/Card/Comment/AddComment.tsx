@@ -2,7 +2,7 @@ import { TextAreaInput } from '@/components/common/Inputs/Inputs';
 
 export default function AddComment() {
   return (
-    <div className="flex min-h-[113px] w-full flex-col bg-transparent lg:h-[216px] lg:w-[1200px]">
+    <div className="flex min-h-[113px] w-full max-w-[1200px] flex-col bg-transparent lg:h-[216px]">
       <div className="text-gray100 mr-0.5 flex w-full items-start justify-between text-base font-bold sm:text-xl sm:font-medium">
         댓글달기
       </div>

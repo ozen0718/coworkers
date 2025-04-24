@@ -30,7 +30,7 @@ export default function AuthorInfo({
       {showLike && (
         <div className="ml-2 flex items-center">
           <IconHeart
-            className="mr-1 cursor-pointer"
+            className="mr-1.5 cursor-pointer"
             fillColor={isLiked ? '#EF4444' : 'none'}
             strokeColor={isLiked ? '#EF4444' : '#64748B'}
             onClick={toggleLike}
