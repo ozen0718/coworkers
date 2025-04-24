@@ -1,8 +1,6 @@
 'use client';
 
 import { createContext, useContext, useState, ReactNode } from 'react';
-
-// ✅ 상태 타입 분리
 interface HeaderState {
   showTeamSelector: boolean;
   showFreeBoardLink: boolean;

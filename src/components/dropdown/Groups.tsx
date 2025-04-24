@@ -1,36 +1,39 @@
+'use client';
+
 import Image from 'next/image';
 import Link from 'next/link';
 
-interface GroupOptionProps {
-  group: {
-    teamId: string;
-    updatedAt: string;
-    createdAt: string;
-    image: string;
-    name: string;
-    id: number;
-  };
+export interface GroupOption {
+  teamId: string;
+  updatedAt: string;
+  createdAt: string;
+  image: string;
+  name: string;
+  id: number;
 }
 
-export default function DropDownGroupsItem({ group }: GroupOptionProps) {
+interface DropDownGroupsItemProps {
+  group: GroupOption;
+}
+
+export default function DropDownGroupsItem({ group }: DropDownGroupsItemProps) {
   const { name, image, id } = group;
 
   return (
     <div className="hover:bg-bg100 flex w-[186px] cursor-pointer items-center justify-between rounded-lg px-2 py-[7px]">
       <Link href={`/${id}`} className="text-lg-md text-gray400 flex items-center gap-3">
-        {image && (
-          <Image
-            src={image}
-            width={32}
-            height={32}
-            alt="팀 이미지"
-            className="h-[32px] w-[32px] rounded-md object-cover"
-          />
-        )}
+        <Image
+          src={image || '/default-team.png'}
+          width={32}
+          height={32}
+          alt={`${name} 이미지`}
+          className="h-[32px] w-[32px] rounded-md object-cover"
+        />
         <p className="w-[110px] truncate">{name}</p>
       </Link>
-      <Link href={`/${id}/edit`}>
-        <Image width={16} height={16} src="/icons/kebab.svg" alt=":" />
+
+      <Link href={`/${id}/edit`} className="shrink-0">
+        <Image src="/icons/kebab.svg" width={16} height={16} alt="팀 편집" />
       </Link>
     </div>
   );

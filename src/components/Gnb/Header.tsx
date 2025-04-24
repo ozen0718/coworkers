@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Logo from './Logo';
 import SideMenu from './SideMenu';
 import TeamSelector from './TeamSelector';
-import ProfileDropdown from './profileDropdown';
+import ProfileDropdown from './ProfileDropdown';
 import { useHeader } from './HeaderContext';
 
 const USER_DATA = {

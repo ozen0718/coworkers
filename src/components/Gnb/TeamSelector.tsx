@@ -1,6 +1,5 @@
-// components/Gnb/TeamSelector.tsx
 import Link from 'next/link';
-import { OptionSelector } from '@/components/dropdown/OptionItem';
+import SelectableDropdown from '@/components/dropdown/SelectableDropdown';
 import DropDownGroupsItem from '@/components/dropdown/Groups';
 
 interface Team {
@@ -19,7 +18,7 @@ interface Props {
 
 export default function TeamSelector({ teams, defaultTeamName }: Props) {
   return (
-    <OptionSelector
+    <SelectableDropdown
       placement="top-10 mt-2"
       size="xl"
       defaultValue={defaultTeamName}

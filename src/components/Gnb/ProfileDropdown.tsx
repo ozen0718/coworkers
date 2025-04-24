@@ -1,7 +1,6 @@
-// components/Gnb/ProfileDropdown.tsx
 import Image from 'next/image';
-import DropDown from '@/components/dropdown/index';
-import DropDownProfileItemList from '@/components/dropdown/ProfileItem';
+import DropDown from '@/components/dropdown/BaseDropdown';
+import DropDownProfileItemList from '@/components/dropdown/ProfileItemList';
 
 interface Props {
   userName: string;
