@@ -33,6 +33,7 @@ export type ModalProps = PropsWithChildren<{
 
 export type ModalHeaderProps = Pick<
   ModalProps,
+  | 'headerIcon'
   | 'title'
   | 'description'
 >;

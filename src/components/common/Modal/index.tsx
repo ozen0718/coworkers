@@ -11,6 +11,7 @@ import ModalButtons from './ModalButtons';
 export default function Modal({
   padding = 'default',
   borderRadius = '12',
+  headerIcon,
   title,
   description,
   cancelButtonLabel,
@@ -47,7 +48,7 @@ export default function Modal({
         )}
         onClick={(e) => e.stopPropagation()}
       >
-        <ModalHeader title={title} description={description} />
+        <ModalHeader headerIcon={headerIcon} title={title} description={description} />
         {children}
         <ModalButtons
           cancelButtonLabel={cancelButtonLabel}
