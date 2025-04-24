@@ -12,16 +12,15 @@ export interface BoardPostProps {
 
 export function BestPost() {
   return (
-    <div className="bg-bg200 h-[300px] max-h-[220px] max-w-[387px] cursor-pointer rounded-xl p-3">
+    <div className="bg-bg200 h-[300px] max-h-[220px] max-w-[387px] cursor-pointer rounded-xl p-5">
       <div className="mr-4 flex">
         <Image src="/icons/best.svg" alt="베스트 아이콘" width={16} height={16} />
         <p className="text-md-semibold">Best</p>
       </div>
       <div>
         <div className="mt-3 flex justify-between">
-          <p className="mr-1 line-clamp-4 max-w-[251px] overflow-hidden text-sm sm:line-clamp-3 sm:text-lg">
-            자유게시판에 질문을 해봅시다. 질문하세요 질문하라고용 질문질문질문 내놔 자고싶다나
-            머하냐dddddd
+          <p className="mr-2 line-clamp-4 max-w-[251px] overflow-hidden text-sm sm:mr-0 sm:line-clamp-3 sm:text-lg">
+            자유게시판에 질문을 올릴 수 있어요 질문을 올려볼까요?
           </p>
 
           <div className="min-h-[72px] min-w-[72px]">
@@ -39,7 +38,7 @@ export function BestPost() {
             )}
           </div>
         </div>
-        <div className="text-md-medium text-gray400 mt-6">2024.07.25</div>
+        <div className="text-md-medium text-gray400 mt-4">2024.07.25</div>
       </div>
 
       <AuthorInfo showDate={false} showDivider={false} />
