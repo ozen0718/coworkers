@@ -1,7 +1,7 @@
 import BoardComment from '@/components/Card/Comment/BoardComment';
 import AddComment from '@/components/Card/Comment/AddComment';
 import ImgUpload from '@/components/Card/ImgUpload';
-import { BoardPost } from '@/components/Card/BoardPost';
+import { BestPost, GeneralPost } from '@/components/Card/BoardPost';
 
 export default function Home() {
   return (
@@ -15,10 +15,10 @@ export default function Home() {
       <ImgUpload />
 
       <br />
-      <BoardPost type="best" />
+      <BestPost />
       <br />
       <br />
-      <BoardPost type="general" />
+      <GeneralPost />
     </div>
   );
 }
