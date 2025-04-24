@@ -19,10 +19,10 @@ export function BestPost() {
       </div>
       <div>
         <div className="mt-5 flex justify-between">
-          <span className="mr-2 text-sm sm:text-lg">
+          <span className="mr-1 text-sm sm:text-lg">
             자유게시판에 질문을 올릴 수 있어요 질문을 올려볼까요?
           </span>
-          <div className="min-h-[64px] min-w-[64px]">
+          <div className="min-h-[72px] min-w-[72px]">
             {testimgurl ? (
               <Image
                 className="aspect-square rounded-lg"
@@ -30,9 +30,10 @@ export function BestPost() {
                 alt="자유게시판 이미지"
                 width={72}
                 height={72}
+                sizes="(max-width: 600px) 50vw, 72px"
               />
             ) : (
-              <div className="aspect-square h-[72px] w-[72px] rounded-lg" />
+              <div className="aspect-square min-h-[64px] min-w-[64px] rounded-lg" />
             )}
           </div>
         </div>
