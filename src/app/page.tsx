@@ -1,7 +1,10 @@
 import BoardComment from '@/components/Card/Comment/BoardComment';
 import AddComment from '@/components/Card/Comment/AddComment';
 import ImgUpload from '@/components/Card/ImgUpload';
-import { BestPost, GeneralPost } from '@/components/Card/BoardPost';
+//import { BestPost, GeneralPost } from '@/components/Card/BoardPost';
+
+import { BestPost } from '@/components/Card/Post/BestPost';
+import { GeneralPost } from '@/components/Card/Post/GeneralPost';
 
 export default function Home() {
   return (
