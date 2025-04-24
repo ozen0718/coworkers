@@ -9,7 +9,6 @@ const PROFILE_DROPDOWN_LIST = [
 
 const DropDownProfileItemList = PROFILE_DROPDOWN_LIST.map((list, index) => {
   const isLast = index === PROFILE_DROPDOWN_LIST.length - 1;
-
   const handleClickLogOut = () => {};
 
   return isLast ? (
