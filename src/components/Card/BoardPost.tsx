@@ -46,6 +46,18 @@ export function BestPost() {
 }
 
 /* 일반 글 */
+const sizeClass = {
+  large: 'min-h-[176px] max-w-[590px]',
+  medium: 'min-h-[176px] max-w-[696px]',
+  small: 'min-h-[162px] max-w-[343px]',
+};
+
+const fontClass = {
+  large: 'text-lg leading-[24px]',
+  medium: 'text-lg leading-[24px]',
+  small: 'text-sm leading-[28px]',
+};
+
 export function GeneralPost() {
   const windowWidth = useWindowSize();
 
@@ -53,34 +65,22 @@ export function GeneralPost() {
   if (windowWidth <= 375) size = 'small';
   else if (windowWidth <= 744) size = 'medium';
 
-  const sizeClass = {
-    large: 'min-h-[176px] max-w-[590px]',
-    medium: 'min-h-[176px] max-w-[696px]',
-    small: 'min-h-[162px] max-w-[343px]',
-  };
-
-  const fontClass = {
-    large: 'text-lg leading-[24px]',
-    medium: 'text-lg leading-[24px]',
-    small: 'text-sm leading-[28px]',
-  };
-
   return (
     <div
       className={clsx(
-        'border-bg100 bg-bg200 flex w-full flex-col gap-3.5 rounded-xl border p-5',
+        'border-bg100 bg-bg200 flex max-h-[176px] w-full flex-col gap-3.5 rounded-xl border p-5',
         sizeClass[size]
       )}
     >
       <div className="flex w-full items-start">
-        <div className="relative flex w-full items-start justify-between">
-          <p
-            className={clsx('mr-2 block max-h-[56px] min-h-[40px] w-[251px] pr-6', fontClass[size])}
-          >
-            자유게시판에
+        <div className="relative flex max-h-[56px] w-full items-start justify-between">
+          <p className={clsx('mr-2 line-clamp-2 w-[500px] pr-6', fontClass[size])}>
+            자유게시
+            판에자유게시판에자유게시판에자유게시판에자유게시판에자유게시판에자유게시판에dddddddddddddddddddd안녕자고싶다
+            이것들아ㅇㅇ
           </p>
 
-          <div className="relative min-h-[72px] min-w-[112px]">
+          <div className={clsx('relative', size === 'small' ? 'min-w-[72px]' : 'min-w-[112px]')}>
             {testimgurl ? (
               <Image
                 className="aspect-square rounded-lg"
@@ -91,16 +91,18 @@ export function GeneralPost() {
                 sizes="(max-width: 600px) 50vw, 72px"
               />
             ) : (
-              <div className="aspect-square min-h-[64px] min-w-[64px] rounded-lg" />
+              <div className="aspect-square min-w-[64px] rounded-lg" />
             )}
 
-            <Image
-              className="absolute top-0 right-0 cursor-pointer"
-              src="/icons/kebab.svg"
-              alt="Kebab Icon"
-              width={24}
-              height={24}
-            />
+            {(size === 'large' || size === 'medium') && (
+              <Image
+                className="absolute top-0 right-0 cursor-pointer"
+                src="/icons/kebab.svg"
+                alt="Kebab Icon"
+                width={24}
+                height={24}
+              />
+            )}
           </div>
         </div>
       </div>
