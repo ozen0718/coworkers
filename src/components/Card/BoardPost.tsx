@@ -11,7 +11,7 @@ const testimgurl =
 /* 베스트 글 */
 export function BestPost() {
   return (
-    <div className="bg-bg200 h-[300px] max-h-[220px] max-w-[387px] cursor-pointer rounded-xl p-5">
+    <div className="border-bg100 bg-bg200 h-[300px] max-h-[220px] max-w-[387px] cursor-pointer rounded-xl border p-5">
       <div className="mr-4 flex">
         <Image src="/icons/best.svg" alt="베스트 아이콘" width={16} height={16} />
         <p className="text-md-semibold">Best</p>
@@ -66,7 +66,12 @@ export function GeneralPost() {
   };
 
   return (
-    <div className={clsx('bg-bg200 flex w-full flex-col gap-3.5 rounded-xl p-5', sizeClass[size])}>
+    <div
+      className={clsx(
+        'border-bg100 bg-bg200 flex w-full flex-col gap-3.5 rounded-xl border p-5',
+        sizeClass[size]
+      )}
+    >
       <div className="flex w-full items-start">
         <div className="relative flex w-full items-start justify-between">
           <p
