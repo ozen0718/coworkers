@@ -77,7 +77,7 @@ export function GeneralPost() {
           <p
             className={clsx('mr-2 block max-h-[56px] min-h-[40px] w-[251px] pr-6', fontClass[size])}
           >
-            자유게시판에 질문을 올릴 수 있어요 질문을 올려볼까요?
+            자유게시판에
           </p>
 
           <div className="relative min-h-[72px] min-w-[112px]">
@@ -105,7 +105,14 @@ export function GeneralPost() {
         </div>
       </div>
 
-      <AuthorInfo />
+      {size === 'small' ? (
+        <>
+          <p className="text-xs-medium text-gray400">2024.07.25</p>
+          <AuthorInfo showKabab={true} showDate={false} showDivider={false} />
+        </>
+      ) : (
+        <AuthorInfo />
+      )}
     </div>
   );
 }
