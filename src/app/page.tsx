@@ -1,5 +1,6 @@
 import BoardComment from '@/components/Card/Comment/BoardComment';
 import AddComment from '@/components/Card/Comment/AddComment';
+import ImgUpload from '@/components/Card/ImgUpload';
 
 export default function Home() {
   return (
@@ -9,6 +10,8 @@ export default function Home() {
       <BoardComment />
       <br />
       <AddComment />
+      <br />
+      <ImgUpload />
     </div>
   );
 }
