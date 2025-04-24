@@ -1,7 +1,4 @@
-interface ModalHeaderProps {
-  title?: string;
-  description?: string;
-}
+import { ModalHeaderProps } from "./types";
 
 export default function ModalHeader({ title, description }: ModalHeaderProps) {
   if (!title && !description) return null;

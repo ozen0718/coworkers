@@ -1,4 +1,4 @@
-import type { PropsWithChildren } from 'react';
+import type { PropsWithChildren, ReactNode } from 'react';
 import { ButtonProps } from '../Button/Button';
 import { PaddingStyleType, RadiusStyleType } from './style';
 
@@ -16,6 +16,7 @@ export type ModalProps = PropsWithChildren<{
    * - '24': 24px
    */
   borderRadius?: RadiusStyleType;
+  headerIcon?: ReactNode;
   title?: string;
   description?: string;
 
@@ -29,6 +30,12 @@ export type ModalProps = PropsWithChildren<{
   onSubmit?: () => void;
   disabled?: boolean;
 }>;
+
+export type ModalHeaderProps = Pick<
+  ModalProps,
+  | 'title'
+  | 'description'
+>;
 
 export type ModalButtonsProps = Pick<
   ModalProps,
