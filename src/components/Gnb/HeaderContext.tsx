@@ -2,15 +2,19 @@
 
 import { createContext, useContext, useState, ReactNode } from 'react';
 
+// ✅ 상태 타입 분리
 interface HeaderState {
   showTeamSelector: boolean;
   showFreeBoardLink: boolean;
   showProfile: boolean;
+}
+
+interface HeaderContextType extends HeaderState {
   setHeaderState: (newState: Partial<HeaderState>) => void;
   resetHeaderState: () => void;
 }
 
-const defaultState: HeaderState = {
+const defaultState: HeaderContextType = {
   showTeamSelector: false,
   showFreeBoardLink: false,
   showProfile: false,
@@ -18,12 +22,11 @@ const defaultState: HeaderState = {
   resetHeaderState: () => {},
 };
 
-const HeaderContext = createContext<HeaderState>(defaultState);
-
+const HeaderContext = createContext<HeaderContextType>(defaultState);
 export const useHeader = () => useContext(HeaderContext);
 
 export function HeaderProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<Omit<HeaderState, 'setHeaderState' | 'resetHeaderState'>>({
+  const [state, setState] = useState<HeaderState>({
     showTeamSelector: false,
     showFreeBoardLink: false,
     showProfile: false,
