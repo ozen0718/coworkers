@@ -19,9 +19,9 @@ export function BestPost() {
       </div>
       <div>
         <div className="mt-3 flex justify-between">
-          <p className="mr-1 line-clamp-3 max-w-[251px] overflow-hidden text-sm sm:text-lg">
+          <p className="mr-1 line-clamp-4 max-w-[251px] overflow-hidden text-sm sm:line-clamp-3 sm:text-lg">
             자유게시판에 질문을 해봅시다. 질문하세요 질문하라고용 질문질문질문 내놔 자고싶다나
-            머하냐ㅇㅇㅇ
+            머하냐dddddd
           </p>
 
           <div className="min-h-[72px] min-w-[72px]">
