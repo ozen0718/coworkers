@@ -95,7 +95,7 @@ export default function PostCard({
       </div>
 
       {/* 날짜 */}
-      {date && (
+      {(type === 'best' || (type === 'general' && size === 'small')) && (
         <p className={clsx('text-xs-medium text-gray400 mt-2', type === 'best' && 'mt-4')}>
           {date}
         </p>
@@ -105,8 +105,8 @@ export default function PostCard({
       <div>
         <AuthorInfo
           showKabab={showKebab && size === 'small'}
-          showDate={false}
-          showDivider={false}
+          showDate={type === 'general' && size !== 'small' ? true : false}
+          showDivider={type === 'general' && size !== 'small' ? true : false}
         />
       </div>
     </div>
