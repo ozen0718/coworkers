@@ -8,8 +8,9 @@ export default function ImgUpload() {
   const [image, setImage] = useState<string | null>();
   const fileInput = useRef<HTMLInputElement>(null);
 
+  /* 이미지 삭제 */
   const handleDeleteImage = () => {
-    setImage(null); // 이미지 삭제
+    setImage(null);
   };
 
   return (
@@ -47,8 +48,6 @@ export default function ImgUpload() {
           if (file.size > 10 * 1024 * 1024) {
             alert('10MB 이하의 이미지만 업로드 가능합니다.');
             e.target.value = ''; // 파일 선택 초기화
-            console.log(file.size); // 이미지 테스트
-
             return;
           }
 
