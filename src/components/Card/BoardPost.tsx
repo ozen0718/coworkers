@@ -15,13 +15,15 @@ export function BestPost() {
     <div className="bg-bg200 h-[300px] max-h-[220px] max-w-[387px] rounded-xl p-3">
       <div className="mr-4 flex">
         <Image src="/icons/best.svg" alt="베스트 아이콘" width={16} height={16} />
-        <span className="text-md-semibold">Best</span>
+        <p className="text-md-semibold">Best</p>
       </div>
       <div>
-        <div className="mt-5 flex justify-between">
-          <span className="mr-1 text-sm sm:text-lg">
-            자유게시판에 질문을 올릴 수 있어요 질문을 올려볼까요?
-          </span>
+        <div className="mt-3 flex justify-between">
+          <p className="mr-1 line-clamp-3 max-w-[251px] overflow-hidden text-sm sm:text-lg">
+            자유게시판에 질문을 해봅시다. 질문하세요 질문하라고용 질문질문질문 내놔 자고싶다나
+            머하냐ㅇㅇㅇ
+          </p>
+
           <div className="min-h-[72px] min-w-[72px]">
             {testimgurl ? (
               <Image
@@ -39,6 +41,7 @@ export function BestPost() {
         </div>
         <div className="text-md-medium text-gray400 mt-6">2024.07.25</div>
       </div>
+
       <AuthorInfo showDate={false} showDivider={false} />
     </div>
   );
