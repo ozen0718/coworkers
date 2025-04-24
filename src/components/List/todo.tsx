@@ -1,7 +1,9 @@
+'use client';
 import Image from 'next/image';
-import React from 'react';
+import React, { useState } from 'react';
 
 interface TodoItemProps {
+  id: number;
   title: string;
   date: string;
   time: string;
@@ -18,17 +20,27 @@ export default function TodoItem({
   comments,
   completed,
 }: TodoItemProps) {
+  const [isChecked, setIsChecked] = useState(completed);
+
+  const toggleChecked = () => setIsChecked((prev) => !prev);
+
   return (
     <div className="flex items-center justify-between rounded-lg bg-slate-800 p-3">
       <div className="flex items-center space-x-3">
-        <Image
-          src={completed ? '/icons/checkbox_done.svg' : '/icons/checkbox_defualt.svg'}
-          alt={completed ? '완료' : '미완료'}
-          width={18}
-          height={18}
-        />
+        <button onClick={toggleChecked} className="cursor-pointer">
+          <Image
+            src={isChecked ? '/icons/checkbox_done.svg' : '/icons/checkbox_defualt.svg'}
+            alt={isChecked ? '완료' : '미완료'}
+            width={18}
+            height={18}
+          />
+        </button>
         <div className="flex flex-col space-y-1">
-          <span className="font-medium text-white">{title}</span>
+          <span
+            className={`font-medium ${isChecked ? 'text-gray-400 line-through' : 'text-white'}`}
+          >
+            {title}
+          </span>
           <div className="flex items-center space-x-1 text-xs text-gray-400">
             <Image src="/icons/icon_calendar.svg" alt="날짜" width={12} height={12} />
             <span>{date}</span>
