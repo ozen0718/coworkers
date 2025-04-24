@@ -68,7 +68,7 @@ export function GeneralPost() {
   return (
     <div
       className={clsx(
-        'border-bg100 bg-bg200 flex max-h-[176px] w-full flex-col gap-3.5 rounded-xl border p-5',
+        'border-bg100 bg-bg200 flex max-h-[176px] w-full flex-col gap-1.5 rounded-xl border p-5',
         sizeClass[size]
       )}
     >
@@ -109,11 +109,15 @@ export function GeneralPost() {
 
       {size === 'small' ? (
         <>
-          <p className="text-xs-medium text-gray400">2024.07.25</p>
-          <AuthorInfo showKabab={true} showDate={false} showDivider={false} />
+          <p className="text-xs-medium text-gray400 mt-2">2024.07.25</p>
+          <div className="mb-5">
+            <AuthorInfo showKabab={true} showDate={false} showDivider={false} />
+          </div>
         </>
       ) : (
-        <AuthorInfo />
+        <div className="mt-6">
+          <AuthorInfo />
+        </div>
       )}
     </div>
   );
