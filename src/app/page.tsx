@@ -16,6 +16,8 @@ export default function Home() {
 
       <br />
       <BoardPost type="best" />
+      <br />
+      <br />
       <BoardPost type="general" />
     </div>
   );

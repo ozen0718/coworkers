@@ -8,6 +8,7 @@ import IconHeart from '@/assets/icons/IconHeart';
 export default function AuthorInfo({
   showDivider = true, // 선 유무
   showLike = true,
+  showDate = true,
   authorName = '우지은',
   date = '2024.07.25',
   profileSpacing = '7px', // 프로필, 이름, 선 간격
@@ -24,7 +25,7 @@ export default function AuthorInfo({
         <Image src="/icons/initialprofile.svg" alt="프로필 사진" width={32} height={32} />
         <span className="block">{authorName}</span>
         {showDivider && <div className="h-[12px] border-l-2 border-slate-700"></div>}
-        <span className="text-gray400">{date}</span>
+        {showDate && <span className="text-gray400">{date}</span>}
       </div>
 
       {showLike && (
