@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useState } from 'react';
+import IconHeart from '@/assets/icons/IconHeart';
 
 // 임시 데이터
 export default function AuthorInfo({
@@ -28,12 +29,10 @@ export default function AuthorInfo({
 
       {showLike && (
         <div className="ml-2 flex items-center">
-          <Image
+          <IconHeart
             className="mr-1 cursor-pointer"
-            src={isLiked ? '/icons/heart-filled.svg' : '/icons/heart.svg'}
-            alt="좋아요"
-            width={16}
-            height={16}
+            fillColor={isLiked ? '#EF4444' : 'none'}
+            strokeColor={isLiked ? '#EF4444' : '#64748B'}
             onClick={toggleLike}
           />
           <span className="text-gray400">9999+</span>
