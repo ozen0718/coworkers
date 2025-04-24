@@ -18,7 +18,7 @@ export default function AuthorInfo({
   };
 
   return (
-    <div className="flex items-center w-full mt-3 justify-between sm:text-md-medium not-last:sm:flex-nowrap">
+    <div className="flex items-center w-full mt-3 justify-between sm:text-sm text-[10px]">
       <div
         className="flex items-center sm:flex-nowrap"
         style={{ columnGap: profileSpacing }}
@@ -50,5 +50,8 @@ export default function AuthorInfo({
         </div>
       )}
     </div>
+    /**
+     * @fixme api 연결 후 좋아요 개수, 좋아요 여부 데이터로 변경
+     */
   );
 }
