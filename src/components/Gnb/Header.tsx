@@ -5,9 +5,9 @@ import Link from 'next/link';
 import Logo from './Logo';
 import { OptionSelector } from '@/components/dropdown/OptionItem';
 import DropDownProfileItemList from '@/components/dropdown/ProfileItem';
-import DropDownGroupsItem from '@/components/dropdown/GroupsItem';
+import DropDownGroupsItem from '@/components/dropdown/Groups';
 import DropDown from '@/components/dropdown/index';
-import { useHeader } from './HeaderContext'; // ✅ 컨텍스트 추가
+import { useHeader } from './HeaderContext';
 
 const USER_DATA = {
   name: '안혜나',
@@ -39,7 +39,7 @@ interface HeaderProps {
 }
 
 export default function Header({ onOpenSideMenu }: HeaderProps) {
-  const { showTeamSelector, showFreeBoardLink, showProfile } = useHeader(); // ✅ context에서 상태 가져오기
+  const { showTeamSelector, showFreeBoardLink, showProfile } = useHeader();
 
   return (
     <header className="bg-bg200 border-border sticky top-0 z-50 flex h-15 w-full justify-center border-b-1 py-[14px]">
@@ -53,7 +53,6 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
           </div>
 
           <div className="text-lg-md hidden items-center gap-8 md:flex lg:gap-10">
-            {/* ✅ 팀 선택 */}
             {showTeamSelector && (
               <div className="relative">
                 <OptionSelector
@@ -76,7 +75,6 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
               </div>
             )}
 
-            {/* ✅ 자유게시판 링크 */}
             {showFreeBoardLink && (
               <Link href={`/articles`} className="mt-0 cursor-pointer">
                 자유게시판
@@ -85,7 +83,6 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
           </div>
         </div>
 
-        {/* ✅ 프로필 드롭다운 */}
         {showProfile && (
           <div className="relative ml-auto">
             <DropDown

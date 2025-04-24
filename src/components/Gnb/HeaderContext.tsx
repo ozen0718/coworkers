@@ -10,7 +10,6 @@ interface HeaderState {
   resetHeaderState: () => void;
 }
 
-// ✅ 기본 상태
 const defaultState: HeaderState = {
   showTeamSelector: false,
   showFreeBoardLink: false,
@@ -19,13 +18,10 @@ const defaultState: HeaderState = {
   resetHeaderState: () => {},
 };
 
-// ✅ Context 생성
 const HeaderContext = createContext<HeaderState>(defaultState);
 
-// ✅ Context 접근 Hook
 export const useHeader = () => useContext(HeaderContext);
 
-// ✅ Provider 구현
 export function HeaderProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<Omit<HeaderState, 'setHeaderState' | 'resetHeaderState'>>({
     showTeamSelector: false,
