@@ -12,7 +12,7 @@ export interface BoardPostProps {
 
 export function BestPost() {
   return (
-    <div className="bg-bg200 h-[300px] max-h-[220px] max-w-[387px] rounded-xl p-3">
+    <div className="bg-bg200 h-[300px] max-h-[220px] max-w-[387px] cursor-pointer rounded-xl p-3">
       <div className="mr-4 flex">
         <Image src="/icons/best.svg" alt="베스트 아이콘" width={16} height={16} />
         <p className="text-md-semibold">Best</p>
