@@ -4,11 +4,13 @@ export default function ModalHeader({ headerIcon, title, description }: ModalHea
   if (!headerIcon && !title && !description) return null;
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-4 text-center">
       {headerIcon && headerIcon}
       <div className="flex flex-col items-center gap-2">
         {title && <h2 className="text-lg-medium">{title}</h2>}
-        {description && <p className="text-gray300 text-md-medium">{description}</p>}
+        {description && (
+          <p className="text-gray300 text-md-medium whitespace-pre-line">{description}</p>
+        )}
       </div>
     </div>
   );
