@@ -6,8 +6,8 @@ import { BaseProfileProps, ProfileProps, TeamProfileProps } from '@/types/inputt
 function BaseProfile({ imageUrl, width, showEditIcon }: BaseProfileProps) {
   const border = Math.floor(width / 32);
   const innerWidth = width - border * 2;
-  const editIconWidth = Math.floor(width / 3.6);
-  const editIconBorderWidth = border;
+  const editIconWidth = Math.floor(innerWidth / 3.3);
+  const editIconOutline = border;
 
   return (
     <div className="relative" style={{ width: `${width}px`, height: `${width}px` }}>
@@ -25,11 +25,11 @@ function BaseProfile({ imageUrl, width, showEditIcon }: BaseProfileProps) {
 
       {showEditIcon && (
         <div
-          className="border-bg300 bg-bg100 absolute right-0 bottom-0 rounded-full border"
+          className="outline-bg300 bg-bg100 absolute right-0 bottom-0 rounded-full outline"
           style={{
             width: `${editIconWidth}px`,
             height: `${editIconWidth}px`,
-            borderWidth: `${editIconBorderWidth}px`,
+            outlineWidth: `${editIconOutline}px`,
           }}
         >
           <Image src="/icons/pencil.svg" alt="프로필 바꾸기" fill style={{ objectFit: 'cover' }} />

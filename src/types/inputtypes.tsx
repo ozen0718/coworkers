@@ -38,3 +38,8 @@ export type TeamProfileProps = {
   teamProfileUrl?: string;
   width: number;
 };
+
+export interface TaskListTapProps {
+  title: string;
+  isSelected?: boolean;
+}
