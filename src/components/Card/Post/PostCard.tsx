@@ -50,19 +50,24 @@ export default function PostCard({
         </div>
       )}
 
-      {/* 콘텐츠 */}
+      {/* 내용 */}
       <div className="flex w-full items-start">
         <div className="relative flex w-full items-start justify-between">
           <p
             className={clsx(
               'mr-2 line-clamp-2 pr-6',
-              type === 'best' ? 'text-sm sm:text-lg' : fontClass[size]
+              type === 'best' ? 'text-sm leading-[24px] sm:text-lg' : fontClass[size]
             )}
           >
             {title}
           </p>
 
-          <div className={clsx('relative', size === 'small' ? 'min-w-[72px]' : 'min-w-[112px]')}>
+          <div
+            className={clsx(
+              'relative',
+              type === 'best' ? 'min-w-[72px]' : size === 'small' ? 'min-w-[72px]' : 'min-w-[112px]'
+            )}
+          >
             {imgUrl ? (
               <Image
                 className="aspect-square rounded-lg"
@@ -97,7 +102,7 @@ export default function PostCard({
       )}
 
       {/* 작성자 정보 */}
-      <div className={clsx(type === 'best' ? 'mt-0' : 'mt-0')}>
+      <div>
         <AuthorInfo
           showKabab={showKebab && size === 'small'}
           showDate={false}
