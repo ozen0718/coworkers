@@ -1,4 +1,4 @@
-import { TaskListTapProps } from '@/types/inputtypes';
+import { TaskListTapProps } from '@/types/tasktypes';
 
 export function TaskListTab({ title, isSelected = false }: TaskListTapProps) {
   return (

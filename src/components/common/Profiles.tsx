@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { BaseProfileProps, ProfileProps, TeamProfileProps } from '@/types/inputtypes';
+import { BaseProfileProps, ProfileProps, TeamProfileProps } from '@/types/profiletypes';
 
 function BaseProfile({ imageUrl, width, showEditIcon }: BaseProfileProps) {
   const border = Math.floor(width / 32);
