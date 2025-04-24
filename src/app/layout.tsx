@@ -1,4 +1,4 @@
-import { HeaderProvider } from '@/components/Gnb/HeaderContext';
+import { HeaderProvider } from '@/components/layout/Gnb/HeaderContext';
 import '@/styles/globals.css';
 import type { Metadata } from 'next';
 
