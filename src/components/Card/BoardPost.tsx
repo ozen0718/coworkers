@@ -18,7 +18,7 @@ export function BestPost() {
       </div>
       <div>
         <div className="mt-3 flex justify-between">
-          <p className="mr-2 line-clamp-4 max-w-[251px] overflow-hidden text-sm font-medium sm:mr-0 sm:line-clamp-3 sm:text-lg">
+          <p className="mr-2 line-clamp-4 max-w-[251px] overflow-hidden text-sm sm:mr-0 sm:line-clamp-3 sm:text-lg">
             자유게시판에 질문을 올릴 수 있어요 질문을 올려볼까요?
           </p>
 
@@ -66,16 +66,13 @@ export function GeneralPost() {
   };
 
   return (
-    <div className={clsx('bg-bg200 flex w-full flex-col rounded-xl p-5', sizeClass[size])}>
-      <div className="flex w-full items-start justify-between">
-        <div className="relative flex w-full items-start">
+    <div className={clsx('bg-bg200 flex w-full flex-col gap-3.5 rounded-xl p-5', sizeClass[size])}>
+      <div className="flex w-full items-start">
+        <div className="relative flex w-full items-start justify-between">
           <p
-            className={clsx(
-              'mr-2 block max-h-[56px] min-h-[40px] w-[251px] pr-6 font-medium',
-              fontClass[size]
-            )}
+            className={clsx('mr-2 block max-h-[56px] min-h-[40px] w-[251px] pr-6', fontClass[size])}
           >
-            자유게시판에 질문을 올릴 수 있어요 질
+            자유게시판에 질문을 올릴 수 있어요 질문을 올려볼까요?
           </p>
 
           <div className="relative min-h-[72px] min-w-[112px]">
