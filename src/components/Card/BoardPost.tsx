@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import AuthorInfo from './Comment/AuthorInfo';
 import clsx from 'clsx';
-import { useWindowSize } from '@/hooks/WindowSize';
+import { useWindowSize } from '@/hooks/useWindowSize';
 
 const testimgurl =
   'https://sprint-fe-project.s3.ap-northeast-2.amazonaws.com/Coworkers/user/1855/testimage.jpg';
