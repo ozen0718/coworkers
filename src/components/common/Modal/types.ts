@@ -17,6 +17,7 @@ export type ModalProps = PropsWithChildren<{
    */
   borderRadius?: RadiusStyleType;
   headerIcon?: ReactNode;
+  closeIcon?: boolean;
   title?: string;
   description?: string;
 
