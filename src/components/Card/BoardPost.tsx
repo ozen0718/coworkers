@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import AuthorInfo from './Comment/AuthorInfo';
 import clsx from 'clsx';
+import { useWindowSize } from '@/hooks/WindowSize';
 
 const testimgurl =
   'https://sprint-fe-project.s3.ap-northeast-2.amazonaws.com/Coworkers/user/1855/testimage.jpg';
@@ -49,16 +50,17 @@ interface GeneralPostProps {
   size?: 'large' | 'medium' | 'small';
 }
 
-export function GeneralPost({ size = 'large' }: GeneralPostProps) {
+export function GeneralPost() {
+  const windowWidth = useWindowSize();
+
+  let size: 'large' | 'medium' | 'small' = 'large';
+  if (windowWidth <= 375) size = 'small';
+  else if (windowWidth <= 744) size = 'medium';
+
   const sizeClass = {
-    large: 'min-h-[176px] max-w-[598px]',
+    large: 'min-h-[176px] max-w-[590px]',
     medium: 'min-h-[176px] max-w-[696px]',
     small: 'min-h-[162px] max-w-[343px]',
-  };
-
-  const textClass = {
-    largemedium: 'text-lg leading-[28px]',
-    small: 'text-sm leading-[24px] ',
   };
 
   return (
@@ -66,7 +68,7 @@ export function GeneralPost({ size = 'large' }: GeneralPostProps) {
       <div className="text-lg-regular flex w-full items-start justify-between">
         <div className="relative flex w-full items-start">
           <span className="mr-2 block max-h-[50px] min-h-[40px] pr-6 font-medium">
-            자유게시판에 질문을 올릴 수 있어요 질문을 올려볼까요? ...
+            자유게시판에 질문을 올릴 수 있어요 질문을 올려볼까요?
           </span>
           <Image
             className="absolute top-0 right-0 cursor-pointer"
