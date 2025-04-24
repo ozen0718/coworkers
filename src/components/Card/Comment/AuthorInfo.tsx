@@ -12,6 +12,7 @@ export default function AuthorInfo({
   authorName = '우지은',
   date = '2024.07.25',
   profileSpacing = '7px', // 프로필, 이름, 선 간격
+  showKabab = false,
 }) {
   const [isLiked, setIsLiked] = useState(false);
 
@@ -27,19 +28,31 @@ export default function AuthorInfo({
         {showDivider && <div className="h-[12px] border-l-2 border-slate-700"></div>}
         {showDate && <span className="text-gray400">{date}</span>}
       </div>
+      <div className="ml-2 flex items-center">
+        {showLike && (
+          <div className="flex items-center">
+            <IconHeart
+              className="mr-1.5 cursor-pointer"
+              fillColor={isLiked ? '#EF4444' : 'none'}
+              strokeColor={isLiked ? '#EF4444' : '#64748B'}
+              onClick={toggleLike}
+            />
+            <span className="text-gray400">9999+</span>
+          </div>
+        )}
 
-      {showLike && (
-        <div className="ml-2 flex items-center">
-          <IconHeart
-            className="mr-1.5 cursor-pointer"
-            fillColor={isLiked ? '#EF4444' : 'none'}
-            strokeColor={isLiked ? '#EF4444' : '#64748B'}
-            onClick={toggleLike}
+        {showKabab && (
+          <Image
+            className="ml-1 cursor-pointer"
+            src="/icons/kebab.svg"
+            alt="Kebab Icon"
+            width={16}
+            height={16}
           />
-          <span className="text-gray400">9999+</span>
-        </div>
-      )}
+        )}
+      </div>
     </div>
+
     /**
      * @fixme api 연결 후 좋아요 개수, 좋아요 여부 데이터로 변경
      */
