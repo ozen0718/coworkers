@@ -18,7 +18,17 @@ export type TextAreaInputProps = {
 
 export type ReplyItemProps = {
   comment: string;
-  profileImageUrl?: string;
+  profileUrl?: string;
   name?: string;
   date?: string;
+};
+
+export type ProfileProps = {
+  profileUrl?: string;
+  width: number;
+};
+
+export type TeamProfileProps = {
+  teamProfileUrl?: string;
+  width: number;
 };
