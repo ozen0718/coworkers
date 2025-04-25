@@ -22,15 +22,15 @@ export default function AuthorInfo({
 
   return (
     <div className="mt-3 flex w-full items-center justify-between text-[10px] sm:text-sm">
-      <div className="flex items-center" style={{ gap: profileSpacing }}>
-        {/* 왼쪽 프로필 + 이름 + 구분선*/}
+      <div className="flex flex-nowrap items-center" style={{ gap: profileSpacing }}>
+        {/* 프로필 + 이름 + 구분선*/}
         <div className="flex items-center gap-[7px]">
           <Image src="/icons/initialprofile.svg" alt="프로필 사진" width={32} height={32} />
           <span className="block">{authorName}</span>
           {showDivider && <div className="h-[12px] border-l-2 border-slate-700"></div>}
         </div>
 
-        {/* 오른쪽 날짜 */}
+        {/* 날짜 */}
         {showDate && <span className="text-gray400">{date}</span>}
       </div>
       <div className="ml-2 flex items-center">
