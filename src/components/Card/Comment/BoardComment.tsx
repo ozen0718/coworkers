@@ -62,14 +62,13 @@ export default function BoardComment({ type }: BoardCommentProps) {
         )}
       </div>
 
-      {/* 드롭다운이 kebab 아이콘 밑에 나타나도록 absolute로 위치 설정 */}
       {isDropDownOpen && (
         <PostDropdown
           type="kebab"
           textJustify="center"
           options={[
-            { label: '수정', action: handleEdit }, // 수정 옵션
-            { label: '삭제', action: handleDelete }, // 삭제 옵션
+            { label: '수정', action: handleEdit },
+            { label: '삭제', action: handleDelete },
           ]}
           isOpen={isDropDownOpen}
           toggleDropdown={toggleDropdown}

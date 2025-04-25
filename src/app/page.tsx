@@ -17,6 +17,8 @@ import { TextAreaInput } from '@/components/common/Inputs';
 
 import Button from '@/components/common/Button/Button';
 
+import DetailPost from '@/components/Card/Post/Deatil/DetailPost';
+
 export default function Home() {
   return (
     <div className="bg-bg300 min-h-screen p-10">
@@ -34,10 +36,8 @@ export default function Home() {
         <TodoCardReplyInput />
       </div>
       <br />
-
       <TextAreaInput />
       <br />
-
       <br />
       <BoardComment type="free" />
       <br />
@@ -46,6 +46,10 @@ export default function Home() {
       <Button size="small" variant="inverse">
         생성하기
       </Button>
+      <br />
+      <br /> <br />
+      <br />
+      <DetailPost />
     </div>
   );
 }
