@@ -15,6 +15,16 @@ export default function BoardComment({ type }: BoardCommentProps) {
     setIsDropDownOpen((prev) => !prev);
   };
 
+  /* 수정 함수 */
+  const handleEdit = () => {
+    console.log('수정 눌렀다.');
+  };
+
+  /* 삭제 함수 */
+  const handleDelete = () => {
+    console.log('삭제 눌렀다.');
+  };
+
   return (
     <div className="bg-bg200 relative flex min-h-[113px] w-full max-w-[1200px] flex-col rounded-lg p-5 lg:h-[123px]">
       <div className="text-lg-regular flex w-full items-start justify-between">
@@ -38,7 +48,10 @@ export default function BoardComment({ type }: BoardCommentProps) {
         <PostDropdown
           type="kebab"
           textJustify="center"
-          options={['수정', '삭제']}
+          options={[
+            { label: '수정', action: handleEdit }, // 수정 옵션
+            { label: '삭제', action: handleDelete }, // 삭제 옵션
+          ]}
           isOpen={isDropDownOpen}
           toggleDropdown={toggleDropdown}
           toppercent="30%"

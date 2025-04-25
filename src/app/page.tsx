@@ -12,7 +12,8 @@ import { DateInfo } from '@/components/Card/Post/Deatil/DateInfo';
 import AuthorInfo from '@/components/Card/Comment/AuthorInfo';
 
 import { TodoCardReplyInput } from '@/components/common/Inputs';
-import DropDown from '@/components/dropdown/BaseDropdown';
+
+import { TextAreaInput } from '@/components/common/Inputs';
 
 export default function Home() {
   return (
@@ -31,6 +32,8 @@ export default function Home() {
         <TodoCardReplyInput />
       </div>
       <br />
+
+      <TextAreaInput />
       <br />
 
       <br />

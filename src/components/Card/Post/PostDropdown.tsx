@@ -6,7 +6,7 @@ import clsx from 'clsx';
 type PostDropdownProps = {
   type?: 'sort' | 'kebab';
   textJustify: 'center' | 'left';
-  options: string[];
+  options: { label: string; action: () => void }[];
   isOpen: boolean;
   toggleDropdown: () => void;
   toppercent: string;
@@ -42,11 +42,11 @@ export default function PostDropdown({
               key={idx}
               className="hover:bg-bg100 cursor-pointer rounded-lg p-2"
               onClick={() => {
-                console.log('Selected:', option);
+                console.log('선택:', option);
                 toggleDropdown();
               }}
             >
-              {option}
+              {option.label}
             </div>
           ))}
         </div>
