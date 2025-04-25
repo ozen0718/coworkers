@@ -11,7 +11,6 @@ export default function AuthorInfo({
   showDate = true,
   authorName = '우지은',
   date = '2024.07.25',
-  profileSpacing = '10px', // 프로필, 이름, 선 간격
   showKabab = false,
 }) {
   const [isLiked, setIsLiked] = useState(false);
