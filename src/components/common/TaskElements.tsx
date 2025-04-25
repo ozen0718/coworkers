@@ -1,5 +1,6 @@
 'use client';
 
+import { trimColors } from '@/styles/trimColors';
 import { TaskListTapProps, ProgressBadgeProps, TasksItemProp } from '@/types/tasktypes';
 import stringToHash from '@/utils/stringToHash';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
@@ -40,16 +41,6 @@ export function ProgressBadge({ completedTaskNumber, totalTaskNumber }: Progress
     </div>
   );
 }
-
-const trimColors = [
-  '#8B5CF6', // purple
-  '#3B82F6', // blue
-  '#06B6D4', // cyan
-  '#EC4899', // pink
-  '#F59E0B', // amber
-  '#10B981', // green
-  '#F43F5E', // rose
-];
 
 function getTrimColor(text: string): string {
   const hash = stringToHash(text);
