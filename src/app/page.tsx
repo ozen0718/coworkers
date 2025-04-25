@@ -49,7 +49,7 @@ export default function Home() {
       <br />
       <br /> <br />
       <br />
-      <DetailPost title={'법인 설립 비용 안내 드리기'} />
+      <DetailPost title={'법인 설립 비용 안내 드리기'} showComplete={false} />
     </div>
   );
 }

@@ -7,24 +7,29 @@ import Button from '@/components/common/Button/Button';
 import { TextAreaInput } from '@/components/common/Inputs';
 import IconDelete from '@/assets/icons/IconDelete';
 import IconCheck from '@/assets/icons/IconCheck';
+import { DateInfo } from './DateInfo';
+import { TodoCardReplyInput } from '@/components/common/Inputs';
 
 type DetailPostProps = {
   title: string;
+  showComplete: boolean;
 };
 
-export default function DetailPost({ title }: DetailPostProps) {
+export default function DetailPost({ title, showComplete }: DetailPostProps) {
   return (
-    <div className="bg-bg200 relative flex h-[698px] max-h-[1019px] min-h-[698px] w-full max-w-[779px] flex-col gap-[10px] p-5 md:h-[1073px] lg:h-[1019px]">
+    <div className="bg-bg200 relative flex h-[698px] max-h-[1019px] min-h-[698px] w-full max-w-[699px] flex-col gap-[10px] p-5 md:h-[1073px] lg:h-[1019px]">
       <div className="text-lg-regular flex w-full items-start justify-between">
         {' '}
         <IconDelete />
       </div>
       <div className="flex flex-col">
-        <div className="flex items-center gap-1">
-          <IconCheck color="#a3e635" />
-          <p className="text-tertiary text-xs font-medium">완료</p>
-        </div>
-        <div className="text-xl-bold mt-2 flex items-center">
+        {showComplete && (
+          <div className="flex items-center gap-1">
+            <IconCheck color="#a3e635" />
+            <p className="text-tertiary text-xs font-medium">완료</p>
+          </div>
+        )}
+        <div className="text-xl-bold mt-2 flex max-w-[699px] items-center md:w-[668px]">
           {title}
           <Image
             className="ml-auto flex h-[24px] min-h-[21px] max-w-[699px] cursor-pointer"
@@ -35,6 +40,21 @@ export default function DetailPost({ title }: DetailPostProps) {
           />
         </div>
       </div>
+      <div className="w-full max-w-[699px]">
+        <AuthorInfo showLike={false} showDivider={false} />
+      </div>
+      {!showComplete && (
+        <div className="mt-2">
+          <DateInfo date="2025-04-25T00:00:00Z" time="15:30" repeatinfo="DAILY" />
+        </div>
+      )}
+      <div>
+        <span className="scroll-area text-md-regular mt-2 block min-h-[300px] w-full overflow-x-hidden overflow-y-auto">
+          필수 정보 10분 입력하면 3일 안에 법인 설립이 완료되는 법인 설립 서비스의 장점에 대해
+          상세하게 설명드리기
+        </span>
+      </div>
+      <TodoCardReplyInput />
     </div>
   );
 }
