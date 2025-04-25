@@ -18,7 +18,7 @@ export type TextAreaInputProps = {
 
 export type ReplyItemProps = {
   comment: string;
-  profileImageUrl?: string;
+  profileUrl?: string;
   name?: string;
   date?: string;
 };
