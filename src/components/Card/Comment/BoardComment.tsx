@@ -39,7 +39,7 @@ export default function BoardComment({ type }: BoardCommentProps) {
   };
 
   return (
-    <div className="bg-bg200 relative flex min-h-[113px] w-full max-w-[1200px] flex-col rounded-lg p-5 lg:h-[123px]">
+    <div className="bg-bg200 relative flex min-h-[81px] w-[full] max-w-[1200px] flex-col rounded-lg p-3 lg:h-[123px]">
       <div className="text-lg-regular flex w-full items-start justify-between">
         {isEditing ? (
           <div className="relative flex w-full items-start">
@@ -90,9 +90,10 @@ export default function BoardComment({ type }: BoardCommentProps) {
             </Button>
           </div>
         ) : (
-          <AuthorInfo showDivider={type !== 'free'} showLike={type !== 'free'} />
+          <AuthorInfo showDivider={type !== 'list'} showLike={type !== 'list'} />
         )}
       </div>
+      {type === 'list' && <div className="mt-2 h-[1px] w-full bg-[#F8FAFC1A]"></div>}
     </div>
   );
 }

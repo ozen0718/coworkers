@@ -9,6 +9,7 @@ import IconDelete from '@/assets/icons/IconDelete';
 import IconCheck from '@/assets/icons/IconCheck';
 import { DateInfo } from './DateInfo';
 import { TodoCardReplyInput } from '@/components/common/Inputs';
+import BoardComment from '@/components/Card/Comment/BoardComment';
 
 type DetailPostProps = {
   title: string;
@@ -17,10 +18,10 @@ type DetailPostProps = {
 
 export default function DetailPost({ title, showComplete }: DetailPostProps) {
   return (
-    <div className="bg-bg200 relative flex h-[698px] max-h-[1019px] min-h-[698px] w-full max-w-[699px] flex-col gap-[10px] p-5 md:h-[1073px] lg:h-[1019px]">
+    <div className="bg-bg200 relative flex h-full max-h-[1019px] min-h-[698px] w-full max-w-[779px] flex-col gap-[10px] p-5 md:h-[1073px] lg:h-[1019px]">
       <div className="text-lg-regular flex w-full items-start justify-between">
         {' '}
-        <IconDelete />
+        <IconDelete className="cursor-pointer" />
       </div>
       <div className="flex flex-col">
         {showComplete && (
@@ -55,6 +56,15 @@ export default function DetailPost({ title, showComplete }: DetailPostProps) {
         </span>
       </div>
       <TodoCardReplyInput />
+      <div className="scroll-area max-h-[350px] w-full overflow-y-auto">
+        <BoardComment type="list" />
+        <BoardComment type="list" />
+        <BoardComment type="list" />
+        <BoardComment type="list" />
+      </div>
+      <Button variant="complete" size="complete" icon="check" className="absolute right-5 bottom-5">
+        완료하기
+      </Button>
     </div>
   );
 }
