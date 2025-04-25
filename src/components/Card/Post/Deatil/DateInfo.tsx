@@ -35,7 +35,7 @@ function formatTime(timeString: string) {
 
 export function DateInfo({ date, time, repeatinfo }: DateInfoProps) {
   return (
-    <div className="flex items-center space-x-4 text-xs text-gray-400">
+    <div className="flex items-center space-x-1 text-xs text-gray-400 sm:space-x-3">
       <div className="flex items-center space-x-1">
         <Image src="/icons/icon_calendar.svg" alt="날짜 아이콘" width={12} height={12} />
         <span>{formatDate(date)}</span>
