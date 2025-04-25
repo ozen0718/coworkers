@@ -1,7 +1,11 @@
 import Image from 'next/image';
 import AuthorInfo from './AuthorInfo';
 
-export default function BoardComment() {
+type BoardCommentProps = {
+  type?: 'free' | 'list';
+};
+
+export default function BoardComment({ type }: BoardCommentProps) {
   return (
     <div className="bg-bg200 flex min-h-[113px] w-full max-w-[1200px] flex-col rounded-lg p-5 lg:h-[123px]">
       <div className="text-lg-regular flex w-full items-start justify-between">
@@ -19,7 +23,11 @@ export default function BoardComment() {
         </div>
       </div>
       <div className="flex-grow">
-        <AuthorInfo />
+        <AuthorInfo
+          showDivider={type !== 'free'}
+          showLike={type !== 'free'}
+          profileSpacing="210px"
+        />
       </div>
     </div>
   );

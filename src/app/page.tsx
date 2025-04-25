@@ -26,6 +26,10 @@ export default function Home() {
       <br />
       <br />
       <TodoCardReplyInput />
+      <br />
+      <BoardComment type="free" />
+      <br />
+      <BoardComment type="list" />
     </div>
   );
 }
