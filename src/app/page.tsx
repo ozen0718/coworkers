@@ -1,10 +1,11 @@
 import BoardComment from '@/components/Card/Comment/BoardComment';
 import AddComment from '@/components/Card/Comment/AddComment';
 import ImgUpload from '@/components/Card/ImgUpload';
-//import { BestPost, GeneralPost } from '@/components/Card/BoardPost';
 
 import { BestPost } from '@/components/Card/Post/BestPost';
 import { GeneralPost } from '@/components/Card/Post/GeneralPost';
+
+import { DateInfo } from '@/components/Card/Post/Deatil/DateInfo';
 
 export default function Home() {
   return (
@@ -22,6 +23,8 @@ export default function Home() {
       <br />
       <br />
       <GeneralPost />
+
+      <DateInfo date="2025-04-25T00:00:00Z" time="15:30" repeatinfo="DAILY" />
     </div>
   );
 }
