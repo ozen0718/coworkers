@@ -14,7 +14,7 @@ export function GeneralPost() {
     <PostCard
       type="general"
       size={size}
-      title="자유게시판에자유게시판에자유게시판에자유게시판에자유게시판에자유게시판에dddddddddddddddddddd안녕자고싶다 이것들아ㅇㅇ"
+      title="자유게시판에자유게시판에자유게시판에자유게시판에자유게시판에자유게시판에dddddddddddddddddddd안녕자고 싶다잠온다몇시지 이이이 "
       imgUrl="https://sprint-fe-project.s3.ap-northeast-2.amazonaws.com/Coworkers/user/1855/testimage.jpg"
       date="2024.07.25"
       showKebab={size == 'small'}
