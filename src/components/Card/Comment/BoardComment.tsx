@@ -4,6 +4,7 @@ import AuthorInfo from './AuthorInfo';
 import { useState, useEffect } from 'react';
 import PostDropdown from '../Post/PostDropdown';
 import Button from '@/components/common/Button/Button';
+import { TextAreaInput } from '@/components/common/Inputs';
 
 type BoardCommentProps = {
   type?: 'free' | 'list';
@@ -40,19 +41,25 @@ export default function BoardComment({ type }: BoardCommentProps) {
   return (
     <div className="bg-bg200 relative flex min-h-[113px] w-full max-w-[1200px] flex-col rounded-lg p-5 lg:h-[123px]">
       <div className="text-lg-regular flex w-full items-start justify-between">
-        <div className="relative flex w-full items-start">
-          <span className="scroll-area mr-2 block max-h-[50px] min-h-[40px] overflow-x-hidden overflow-y-auto pr-6">
-            댓글 영역입니다.dd
-          </span>
-          <Image
-            className="absolute top-0 right-0 cursor-pointer"
-            src="/icons/kebab.svg"
-            alt="Kebab Icon"
-            width={16}
-            height={16}
-            onClick={toggleDropdown}
-          />
-        </div>
+        {isEditing ? (
+          <div className="relative flex w-full items-start">
+            <TextAreaInput />
+          </div>
+        ) : (
+          <div className="relative flex w-full items-start">
+            <span className="scroll-area mr-2 block max-h-[50px] min-h-[40px] overflow-x-hidden overflow-y-auto pr-6">
+              댓글 영역입니다.dd
+            </span>
+            <Image
+              className="absolute top-0 right-0 cursor-pointer"
+              src="/icons/kebab.svg"
+              alt="Kebab Icon"
+              width={16}
+              height={16}
+              onClick={toggleDropdown}
+            />
+          </div>
+        )}
       </div>
 
       {/* 드롭다운이 kebab 아이콘 밑에 나타나도록 absolute로 위치 설정 */}
@@ -72,7 +79,7 @@ export default function BoardComment({ type }: BoardCommentProps) {
 
       <div className="flex flex-grow flex-col justify-end">
         {isEditing ? (
-          <div className="ml-auto flex">
+          <div className="mt-5 ml-auto flex">
             <button
               onClick={handleCancel}
               className="text-gray500 h-[32px] w-[48px] bg-transparent text-sm font-semibold"
