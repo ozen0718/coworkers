@@ -10,9 +10,17 @@ export default function ModalButtons({
   onSubmit,
   disabled,
 }: ModalButtonsProps) {
-  const handleClickSubmit = () => {
-    onSubmit?.();
-    onClose();
+  const handleClickSubmit = async () => {
+    if (onSubmit) {
+      try {
+        await onSubmit();
+        onClose();
+      } catch (error) {
+        console.error('Submit 에러:', error);
+      }
+    } else {
+      onClose();
+    }
   };
 
   return (
