@@ -42,7 +42,7 @@ export default function PostDropdown({
               key={idx}
               className="hover:bg-bg100 cursor-pointer rounded-lg p-2"
               onClick={() => {
-                console.log('선택:', option);
+                option.action();
                 toggleDropdown();
               }}
             >
