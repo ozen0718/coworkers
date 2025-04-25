@@ -39,7 +39,7 @@ export default function BoardComment({ type }: BoardCommentProps) {
   };
 
   return (
-    <div className="bg-bg200 relative flex min-h-[81px] w-[full] max-w-[1200px] flex-col rounded-lg p-3 lg:h-[123px]">
+    <div className="bg-bg200 relative flex min-h-[81px] w-[full] max-w-[1200px] flex-col rounded-lg p-4 lg:h-[134px]">
       <div className="text-lg-regular flex w-full items-start justify-between">
         {isEditing ? (
           <div className="relative flex w-full items-start">

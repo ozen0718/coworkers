@@ -30,7 +30,7 @@ export default function DetailPost({ title, showComplete }: DetailPostProps) {
             <p className="text-tertiary text-xs font-medium">완료</p>
           </div>
         )}
-        <div className="text-xl-bold mt-2 flex max-w-[699px] items-center md:w-[668px]">
+        <div className="text-xl-bold mt-2 ml-auto flex items-center md:w-[747px]">
           {title}
           <Image
             className="ml-auto flex h-[24px] min-h-[21px] max-w-[699px] cursor-pointer"
@@ -41,7 +41,7 @@ export default function DetailPost({ title, showComplete }: DetailPostProps) {
           />
         </div>
       </div>
-      <div className="w-full max-w-[699px]">
+      <div className="w-full max-w-[739px]">
         <AuthorInfo showLike={false} showDivider={false} />
       </div>
       {!showComplete && (
