@@ -1,4 +1,4 @@
-import { TextAreaInput } from '@/components/common/Inputs/Inputs';
+import { TextAreaInput } from '@/components/common/Inputs';
 
 export default function AddComment() {
   return (
