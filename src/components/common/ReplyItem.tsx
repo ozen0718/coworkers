@@ -1,8 +1,9 @@
 import Image from 'next/image';
 import { ReplyItemProps } from '@/types/inputtypes';
 import Button from '@/components/common/Button/Button';
+import { Profile } from '@/components/common/Profiles';
 
-export function ReplyItem({ comment, profileImageUrl, name, date }: ReplyItemProps) {
+export function ReplyItem({ comment, profileUrl, name, date }: ReplyItemProps) {
   return (
     <div className="border-b-gray100/10 flex w-full flex-col gap-4 border border-x-0 border-t-0 py-4">
       <div className="flex w-full items-start justify-between">
@@ -11,14 +12,7 @@ export function ReplyItem({ comment, profileImageUrl, name, date }: ReplyItemPro
       </div>
       <div className="flex w-full items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="h-8 w-8 overflow-hidden rounded-full">
-            <Image
-              src={profileImageUrl || '/icons/initialprofile.svg'}
-              alt="프로필 이미지"
-              width={32}
-              height={32}
-            />
-          </div>
+          <Profile profileUrl={profileUrl} width={32} />
           <p className="text-md-medium">{name}</p>
         </div>
         <p className="text-md-regular">{date}</p>
