@@ -2,6 +2,7 @@
 
 import BoardComment from '@/components/Card/Comment/BoardComment';
 import AddComment from '@/components/Card/Comment/AddComment';
+import PostCard from '@/components/Card/Post/PostCard';
 import ImgUpload from '@/components/Card/ImgUpload';
 
 import { BestPost } from '@/components/Card/Post/BestPost';
@@ -25,6 +26,8 @@ export default function Home() {
       <GeneralPost />
       <br />
       <br />
+      <PostCard title={'안녕'} />
+      <ImgUpload />
       <h1 className="text-xl-semibold text-blue">상세 카드 모달 컴포넌트</h1>
       <br />
       <DateInfo date="2025-04-25T00:00:00Z" time="15:30" repeatinfo="DAILY" />

@@ -20,7 +20,7 @@ export default function ImgUpload() {
     >
       {image ? (
         <div className="aspect-square w-full">
-          <img src={image} alt="업로드 이미지" className="h-full w-full opacity-50" />
+          <img src={image} alt="업로드 이미지" className="h-full w-full object-cover opacity-50" />
           <IconDelete
             width={40}
             height={40}

@@ -70,7 +70,7 @@ export default function PostCard({
           >
             {imgUrl ? (
               <Image
-                className="aspect-square rounded-lg"
+                className="aspect-square rounded-lg object-cover"
                 src={imgUrl}
                 alt="게시글 이미지"
                 width={72}
