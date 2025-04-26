@@ -3,7 +3,7 @@ import AuthorInfo from './AuthorInfo';
 
 export default function BoardComment() {
   return (
-    <div className="bg-bg200 flex min-h-[113px] w-full flex-col rounded-lg p-5 lg:h-[123px] lg:w-[1200px]">
+    <div className="bg-bg200 flex min-h-[113px] w-full max-w-[1200px] flex-col rounded-lg p-5 lg:h-[123px]">
       <div className="text-lg-regular flex w-full items-start justify-between">
         <div className="relative flex w-full items-start">
           <span className="scroll-area mr-2 block max-h-[50px] min-h-[40px] overflow-x-hidden overflow-y-auto pr-6">
