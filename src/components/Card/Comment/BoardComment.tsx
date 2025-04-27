@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import PostDropdown from '../Post/PostDropdown';
 import Button from '@/components/common/Button/Button';
 import { TextAreaInput } from '@/components/common/Inputs';
+import clsx from 'clsx';
 
 type BoardCommentProps = {
   type?: 'free' | 'list';
@@ -39,16 +40,23 @@ export default function BoardComment({ type }: BoardCommentProps) {
   };
 
   return (
-    <div className="bg-bg200 relative flex min-h-[81px] w-[full] max-w-[1200px] flex-col rounded-lg p-4 lg:h-[134px]">
+    <div
+      className={clsx(
+        'bg-bg200 relative flex min-h-[81px] w-full max-w-[1200px] flex-col rounded-lg lg:h-[134px]',
+        type === 'free' && 'p-4'
+      )}
+    >
       <div className="text-lg-regular flex w-full items-start justify-between">
         {isEditing ? (
           <div className="relative flex w-full items-start">
             <TextAreaInput />
           </div>
         ) : (
-          <div className="relative flex w-full items-start">
+          <div
+            className={clsx('relative flex w-full items-start', type === 'free' ? 'mt-0' : 'mt-4')}
+          >
             <span className="scroll-area mr-2 block max-h-[50px] min-h-[40px] overflow-x-hidden overflow-y-auto pr-6">
-              댓글 영역입니다.dd
+              댓글 영역입니다.
             </span>
             <Image
               className="absolute top-0 right-0 cursor-pointer"

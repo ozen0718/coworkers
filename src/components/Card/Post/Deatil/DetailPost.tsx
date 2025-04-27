@@ -30,7 +30,7 @@ export default function DetailPost({ title, showComplete }: DetailPostProps) {
             <p className="text-tertiary text-xs font-medium">완료</p>
           </div>
         )}
-        <div className="text-xl-bold mt-2 ml-auto flex items-center md:w-[747px]">
+        <div className="text-xl-bold mt-2 flex items-center md:w-[747px]">
           {title}
           <Image
             className="ml-auto flex h-[24px] min-h-[21px] max-w-[699px] cursor-pointer"
@@ -50,9 +50,9 @@ export default function DetailPost({ title, showComplete }: DetailPostProps) {
         </div>
       )}
       <div>
-        <span className="scroll-area text-md-regular mt-2 block min-h-[300px] w-full overflow-x-hidden overflow-y-auto">
+        <span className="scroll-area text-md-regular mt-2 block min-h-[300px] w-full overflow-x-hidden overflow-y-auto leading-[17px]">
           필수 정보 10분 입력하면 3일 안에 법인 설립이 완료되는 법인 설립 서비스의 장점에 대해
-          상세하게 설명드리기
+          상세하게 설명드리기 (api 연결 후 데이터로 변경)
         </span>
       </div>
       <TodoCardReplyInput />

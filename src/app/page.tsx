@@ -23,32 +23,10 @@ import DetailPost from '@/components/Card/Post/Deatil/DetailPost';
 export default function Home() {
   return (
     <div className="bg-bg300 min-h-screen p-10">
-      <GeneralPost />
       <br />
       <br />
-      <PostCard title={'안녕'} />
-      <ImgUpload />
-      <h1 className="text-xl-semibold text-blue">상세 카드 모달 컴포넌트</h1>
-      <br />
-      <DateInfo date="2025-04-25T00:00:00Z" time="15:30" repeatinfo="DAILY" />
-      <br />
-      <br />
-      <div className="max-w-[699px]">
-        <AuthorInfo showLike={false} showDivider={false} />
-        <br />
-        <TodoCardReplyInput />
-      </div>
-      <br />
-      <TextAreaInput />
-      <br />
-      <br />
+      <h1>free BoardComment</h1>
       <BoardComment type="free" />
-      <br />
-      <BoardComment type="list" />
-      <br />
-      <Button size="small" variant="inverse">
-        생성하기
-      </Button>
       <br />
       <br /> <br />
       <br />
