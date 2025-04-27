@@ -1,18 +1,18 @@
 'use client';
 import { motion } from 'framer-motion';
 type SlideWrapperProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  children: React.ReactNode;
+  isOpen: boolean; // 열림 여부
+  onClose: () => void; // 닫힘 여부
+  children: React.ReactNode; // 내용
 };
 
 export default function SlideWrapper({ isOpen, onClose, children }: SlideWrapperProps) {
   return (
     <>
-      {/* 배경 오버레이 */}
+      {/* 배경*/}
       {isOpen && <div className="fixed inset-0 z-40 bg-black/30" onClick={onClose} />}
 
-      {/* 카드 영역 */}
+      {/* 카드 */}
       <motion.div
         initial={{ x: '100%' }}
         animate={{ x: isOpen ? 0 : '100%' }}

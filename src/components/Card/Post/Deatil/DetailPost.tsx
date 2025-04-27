@@ -1,10 +1,7 @@
 'use client';
 import Image from 'next/image';
 import AuthorInfo from '../../Comment/AuthorInfo';
-import { useState, useEffect } from 'react';
-import PostDropdown from '../PostDropdown';
 import Button from '@/components/common/Button/Button';
-import { TextAreaInput } from '@/components/common/Inputs';
 import IconDelete from '@/assets/icons/IconDelete';
 import IconCheck from '@/assets/icons/IconCheck';
 import { DateInfo } from './DateInfo';
