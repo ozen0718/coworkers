@@ -21,7 +21,7 @@ export default function DetailPost({ title, showComplete, onClose }: DetailPostP
   return (
     <div
       style={{ borderLeft: '1px solid var(--Border-Primary, #F8FAFC1A)' }}
-      className="bg-bg200 relative flex h-full max-h-[1019px] min-h-[698px] w-full max-w-[779px] flex-col gap-[10px] overflow-x-hidden p-5 md:h-[1073px] lg:h-[1019px]"
+      className="bg-bg200 relative flex h-full min-h-[698px] w-full flex-col gap-[10px] overflow-x-hidden p-5"
     >
       <div className="text-lg-regular flex w-full items-start justify-between">
         {' '}
@@ -60,7 +60,7 @@ export default function DetailPost({ title, showComplete, onClose }: DetailPostP
         </span>
       </div>
       <TodoCardReplyInput />
-      <div className="scroll-area max-h-[350px] w-full overflow-y-auto">
+      <div className="scroll-area max-h-[400px] w-full overflow-y-auto">
         <BoardComment type="list" />
         <BoardComment type="list" />
         <BoardComment type="list" />

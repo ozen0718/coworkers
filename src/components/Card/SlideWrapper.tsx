@@ -17,7 +17,7 @@ export default function SlideWrapper({ isOpen, onClose, children }: SlideWrapper
         initial={{ x: '100%' }}
         animate={{ x: isOpen ? 0 : '100%' }}
         transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-        className="fixed top-0 right-0 z-50 h-full w-[780px] overflow-auto bg-white shadow-xl"
+        className="fixed top-0 right-0 z-50 h-full max-w-full overflow-auto bg-white shadow-xl sm:max-w-[435px] lg:max-w-[780px]"
       >
         {children}
       </motion.div>
