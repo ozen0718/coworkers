@@ -1,5 +1,6 @@
 // page.tsx
 
+'use client';
 import BoardComment from '@/components/Card/Comment/BoardComment';
 import AddComment from '@/components/Card/Comment/AddComment';
 import PostCard from '@/components/Card/Post/PostCard';
@@ -18,11 +19,26 @@ import { TextAreaInput } from '@/components/common/Inputs';
 
 import Button from '@/components/common/Button/Button';
 
+import { useState } from 'react';
 import DetailPost from '@/components/Card/Post/Deatil/DetailPost';
+import SlideWrapper from '@/components/Card/SlideWrapper';
 
 export default function Home() {
+  const [open, setOpen] = useState(false);
   return (
     <div className="bg-bg300 min-h-screen p-10">
+      <br />
+      <br />
+      <button onClick={() => setOpen(true)} className="text-balck bg-blue h-[50px] w-[120px]">
+        클릭
+      </button>
+      <SlideWrapper isOpen={open} onClose={() => setOpen(false)}>
+        <DetailPost
+          title="법인 설립 서비스 설명"
+          showComplete={false}
+          onClose={() => setOpen(false)}
+        />
+      </SlideWrapper>
       <br />
       <br />
       <h1>free BoardComment</h1>
@@ -30,7 +46,6 @@ export default function Home() {
       <br />
       <br /> <br />
       <br />
-      <DetailPost title={'법인 설립 비용 안내 드리기'} showComplete={false} />
     </div>
   );
 }

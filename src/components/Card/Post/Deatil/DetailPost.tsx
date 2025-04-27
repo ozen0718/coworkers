@@ -14,14 +14,18 @@ import BoardComment from '@/components/Card/Comment/BoardComment';
 type DetailPostProps = {
   title: string;
   showComplete: boolean;
+  onClose: () => void;
 };
 
-export default function DetailPost({ title, showComplete }: DetailPostProps) {
+export default function DetailPost({ title, showComplete, onClose }: DetailPostProps) {
   return (
-    <div className="bg-bg200 relative flex h-full max-h-[1019px] min-h-[698px] w-full max-w-[779px] flex-col gap-[10px] p-5 md:h-[1073px] lg:h-[1019px]">
+    <div
+      style={{ borderLeft: '1px solid var(--Border-Primary, #F8FAFC1A)' }}
+      className="bg-bg200 relative flex h-full max-h-[1019px] min-h-[698px] w-full max-w-[779px] flex-col gap-[10px] overflow-x-hidden p-5 md:h-[1073px] lg:h-[1019px]"
+    >
       <div className="text-lg-regular flex w-full items-start justify-between">
         {' '}
-        <IconDelete className="cursor-pointer" />
+        <IconDelete className="cursor-pointer" onClick={onClose} />
       </div>
       <div className="flex flex-col">
         {showComplete && (
