@@ -1,50 +1,32 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, ReactNode } from 'react';
+import { usePathname } from 'next/navigation';
+import { HEADER_VISIBILITY_CONFIG } from './Headerconfig';
+
 interface HeaderState {
   showTeamSelector: boolean;
   showFreeBoardLink: boolean;
   showProfile: boolean;
 }
 
-interface HeaderContextType extends HeaderState {
-  setHeaderState: (newState: Partial<HeaderState>) => void;
-  resetHeaderState: () => void;
-}
-
-const defaultState: HeaderContextType = {
+const defaultState: HeaderState = {
   showTeamSelector: false,
   showFreeBoardLink: false,
   showProfile: false,
-  setHeaderState: () => {},
-  resetHeaderState: () => {},
 };
 
-const HeaderContext = createContext<HeaderContextType>(defaultState);
+const HeaderContext = createContext<HeaderState>(defaultState);
+
 export const useHeader = () => useContext(HeaderContext);
 
 export function HeaderProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<HeaderState>({
-    showTeamSelector: false,
-    showFreeBoardLink: false,
-    showProfile: false,
-  });
+  const pathname = usePathname();
 
-  const setHeaderState = (newState: Partial<HeaderState>) => {
-    setState((prev) => ({ ...prev, ...newState }));
+  const visibility: HeaderState = {
+    ...defaultState,
+    ...HEADER_VISIBILITY_CONFIG[pathname],
   };
 
-  const resetHeaderState = () => {
-    setState({
-      showTeamSelector: false,
-      showFreeBoardLink: false,
-      showProfile: false,
-    });
-  };
-
-  return (
-    <HeaderContext.Provider value={{ ...state, setHeaderState, resetHeaderState }}>
-      {children}
-    </HeaderContext.Provider>
-  );
+  return <HeaderContext.Provider value={visibility}>{children}</HeaderContext.Provider>;
 }
