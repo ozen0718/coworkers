@@ -1,7 +1,7 @@
 import React from 'react';
 import TodoItem from '@/components/List/todo';
 
-export default function ListPage() {
+export default function TaskListPage() {
   const todos = [
     {
       id: 1,
