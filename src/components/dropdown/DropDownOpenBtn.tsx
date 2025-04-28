@@ -3,6 +3,7 @@
 import clsx from 'clsx';
 import Image from 'next/image';
 import { Size } from './BaseDropdown';
+import { useEffect, useState } from 'react';
 
 interface Props {
   size: Size;
@@ -10,6 +11,20 @@ interface Props {
 }
 
 export default function DropDownOpenBtn({ size, currentSelected }: Props) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const iconSrc = isMobile ? '/icons/gnb_menu.svg' : '/icons/check.svg';
+
   return (
     <div
       className={clsx(
@@ -22,7 +37,7 @@ export default function DropDownOpenBtn({ size, currentSelected }: Props) {
     >
       <div className="flex w-full justify-between">
         <p className="w-full truncate">{currentSelected}</p>
-        <Image src="/icons/gnb_menu.svg" width={16} height={7} alt="드롭다운 아이콘" />
+        <Image src={iconSrc} width={16} height={16} alt="드롭다운 아이콘" />
       </div>
     </div>
   );
