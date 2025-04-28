@@ -2,8 +2,8 @@ import Image from 'next/image';
 
 interface DateInfoProps {
   date: string;
-  time: string;
-  repeatinfo: 'ONCE' | 'DAILY' | 'WEEKLY' | 'MONTHLY';
+  time?: string;
+  repeatinfo?: 'ONCE' | 'DAILY' | 'WEEKLY' | 'MONTHLY';
 }
 
 const repeatMap = {
@@ -35,27 +35,29 @@ function formatTime(timeString: string) {
 
 export function DateInfo({ date, time, repeatinfo }: DateInfoProps) {
   return (
-    <div className="flex items-center space-x-4 text-xs text-gray-400">
+    <div className="flex items-center space-x-1 text-xs text-gray-400 sm:space-x-3">
       <div className="flex items-center space-x-1">
         <Image src="/icons/icon_calendar.svg" alt="날짜 아이콘" width={12} height={12} />
         <span>{formatDate(date)}</span>
       </div>
-      <div className="h-[12px] border-l-1 border-slate-700"></div>
-      <div className="flex items-center space-x-1">
-        <Image src="/icons/icon_time.svg" alt="시간 아이콘" width={12} height={12} />
-        <span>{formatTime(time)}</span>
-      </div>
-      <div className="h-[12px] border-l-1 border-slate-700"></div>
-      <div className="flex items-center space-x-1">
-        <Image
-          src="/icons/icon_repeat.svg"
-          alt="반복 아이콘"
-          width={12}
-          height={12}
-          //className={'opacity-30'}
-        />
-        <p>{repeatMap[repeatinfo]}</p>
-      </div>
+      {time && (
+        <>
+          <div className="h-[12px] border-l-1 border-slate-700"></div>
+          <div className="flex items-center space-x-1">
+            <Image src="/icons/icon_time.svg" alt="시간 아이콘" width={12} height={12} />
+            <span>{formatTime(time)}</span>
+          </div>
+        </>
+      )}
+      {repeatinfo && (
+        <>
+          <div className="h-[12px] border-l-1 border-slate-700"></div>
+          <div className="flex items-center space-x-1">
+            <Image src="/icons/icon_repeat.svg" alt="반복 아이콘" width={12} height={12} />
+            <p>{repeatMap[repeatinfo]}</p>
+          </div>
+        </>
+      )}
     </div>
   );
 }
