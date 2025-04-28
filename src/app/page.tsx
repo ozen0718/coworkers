@@ -33,11 +33,7 @@ export default function Home() {
         클릭
       </button>
       <SlideWrapper isOpen={open} onClose={() => setOpen(false)}>
-        <DetailPost
-          title="법인 설립 서비스 설명"
-          showComplete={false}
-          onClose={() => setOpen(false)}
-        />
+        <DetailPost title="법인 설립 서비스 설명" onClose={() => setOpen(false)} />
       </SlideWrapper>
       <br />
       <br />
