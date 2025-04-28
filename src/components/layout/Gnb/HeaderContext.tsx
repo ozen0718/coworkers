@@ -2,7 +2,7 @@
 
 import { createContext, useContext, ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
-import { HEADER_VISIBILITY_CONFIG } from './Headerconfig';
+import { HEADER_VISIBILITY_CONFIG } from '../../../hooks/Headerconfig';
 
 interface HeaderState {
   showTeamSelector: boolean;
