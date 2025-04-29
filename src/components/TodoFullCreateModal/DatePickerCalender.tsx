@@ -1,4 +1,5 @@
 import DatePicker from 'react-datepicker';
+import { ko } from 'date-fns/locale';
 import IconArrowPolygon from '@/assets/icons/IconArrowPolygon';
 import DatePickerInput from './DatePickerInput';
 
@@ -10,6 +11,7 @@ interface DatePickerCalendarProps {
 export default function DatePickerCalendar({ startDate, setStartDate }: DatePickerCalendarProps) {
   return (
     <DatePicker
+      locale={ko}
       selected={startDate ?? undefined}
       onChange={(date) => setStartDate(date)}
       customInput={<DatePickerInput />}
@@ -20,7 +22,7 @@ export default function DatePickerCalendar({ startDate, setStartDate }: DatePick
           <button type="button" onClick={decreaseMonth}>
             <IconArrowPolygon />
           </button>
-          <span>{monthDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
+          <span>{monthDate.toLocaleString('ko', { month: 'long', year: 'numeric' })}</span>
           <button type="button" onClick={increaseMonth}>
             <IconArrowPolygon direction="right" />
           </button>
