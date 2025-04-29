@@ -1,16 +1,13 @@
-import { ReactNode, useState } from 'react';
+import { useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
-import DatePicker, { CalendarContainer } from 'react-datepicker';
-import { isSameDay } from 'date-fns';
-import clsx from 'clsx';
+import DatePicker from 'react-datepicker';
 import { TextAreaInput, TextInput } from '@/components/common/Inputs';
 import Modal from '@/components/common/Modal';
 import { ModalProps } from '@/components/common/Modal/types';
 import SelectableDropdown from '@/components/dropdown/SelectableDropdown';
 import DatePickerInput from './DatePickerInput';
-import './style.css';
-import IconArrowPolygon from '@/assets/icons/IconArrowPolygon';
 import DatePickerCalendar from './DatePickerCalender';
+import './style.css';
 
 export type TodoFullCreateModalProps = Pick<
   ModalProps,
