@@ -3,6 +3,7 @@
 import { BestPost } from '@/components/Card/Post/BestPost';
 import { GeneralPost } from '@/components/Card/Post/GeneralPost';
 import { useWindowSize } from '@/hooks/useWindowSize';
+import { useState } from 'react';
 
 /* 테스트 데이터 */
 import { testPosts } from '@/components/Card/testPosts';
@@ -10,13 +11,19 @@ import { testPosts } from '@/components/Card/testPosts';
 export default function BoardPage() {
   const windowWidth = useWindowSize();
 
-  let bestVisiblePosts = 1; // 기본 1개
+  let bestVisiblePosts = 1;
 
   if (windowWidth >= 1024) {
-    bestVisiblePosts = 3; // PC
+    bestVisiblePosts = 3;
   } else if (windowWidth >= 640) {
-    bestVisiblePosts = 2; // 태블릿
+    bestVisiblePosts = 2;
   }
+
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredData = testPosts.filter((item) =>
+    item.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="bg-bg300 flex min-h-screen flex-col items-center text-white">
@@ -35,6 +42,8 @@ export default function BoardPage() {
             type="text"
             placeholder="검색어를 입력해주세요"
             className="bg-bg200 w-full rounded-xl border border-[#F8FAFC1A] p-4 pl-12"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
 
@@ -47,7 +56,7 @@ export default function BoardPage() {
           </div>
 
           <div className="mt-15 flex w-full justify-center gap-4">
-            {testPosts.slice(0, bestVisiblePosts).map((post) => (
+            {filteredData.slice(0, bestVisiblePosts).map((post) => (
               <BestPost key={post.id} {...post} />
             ))}
           </div>
@@ -62,7 +71,7 @@ export default function BoardPage() {
           </div>
 
           <div className="scroll-area mt-10 grid max-h-[600px] grid-cols-1 justify-items-center gap-4 overflow-y-auto lg:grid-cols-2">
-            {testPosts.map((post) => (
+            {filteredData.map((post) => (
               <GeneralPost key={post.id} title={post.title} imgUrl={post.imgUrl} date={post.date} />
             ))}
           </div>
