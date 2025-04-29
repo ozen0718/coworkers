@@ -58,7 +58,7 @@ export default function PostCard({
     <div
       className={clsx(
         'border-bg100 bg-bg200 flex flex-col gap-1.5 rounded-xl border p-5',
-        type === 'best' ? 'max-h-[220px] max-w-[387px]' : sizeClass[size]
+        type === 'best' ? 'max-h-[220px] w-full max-w-[387px]' : sizeClass[size]
       )}
     >
       {/* 헤더 */}
