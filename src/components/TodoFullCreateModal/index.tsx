@@ -51,6 +51,7 @@ export default function TodoFullCreateModal({ isOpen, onClose }: TodoFullCreateM
             </div>
 
             {/* 시간 선택 */}
+            {/* TODO: Custom style */}
             <div className="w-1/2 min-w-0">
               <DatePicker
                 wrapperClassName="time-picker"
@@ -68,6 +69,8 @@ export default function TodoFullCreateModal({ isOpen, onClose }: TodoFullCreateM
         </div>
 
         {/* 반복 설정 */}
+        {/* TODO 1: 설정 선택 시, 반복되는 요일 선택 렌더링 */}
+        {/* TODO 2: Dropdown 버튼 색, 아이콘 조정 */}
         <div className="flex flex-col gap-4">
           <label>반복 설정</label>
           <SelectableDropdown
