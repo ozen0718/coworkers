@@ -8,4 +8,10 @@ export const HEADER_VISIBILITY_CONFIG: Record<
     showFreeBoardLink: false,
     showProfile: false,
   },
+  '/boards': {
+    //자유 게시판 페이지
+    showTeamSelector: true,
+    showFreeBoardLink: true,
+    showProfile: true,
+  },
 };
