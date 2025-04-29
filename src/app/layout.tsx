@@ -1,6 +1,8 @@
-import { HeaderProvider } from '@/components/layout/Gnb/HeaderContext';
-import '@/styles/globals.css';
 import type { Metadata } from 'next';
+import 'react-datepicker/dist/react-datepicker.css';
+import '@/styles/globals.css';
+import { HeaderProvider } from '@/components/layout/Gnb/HeaderContext';
+import ClientHeaderLayout from '@/components/layout/ClientHeaderLayout';
 
 export const metadata: Metadata = {
   title: 'Coworkers',
@@ -10,8 +12,11 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
-      <body>
-        <HeaderProvider>{children}</HeaderProvider>
+      <body className="bg-bg300 min-h-screen text-white">
+        <HeaderProvider>
+          <ClientHeaderLayout />
+          <main>{children}</main>
+        </HeaderProvider>
       </body>
     </html>
   );
