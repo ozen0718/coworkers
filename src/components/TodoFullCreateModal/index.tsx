@@ -46,7 +46,7 @@ export default function TodoFullCreateModal({ isOpen, onClose }: TodoFullCreateM
           <div className="flex gap-2">
             
             {/* 날짜 선택 */}
-            <div className="flex w-1/2 min-w-0 flex-col">
+            <div className="flex w-2/3 min-w-0 flex-col">
               <DatePickerCalendar
                 startDate={startDate}
                 setStartDate={setStartDate}

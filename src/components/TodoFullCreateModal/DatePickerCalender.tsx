@@ -23,7 +23,7 @@ export default function DatePickerCalendar({ startDate, setStartDate }: DatePick
           <button type="button" onClick={decreaseMonth}>
             <IconArrowPolygon />
           </button>
-          <span>{monthDate.toLocaleString('ko', { month: 'long', year: 'numeric' })}</span>
+          <span>{monthDate.toLocaleString('en', { month: 'long', year: 'numeric' })}</span>
           <button type="button" onClick={increaseMonth}>
             <IconArrowPolygon direction="right" />
           </button>
