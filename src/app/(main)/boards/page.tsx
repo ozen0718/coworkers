@@ -1,5 +1,7 @@
 'use client';
 
+import { BestPost } from '@/components/Card/Post/BestPost';
+
 export default function BoardPage() {
   return (
     <div className="bg-bg300 flex min-h-screen flex-col items-center text-white">
@@ -19,6 +21,12 @@ export default function BoardPage() {
             placeholder="검색어를 입력해주세요"
             className="bg-bg200 w-full rounded-xl border border-[#F8FAFC1A] p-4 pl-12"
           />
+        </div>
+        <div className="mt-10">
+          <h2 className="text-xl-bold">베스트 게시글</h2>
+          <div className="mt-15">
+            <BestPost />
+          </div>
         </div>
       </div>
     </div>

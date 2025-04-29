@@ -35,7 +35,7 @@ export default function AuthorInfo({
         </span>
       )}
 
-      <div className={`ml-2 flex items-center ${showDivider ? 'ml-auto' : 'ml-[0px]'}`}>
+      <div className={'ml-auto flex items-center'}>
         {showLike && (
           <div className="flex items-center">
             <IconHeart
