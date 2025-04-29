@@ -8,9 +8,8 @@ export default function BoardPage() {
     <div className="bg-bg300 flex min-h-screen flex-col items-center text-white">
       <HeaderProvider>
         <Header onOpenSideMenu={() => {}} />
-        {/* 여기만 위에 여백 줄 것 */}
-        <div className="text-2xl-bold text-gray100 mt-10 flex h-full max-h-[1196px] w-full max-w-[1201px]">
-          자유게시판
+        <div className="w-full max-w-[1201px] px-4 sm:px-6 md:px-8">
+          <h1 className="text-2xl-bold text-gray100 mt-10">자유게시판</h1>
         </div>
       </HeaderProvider>
     </div>
