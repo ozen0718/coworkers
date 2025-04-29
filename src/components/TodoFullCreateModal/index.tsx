@@ -9,6 +9,7 @@ import { ModalProps } from '@/components/common/Modal/types';
 import SelectableDropdown from '@/components/dropdown/SelectableDropdown';
 import DatePickerInput from './DatePickerInput';
 import './style.css';
+import IconArrowPolygon from '@/assets/icons/IconArrowPolygon';
 
 export type TodoFullCreateModalProps = Pick<
   ModalProps,
@@ -19,17 +20,8 @@ const todoRepeatOptions = ['반복 안함', '한 번', '매일', '주 반복', '
 
 export default function TodoFullCreateModal({ isOpen, onClose }: TodoFullCreateModalProps) {
   const [startDate, setStartDate] = useState<Date | null>(new Date());
+  const [viewedMonth, setViewedMonth] = useState(new Date());
   const [selectedRepeat, setSelectedRepeat] = useState(todoRepeatOptions[0]);
-
-  const MyContainer = ({ className, children }: { className?: string; children: ReactNode }) => {
-    return (
-      <CalendarContainer className={className}>
-        <div className="border-primary-hover bg-red rounded-lg border p-4 shadow-lg">
-          {children}
-        </div>
-      </CalendarContainer>
-    );
-  };
 
   return (
     <Modal
@@ -41,7 +33,7 @@ export default function TodoFullCreateModal({ isOpen, onClose }: TodoFullCreateM
       isOpen={isOpen}
       onClose={onClose}
     >
-      <div className="mt-6 mb-2 flex max-h-[555px] flex-col gap-6 overflow-y-auto scrollbar-hide">
+      <div className="scrollbar-hide mt-6 mb-2 flex max-h-[70vh] flex-col gap-6 overflow-y-auto">
         {/* 할 일 제목 */}
         <div className="flex flex-col gap-4">
           <label htmlFor="todo-title">할 일 제목</label>
@@ -53,39 +45,44 @@ export default function TodoFullCreateModal({ isOpen, onClose }: TodoFullCreateM
           <label>시작 날짜 및 시간</label>
           <div className="flex gap-2">
             {/* 날짜 선택 */}
-            <div className="flex flex-col w-1/2 min-w-0 ">
+            <div className="flex w-1/2 min-w-0 flex-col">
               <DatePicker
-                className="outline"
                 selected={startDate ?? undefined}
                 onChange={(date) => setStartDate(date)}
+                onMonthChange={(date) => setViewedMonth(date)}
                 customInput={<DatePickerInput />}
-                calendarContainer={MyContainer}
-                dayClassName={(date) =>
-                  clsx(
-                    'w-10 h-10 flex items-center justify-center rounded-full transition',
-                    isSameDay(date, startDate ?? undefined) &&
-                      'bg-blue-600 text-bg200 font-semibold'
-                  )
-                }
-                popperClassName="static-popper"
+                // calender header
+                renderCustomHeader={({ monthDate, decreaseMonth, increaseMonth }) => (
+                  <div className="flex w-full items-center justify-between pb-[5px]">
+                    <button type="button" onClick={decreaseMonth}>
+                      <IconArrowPolygon />
+                    </button>
+                    <span>
+                      {monthDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
+                    </span>
+                    <button type="button" onClick={increaseMonth}>
+                      <IconArrowPolygon direction="right" />
+                    </button>
+                  </div>
+                )}
+                popperClassName="static-popper calendar-picker"
                 popperModifiers={[]}
-                wrapperClassName="w-full"
               />
             </div>
 
             {/* 시간 선택 */}
-            <div className='w-1/2 min-w-0 '>
-
-            <DatePicker
-              selected={startDate ?? undefined}
-              onChange={(date) => setStartDate(date)}
-              customInput={<DatePickerInput />}
-              showTimeSelect
-              showTimeSelectOnly
-              timeIntervals={15}
-              dateFormat="aa h:mm"
-              showTimeCaption={false}
-            />
+            <div className="w-1/2 min-w-0">
+              <DatePicker
+                wrapperClassName="time-picker"
+                selected={startDate ?? undefined}
+                onChange={(date) => setStartDate(date)}
+                customInput={<DatePickerInput />}
+                showTimeSelect
+                showTimeSelectOnly
+                timeIntervals={15}
+                dateFormat="aa h:mm"
+                showTimeCaption={false}
+              />
             </div>
           </div>
         </div>
