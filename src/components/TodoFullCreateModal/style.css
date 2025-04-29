@@ -36,6 +36,13 @@
   color: #ffffff;
 }
 
+/* 반응형 width값 임시적용 */
+@media (max-width: 768px) {
+  .calendar-picker .react-datepicker {
+    width: 327px;
+  }
+}
+
 .calendar-picker .react-datepicker__month-container {
   width: 100%;
 }
