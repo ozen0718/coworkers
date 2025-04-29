@@ -48,6 +48,12 @@
   }
 
   /* font */
+  .text-4xl-bold {
+    font-size: 40px;
+    line-height: 48px;
+    font-weight: 700;
+  }
+
   .text-4xl-medium {
     font-size: 40px;
     line-height: 48px;

@@ -1,5 +1,5 @@
 import { Profile } from '@/components/common/Profiles';
-import MemberProps from '@/types/membertype';
+import { MemberProps } from '@/types/teampagetypes';
 import Image from 'next/image';
 
 export default function Member({ profileUrl, name, email }: MemberProps) {
