@@ -10,6 +10,7 @@ import SelectableDropdown from '@/components/dropdown/SelectableDropdown';
 import DatePickerInput from './DatePickerInput';
 import './style.css';
 import IconArrowPolygon from '@/assets/icons/IconArrowPolygon';
+import DatePickerCalendar from './DatePickerCalender';
 
 export type TodoFullCreateModalProps = Pick<
   ModalProps,
@@ -20,7 +21,6 @@ const todoRepeatOptions = ['반복 안함', '한 번', '매일', '주 반복', '
 
 export default function TodoFullCreateModal({ isOpen, onClose }: TodoFullCreateModalProps) {
   const [startDate, setStartDate] = useState<Date | null>(new Date());
-  const [viewedMonth, setViewedMonth] = useState(new Date());
   const [selectedRepeat, setSelectedRepeat] = useState(todoRepeatOptions[0]);
 
   return (
@@ -44,29 +44,12 @@ export default function TodoFullCreateModal({ isOpen, onClose }: TodoFullCreateM
         <div className="flex flex-col gap-4">
           <label>시작 날짜 및 시간</label>
           <div className="flex gap-2">
+            
             {/* 날짜 선택 */}
             <div className="flex w-1/2 min-w-0 flex-col">
-              <DatePicker
-                selected={startDate ?? undefined}
-                onChange={(date) => setStartDate(date)}
-                onMonthChange={(date) => setViewedMonth(date)}
-                customInput={<DatePickerInput />}
-                // calender header
-                renderCustomHeader={({ monthDate, decreaseMonth, increaseMonth }) => (
-                  <div className="flex w-full items-center justify-between pb-[5px]">
-                    <button type="button" onClick={decreaseMonth}>
-                      <IconArrowPolygon />
-                    </button>
-                    <span>
-                      {monthDate.toLocaleString('default', { month: 'long', year: 'numeric' })}
-                    </span>
-                    <button type="button" onClick={increaseMonth}>
-                      <IconArrowPolygon direction="right" />
-                    </button>
-                  </div>
-                )}
-                popperClassName="static-popper calendar-picker"
-                popperModifiers={[]}
+              <DatePickerCalendar
+                startDate={startDate}
+                setStartDate={setStartDate}
               />
             </div>
 
