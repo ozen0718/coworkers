@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import SideMenu from '@/components/layout/Gnb/SideMenu';
 import Header from '@/components/layout/Gnb/Header';
 import { HeaderProvider } from '@/components/layout/Gnb/HeaderContext';
-import Home from '@/components/landing/index';
+import Landing from '@/components/landing/index';
 
 const USER_DATA = {
   name: '안혜나',
@@ -26,7 +26,7 @@ function PageContent() {
         onClose={() => setIsSideMenuOpen(false)}
       />
 
-      <Home />
+      <Landing />
     </div>
   );
 }

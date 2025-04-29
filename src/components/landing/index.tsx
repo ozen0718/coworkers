@@ -1,4 +1,3 @@
-// landing/index.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -38,5 +37,3 @@ export default function Landing() {
     </div>
   );
 }
-
-// 각각의 컴포넌트들은 props를 통해 이미지를 받도록 구현됨
