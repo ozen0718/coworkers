@@ -4,8 +4,8 @@ export const HEADER_VISIBILITY_CONFIG: Record<
 > = {
   '/': {
     //랜딩 페이지
-    showTeamSelector: true,
-    showFreeBoardLink: true,
-    showProfile: true,
+    showTeamSelector: false,
+    showFreeBoardLink: false,
+    showProfile: false,
   },
 };
