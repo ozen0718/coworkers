@@ -51,7 +51,7 @@ export function TasksItem({ tasksTitle, completed, total }: TasksItemProp) {
   const trimColor = getTrimColor(tasksTitle);
 
   return (
-    <div className="bg-bg200 flex h-10 w-full items-center justify-between overflow-hidden rounded-xl">
+    <div className="bg-bg200 flex h-10 w-full items-center justify-between overflow-hidden rounded-xl hover:cursor-pointer">
       <div className="flex items-center justify-start gap-3">
         <div className="h-10 w-3" style={{ backgroundColor: trimColor }} />
         <p className="text-md-medium">{tasksTitle}</p>
