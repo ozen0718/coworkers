@@ -3,6 +3,8 @@
 import Image from 'next/image';
 import clsx from 'clsx';
 import AuthorInfo from '../Comment/AuthorInfo';
+import PostDropdown from '../Post/PostDropdown';
+import { useState } from 'react';
 
 type PostCardProps = {
   type?: 'best' | 'general';
@@ -35,6 +37,23 @@ export default function PostCard({
   showKebab = false,
   topshowKebab = true,
 }: PostCardProps) {
+  const [isDropDownOpen, setIsDropDownOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsDropDownOpen((prev) => !prev);
+  };
+
+  /* Dropdown 수정 */
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  /* Dropdown 삭제 */
+  const handleDelete = () => {
+    console.log('삭제 눌렀다.');
+  };
+
   return (
     <div
       className={clsx(
@@ -88,9 +107,23 @@ export default function PostCard({
                 alt="옵션"
                 width={24}
                 height={24}
+                onClick={toggleDropdown}
               />
             )}
           </div>
+          {isDropDownOpen && (
+            <PostDropdown
+              type="kebab"
+              textJustify="center"
+              options={[
+                { label: '수정', action: handleEdit },
+                { label: '삭제', action: handleDelete },
+              ]}
+              isOpen={isDropDownOpen}
+              toggleDropdown={toggleDropdown}
+              toppercent="30%"
+            />
+          )}
         </div>
       </div>
 
