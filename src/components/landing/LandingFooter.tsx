@@ -1,27 +1,39 @@
 'use client';
 
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 
-export default function LandingFooter() {
+interface LandingFooterProps {
+  bottomImageSrc: string;
+}
+
+export default function LandingFooter({ bottomImageSrc }: LandingFooterProps) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 50 }}
+      initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.5 }}
+      viewport={{ once: true }}
       transition={{ duration: 0.8 }}
-      className="bg-landing-bottom-small tablet:h-[940px] tablet:bg-landing-bottom-medium xl:bg-landing-bottom-large flex h-[640px] w-full flex-col items-center bg-center bg-no-repeat xl:h-[1080px]"
+      className="relative flex h-[431px] w-full flex-col items-center overflow-x-hidden md:h-[675px] lg:h-[1080px]"
     >
-      <div className="tablet:mt-[176px] tablet:gap-[24px] mt-[123px] flex flex-col items-center gap-[16px] xl:mt-[130px]">
-        <div className="flex gap-[24px]">
-          <span className="text-2xl-semibold tablet:text-4xl text-[var(--color-gray100)]">
+      <div className="absolute top-[100px] md:top-[176px] lg:top-[230px]">
+        <div className="flex flex-col items-center gap-4 md:gap-6 lg:gap-6">
+          <span className="text-text-inverse text-2xl font-medium md:text-4xl lg:text-4xl">
             지금 바로 시작해보세요
           </span>
+          <span className="text-text-inverse text-center text-base font-medium md:text-2xl lg:text-2xl">
+            팀원 모두와 같은 방향, <br className="md:hidden lg:hidden" />
+            같은 속도로 나아가는 가장 쉬운 방법
+          </span>
         </div>
-        <div className="text-md-medium tablet:text-2xl-medium text-center text-[var(--color-gray100)]">
-          팀원 모두와 같은 방향,
-          <span className="tablet:inline block" />
-          같은 속도로 나아가는 가장 쉬운 방법
-        </div>
+      </div>
+      <div className="relative flex h-full w-full overflow-hidden">
+        <Image
+          src={bottomImageSrc}
+          alt="랜딩 페이지 하단 이미지"
+          fill
+          className="absolute inset-0 h-full w-full object-cover"
+        />
       </div>
     </motion.div>
   );
