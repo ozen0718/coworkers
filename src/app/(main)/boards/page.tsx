@@ -5,43 +5,17 @@ import { GeneralPost } from '@/components/Card/Post/GeneralPost';
 import { useWindowSize } from '@/hooks/useWindowSize';
 
 /* 테스트 데이터 */
-const testPosts = [
-  {
-    id: 1,
-    title: '첫 번째 게시글',
-    imgUrl:
-      'https://sprint-fe-project.s3.ap-northeast-2.amazonaws.com/Coworkers/user/1855/testimage.jpg',
-    date: '2024-05-01',
-  },
-  {
-    id: 2,
-    title: '두 번째 게시글',
-    imgUrl: '',
-    date: '2024-05-02',
-  },
-  {
-    id: 3,
-    title: '세 번째 게시글',
-    imgUrl: '',
-    date: '2024-05-03',
-  },
-  {
-    id: 4,
-    title: '세 번째 게시글',
-    imgUrl: '',
-    date: '2024-05-03',
-  },
-];
+import { testPosts } from '@/components/Card/testPosts';
 
 export default function BoardPage() {
   const windowWidth = useWindowSize();
 
-  let visiblePosts = 1; // 기본 1개
+  let bestVisiblePosts = 1; // 기본 1개
 
   if (windowWidth >= 1024) {
-    visiblePosts = 3; // PC
+    bestVisiblePosts = 3; // PC
   } else if (windowWidth >= 640) {
-    visiblePosts = 2; // 태블릿
+    bestVisiblePosts = 2; // 태블릿
   }
 
   return (
@@ -73,7 +47,7 @@ export default function BoardPage() {
           </div>
 
           <div className="mt-15 flex w-full justify-center gap-4">
-            {testPosts.slice(0, visiblePosts).map((post) => (
+            {testPosts.slice(0, bestVisiblePosts).map((post) => (
               <BestPost key={post.id} {...post} />
             ))}
           </div>
@@ -87,12 +61,10 @@ export default function BoardPage() {
             </p>
           </div>
 
-          {/* 예시 리스트 */}
-          <div className="scroll-area mt-10 grid max-h-[600px] grid-cols-2 gap-4 overflow-y-auto">
-            <GeneralPost />
-            <GeneralPost />
-            <GeneralPost />
-            <GeneralPost />
+          <div className="scroll-area mt-10 grid max-h-[600px] grid-cols-1 justify-items-center gap-4 overflow-y-auto lg:grid-cols-2">
+            {testPosts.map((post) => (
+              <GeneralPost key={post.id} title={post.title} imgUrl={post.imgUrl} date={post.date} />
+            ))}
           </div>
         </div>
       </div>

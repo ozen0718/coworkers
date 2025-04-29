@@ -17,7 +17,7 @@ type PostCardProps = {
 };
 
 const sizeClass = {
-  large: 'min-h-[176px] max-w-[590px]',
+  large: 'min-h-[176px] w-full',
   medium: 'min-h-[176px] max-w-[696px]',
   small: 'min-h-[162px] max-w-[343px]',
 };
@@ -57,8 +57,8 @@ export default function PostCard({
   return (
     <div
       className={clsx(
-        'border-bg100 bg-bg200 flex flex-col gap-1.5 rounded-xl border p-5',
-        type === 'best' ? 'max-h-[220px] w-full max-w-[387px]' : sizeClass[size]
+        'border-bg100 bg-bg200 flex w-full flex-col gap-1.5 rounded-xl border p-5',
+        type === 'best' ? 'max-h-[220px] w-full' : sizeClass[size]
       )}
     >
       {/* 헤더 */}
@@ -89,7 +89,7 @@ export default function PostCard({
           >
             {imgUrl ? (
               <Image
-                className="aspect-square rounded-lg object-cover"
+                className="aspect-square min-w-[72px] rounded-lg object-cover"
                 src={imgUrl}
                 alt="게시글 이미지"
                 width={72}
@@ -97,7 +97,7 @@ export default function PostCard({
                 sizes="(max-width: 600px) 50vw, 72px"
               />
             ) : (
-              <div className="aspect-square min-w-[64px] rounded-lg" />
+              <div className="aspect-square h-[72px] w-[72px] min-w-[72px] rounded-lg bg-transparent" />
             )}
 
             {type === 'general' && topshowKebab && (
