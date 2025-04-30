@@ -12,7 +12,7 @@ function BaseProfile({ imageUrl, width, showEditIcon }: BaseProfileProps) {
   return (
     <div className="relative" style={{ width: `${width}px`, height: `${width}px` }}>
       <div
-        className="flex flex-shrink-0 items-center justify-center rounded-full bg-[#475365]"
+        className="bg-gray100/10 flex flex-shrink-0 items-center justify-center rounded-full"
         style={{ width: `${width}px`, height: `${width}px` }}
       >
         <div
