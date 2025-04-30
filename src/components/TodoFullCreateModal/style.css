@@ -24,7 +24,7 @@
 /* ========================= */
 
 .calendar-picker .react-datepicker {
-  width: 336px;
+  width: 335px;
   border: 1px solid var(--color-primary-hover);
   background-color: var(--color-bg200);
   border-radius: 12px;
@@ -39,7 +39,7 @@
 /* 반응형 width값 임시적용 */
 @media (max-width: 768px) {
   .calendar-picker .react-datepicker {
-    width: 327px;
+    width: 326px;
   }
 }
 
