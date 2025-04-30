@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-//import 'react-datepicker/dist/react-datepicker.css';
 import '@/styles/globals.css';
+import 'react-datepicker/dist/react-datepicker.css';
 import { HeaderProvider } from '@/components/layout/Gnb/HeaderContext';
 import ClientHeaderLayout from '@/components/layout/ClientHeaderLayout';
 
