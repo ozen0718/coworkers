@@ -43,7 +43,7 @@ export default function BoardComment({ type }: BoardCommentProps) {
     <div
       className={clsx(
         'bg-bg200 relative flex min-h-[81px] w-full max-w-[1200px] flex-col rounded-lg lg:h-[134px]',
-        type === 'free' && 'p-4'
+        type === 'free' && 'flex-shrink-0 p-4'
       )}
     >
       <div className="text-lg-regular flex w-full items-start justify-between">
@@ -86,7 +86,7 @@ export default function BoardComment({ type }: BoardCommentProps) {
 
       <div className="flex flex-grow flex-col justify-end">
         {isEditing ? (
-          <div className="mt-5 ml-auto flex">
+          <div className="mt-3 ml-auto flex">
             <button
               onClick={handleCancel}
               className="text-gray500 h-[32px] w-[48px] bg-transparent text-sm font-semibold"

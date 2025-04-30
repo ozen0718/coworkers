@@ -3,6 +3,8 @@ import Image from 'next/image';
 import { useState } from 'react';
 import PostDropdown from '@/components/Card/Post/PostDropdown';
 import AuthorInfo from '@/components/Card/Comment/AuthorInfo';
+import AddComment from '@/components/Card/Comment/AddComment';
+import BoardComment from '@/components/Card/Comment/BoardComment';
 
 export default function ArticleDetail() {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
@@ -23,13 +25,13 @@ export default function ArticleDetail() {
   };
 
   return (
-    <div className="bg-bg300 flex min-h-screen flex-col items-center text-white">
+    <div className="text-gray300 flex flex-col items-center">
       <div className="w-full max-w-[1200px] px-4">
         {/* 타이틀 + 작성 정보 */}
         <div className="max-h-[128px] w-full flex-col">
           {/* 타이틀 영역 */}
           <div className="mt-10 flex w-full max-w-[1200px] items-center justify-between">
-            <p className="text-gray100 text-2lg-medium flex font-bold">게시물 제목 영역입니다.</p>
+            <p className="text-2lg-medium flex font-bold">게시물 제목 영역입니다.</p>
             <Image
               className="cursor-pointer"
               src="/icons/kebab.svg"
@@ -61,6 +63,27 @@ export default function ArticleDetail() {
             showKebab={false}
             showComment={true}
           />
+        </div>
+
+        {/*본문 */}
+        <div className="scroll-area mt-15 h-[72px] w-full overflow-y-auto font-normal sm:h-[104px]">
+          본문이 들어가는 영역입니다.
+        </div>
+
+        {/* 댓글 달기 */}
+        <div className="mt-10 w-full">
+          <AddComment />
+        </div>
+
+        <div className="my-4 h-px w-full bg-[#F8FAFC1A]" />
+
+        {/* 댓글 */}
+        <div className="scroll-area mt-10 flex h-full max-h-[262px] flex-col gap-4 overflow-y-auto">
+          <BoardComment type="free" />
+          <BoardComment type="free" />
+          <BoardComment type="free" />
+          <BoardComment type="free" />
+          <BoardComment type="free" />
         </div>
       </div>
     </div>
