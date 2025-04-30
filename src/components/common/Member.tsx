@@ -1,6 +1,9 @@
+'use client';
+
 import { Profile } from '@/components/common/Profiles';
 import { MemberProps } from '@/types/teampagetypes';
 import Image from 'next/image';
+import ActionMenu from '@/components/common/ActionMenu';
 
 export default function Member({ profileUrl, name, email }: MemberProps) {
   return (
@@ -16,7 +19,11 @@ export default function Member({ profileUrl, name, email }: MemberProps) {
           {email}
         </p>
       </div>
-      <Image src="/icons/kebab.svg" alt="멤버 메뉴" width={16} height={16}></Image>
+      <ActionMenu
+        trigger={<Image src="/icons/kebab.svg" alt="멤버 메뉴" width={16} height={16}></Image>}
+        onEdit={() => console.log('수정하기')}
+        onDelete={() => console.log('삭제하기')}
+      />
     </div>
   );
 }
