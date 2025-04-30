@@ -9,6 +9,7 @@ import {
 import useClickOutside from '@/hooks/useClickOutside';
 import useValidatedInput from '@/hooks/useValidatedInput';
 import Button from '@/components/common/Button/Button';
+import { emailRegex, passwordRegex } from '@/utils/regex';
 import { useState, useRef } from 'react';
 import Image from 'next/image';
 
@@ -22,7 +23,7 @@ const InvalidMessageStyle = 'text-md-medium/[17px] text-danger mt-2';
 
 export function EmailInput() {
   const { value, isInvalid, onChange, onBlur } = useValidatedInput((email) =>
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+    emailRegex.test(email)
   );
 
   return (
@@ -44,9 +45,7 @@ export function EmailInput() {
 export function PasswordInput() {
   const [showPassword, setShowPassword] = useState(false);
 
-  const { value, isInvalid, onChange, onBlur } = useValidatedInput((pw) =>
-    /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,12}$/.test(pw)
-  );
+  const { value, isInvalid, onChange, onBlur } = useValidatedInput((pw) => passwordRegex.test(pw));
 
   return (
     <>
