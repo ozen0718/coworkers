@@ -48,7 +48,7 @@ export function PasswordInput() {
   const { value, isInvalid, onChange, onBlur } = useValidatedInput((pw) => passwordRegex.test(pw));
 
   return (
-    <>
+    <div>
       <div className={`${InputStyle} flex items-center justify-between gap-3`}>
         <input
           type={showPassword ? 'text' : 'password'}
@@ -85,7 +85,7 @@ export function PasswordInput() {
           비밀번호는 영문과 숫자를 포함한 4~12자로 입력해주세요.
         </p>
       )}
-    </>
+    </div>
   );
 }
 
