@@ -30,7 +30,7 @@ export default function ArticleDetail() {
         {/* 타이틀 + 작성 정보 */}
         <div className="max-h-[128px] w-full flex-col">
           {/* 타이틀 영역 */}
-          <div className="mt-10 flex w-full max-w-[1200px] items-center justify-between">
+          <div className="mt-15 flex w-full max-w-[1200px] items-center justify-between">
             <p className="text-2lg-medium flex font-bold">게시물 제목 영역입니다.</p>
 
             {/* 케밥 아이콘 + 드롭다운 */}
