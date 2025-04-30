@@ -12,7 +12,7 @@ export default function TeamPage() {
   const sectionHeaderButtonStyle = 'text-md-regular text-primary';
 
   return (
-    <div className="bg-bg300 flex min-h-[100vh] w-full flex-col items-center justify-start px-4 pt-6 sm:px-6">
+    <div className="bg-bg300 flex min-h-[100vh] w-full min-w-[375px] flex-col items-center justify-start px-4 pt-6 sm:px-6">
       <div className="min-80 h-fit w-full max-w-300">
         <TeamHeader title="팀이름" />
 

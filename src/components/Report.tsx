@@ -3,7 +3,7 @@ import ReportProgress from '@/components/ReportProgress';
 import { ProgressProp } from '@/types/teampagetypes';
 
 const rightSideBoxStyle =
-  'flex gap-6 h-fit w-full items-end justify-between bg-bg100 p-4 rounded-xl';
+  'flex sm:gap-6 gap-1 h-fit w-full items-end justify-between bg-bg100 p-4 rounded-xl';
 const rightSideTextBoxStyle = 'flex flex-col items-start justify-center gap-1 ';
 const rightSideLabelStyle = 'text-xs-medium text-gray300';
 const rightSideNumberStyle = 'text-2xl-bold text-tertiary';
@@ -63,7 +63,7 @@ function RightSide() {
 
 export default function Report() {
   return (
-    <div className="bg-bg200 flex h-fit w-full items-center justify-between rounded-xl p-6">
+    <div className="bg-bg200 flex h-fit w-full items-center justify-between gap-2 rounded-xl p-2 sm:p-6">
       <LeftSide percentage={25} />
       <RightSide />
     </div>
