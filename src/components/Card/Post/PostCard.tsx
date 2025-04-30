@@ -137,7 +137,7 @@ export default function PostCard({
       {/* 작성자 정보 */}
       <div>
         <AuthorInfo
-          showKabab={showKebab && size === 'small'}
+          showKebab={showKebab && size === 'small'}
           showDate={type === 'general' && size !== 'small' ? true : false}
           showDivider={type === 'general' && size !== 'small' ? true : false}
         />

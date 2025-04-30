@@ -11,7 +11,7 @@ export default function AuthorInfo({
   showDate = true,
   authorName = '우지은',
   date = '2024.07.25',
-  showKabab = false,
+  showKebab = false,
 }) {
   const [isLiked, setIsLiked] = useState(false);
 
@@ -48,7 +48,7 @@ export default function AuthorInfo({
           </div>
         )}
 
-        {showKabab && (
+        {showKebab && (
           <Image
             className="ml-1 cursor-pointer"
             src="/icons/kebab.svg"
