@@ -12,6 +12,7 @@ export default function AuthorInfo({
   authorName = '우지은',
   date = '2024.07.25',
   showKebab = false,
+  showComment = false,
 }) {
   const [isLiked, setIsLiked] = useState(false);
 
@@ -38,6 +39,19 @@ export default function AuthorInfo({
       <div className={'ml-auto flex items-center'}>
         {showLike && (
           <div className="flex items-center">
+            {showComment && (
+              <div className="mr-4 flex">
+                <Image
+                  className="mr-1.5 cursor-pointer"
+                  src="/icons/comment.svg"
+                  alt="Kebab Icon"
+                  width={16}
+                  height={16}
+                />
+                <p className="text-gray400">3</p>
+              </div>
+            )}
+
             <IconHeart
               className="mr-1.5 cursor-pointer"
               fillColor={isLiked ? '#EF4444' : 'none'}
