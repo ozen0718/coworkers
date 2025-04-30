@@ -12,14 +12,14 @@ function BaseProfile({ imageUrl, width, showEditIcon }: BaseProfileProps) {
   return (
     <div className="relative" style={{ width: `${width}px`, height: `${width}px` }}>
       <div
-        className="bg-gray100/10 flex flex-shrink-0 items-center justify-center rounded-full"
+        className="flex flex-shrink-0 items-center justify-center rounded-full bg-[#475365]"
         style={{ width: `${width}px`, height: `${width}px` }}
       >
         <div
           className="bg-bg100 relative overflow-hidden rounded-full"
           style={{ width: `${innerWidth}px`, height: `${innerWidth}px` }}
         >
-          <Image src={imageUrl} alt="프로필 이미지" fill style={{ objectFit: 'cover' }} />
+          <Image src={imageUrl} alt="프로필 이미지" fill className="object-cover" />
         </div>
       </div>
 
@@ -32,7 +32,7 @@ function BaseProfile({ imageUrl, width, showEditIcon }: BaseProfileProps) {
             outlineWidth: `${editIconOutline}px`,
           }}
         >
-          <Image src="/icons/pencil.svg" alt="프로필 바꾸기" fill style={{ objectFit: 'cover' }} />
+          <Image src="/icons/pencil.svg" alt="프로필 바꾸기" fill className="object-cover" />
         </div>
       )}
     </div>
