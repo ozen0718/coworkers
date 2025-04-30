@@ -1,5 +1,8 @@
+'use client';
+
 import Image from 'next/image';
 import { TeamHeaderProp } from '@/types/tasktypes';
+import ActionMenu from '@/components/common/ActionMenu';
 
 export default function TeamHeader({ title }: TeamHeaderProp) {
   return (
@@ -8,9 +11,12 @@ export default function TeamHeader({ title }: TeamHeaderProp) {
       style={{ backgroundPosition: 'calc(100% - 80px) center' }}
     >
       <h2 className="text-xl-bold">{title}</h2>
-      <button>
-        <Image src="/icons/gear.svg" width={24} height={24} alt="팀 수정하기" />
-      </button>
+
+      <ActionMenu
+        trigger={<Image src="/icons/gear.svg" width={24} height={24} alt="팀 설정" />}
+        onEdit={() => console.log('수정하기')}
+        onDelete={() => console.log('삭제하기')}
+      />
     </div>
   );
 }

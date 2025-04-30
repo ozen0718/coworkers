@@ -6,6 +6,7 @@ import stringToHash from '@/utils/stringToHash';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import Image from 'next/image';
+import ActionMenu from '@/components/common/ActionMenu';
 
 export function TaskListTab({ title, isSelected = false }: TaskListTapProps) {
   return (
@@ -51,16 +52,18 @@ export function TasksItem({ tasksTitle, completed, total }: TasksItemProp) {
   const trimColor = getTrimColor(tasksTitle);
 
   return (
-    <div className="bg-bg200 flex h-10 w-full items-center justify-between overflow-hidden rounded-xl hover:cursor-pointer">
-      <div className="flex items-center justify-start gap-3">
+    <div className="bg-bg200 flex h-10 w-full items-center justify-between rounded-xl hover:cursor-pointer">
+      <div className="flex items-center justify-start gap-3 overflow-hidden rounded-xl">
         <div className="h-10 w-3" style={{ backgroundColor: trimColor }} />
         <p className="text-md-medium">{tasksTitle}</p>
       </div>
       <div className="mr-2 flex w-21.5 items-center justify-end gap-1">
         <ProgressBadge completedTaskNumber={completed} totalTaskNumber={total} />
-        <button>
-          <Image src="/icons/kebab.svg" width={16} height={16} alt="" />
-        </button>
+        <ActionMenu
+          trigger={<Image src="/icons/kebab.svg" width={16} height={16} alt="메뉴" />}
+          onEdit={() => console.log('수정하기')}
+          onDelete={() => console.log('삭제하기')}
+        />
       </div>
     </div>
   );
