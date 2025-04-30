@@ -40,18 +40,14 @@ export default function TodoFullCreateModal({ isOpen, onClose }: TodoFullCreateM
         <div className="flex flex-col gap-4">
           <label>시작 날짜 및 시간</label>
           <div className="flex gap-2">
-            
             {/* 날짜 선택 */}
-            <div className="flex w-2/3 min-w-0 flex-col">
-              <DatePickerCalendar
-                startDate={startDate}
-                setStartDate={setStartDate}
-              />
+            <div className="flex min-w-0 flex-[1.5] flex-col">
+              <DatePickerCalendar startDate={startDate} setStartDate={setStartDate} />
             </div>
 
             {/* 시간 선택 */}
             {/* TODO: Custom style */}
-            <div className="w-1/2 min-w-0">
+            <div className="flex min-w-0 flex-[1]">
               <DatePicker
                 wrapperClassName="time-picker"
                 selected={startDate ?? undefined}
