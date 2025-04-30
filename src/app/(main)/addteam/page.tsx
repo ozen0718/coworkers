@@ -4,9 +4,7 @@ import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import clsx from 'clsx';
-
 import Header from '@/components/layout/Gnb/Header';
-import Logo from '@/components/layout/Gnb/Logo';
 import Button from '@/components/common/Button/Button';
 
 export default function AddTeamPage() {
