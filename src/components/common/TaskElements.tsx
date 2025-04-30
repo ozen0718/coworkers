@@ -59,7 +59,7 @@ export function TasksItem({ tasksTitle, completed, total }: TasksItemProp) {
       <div className="mr-2 flex w-21.5 items-center justify-end gap-1">
         <ProgressBadge completedTaskNumber={completed} totalTaskNumber={total} />
         <button>
-          <Image src="/icons/kebab.svg" width={16} height={16} alt="" />
+          <Image src="/icons/kebab.svg" width={16} height={16} alt="메뉴" />
         </button>
       </div>
     </div>
