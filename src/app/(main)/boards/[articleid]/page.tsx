@@ -95,7 +95,9 @@ export default function ArticleDetail() {
               />
             ))
           ) : (
-            <p className="text-lg-medium text-gray400 text-center">아직 작성된 댓글이 없습니다.</p>
+            <p className="text-lg-medium text-gray400 mt-10 text-center">
+              아직 작성된 댓글이 없습니다.
+            </p>
           )}
         </div>
       </div>
