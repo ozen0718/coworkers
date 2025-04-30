@@ -1,3 +1,5 @@
+import { Comments } from './CardType';
+
 export const testPosts = [
   {
     id: 1,
@@ -23,5 +25,20 @@ export const testPosts = [
     title: '세 번째 게시글',
     imgUrl: '',
     date: '2024-05-03',
+  },
+];
+
+export const comments: Comments[] = [
+  {
+    id: 1,
+    author: '우지은',
+    content: '첫번째 댓글 영역입니다.',
+    date: '2025-04-30',
+  },
+  {
+    id: 2,
+    author: '홍길동',
+    content: '두번째 댓글 영역입니다.',
+    date: '2025-04-29',
   },
 ];

@@ -6,12 +6,9 @@ import PostDropdown from '../Post/PostDropdown';
 import Button from '@/components/common/Button/Button';
 import { TextAreaInput } from '@/components/common/Inputs';
 import clsx from 'clsx';
+import { BoardCommentProps } from '../CardType';
 
-type BoardCommentProps = {
-  type?: 'free' | 'list';
-};
-
-export default function BoardComment({ type }: BoardCommentProps) {
+export default function BoardComment({ type, author, content, date }: BoardCommentProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -56,7 +53,7 @@ export default function BoardComment({ type }: BoardCommentProps) {
             className={clsx('relative flex w-full items-start', type === 'free' ? 'mt-0' : 'mt-4')}
           >
             <span className="scroll-area mr-2 block max-h-[50px] min-h-[40px] overflow-x-hidden overflow-y-auto pr-6">
-              댓글 영역입니다.
+              {content}
             </span>
             <Image
               className="absolute top-0 right-0 cursor-pointer"

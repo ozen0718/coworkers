@@ -3,6 +3,11 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import IconHeart from '@/assets/icons/IconHeart';
+import { AuthorInfoProps } from '../CardType';
+
+/**
+ * @fixme 추후 type 파일 만들어서 정리하기
+ */
 
 // 임시 데이터
 export default function AuthorInfo({
@@ -12,8 +17,8 @@ export default function AuthorInfo({
   authorName = '우지은',
   date = '2024.07.25',
   showKebab = false,
-  showComment = false,
-}) {
+  showComment = false, // 댓글 수 유무
+}: AuthorInfoProps) {
   const [isLiked, setIsLiked] = useState(false);
 
   const toggleLike = () => {
@@ -25,7 +30,7 @@ export default function AuthorInfo({
       {/* 프로필 + 이름 + 구분선*/}
       <div className="flex items-center gap-[7px]">
         <Image src="/icons/initialprofile.svg" alt="프로필 사진" width={32} height={32} />
-        <span className="block">{authorName}</span>
+        {authorName && <span className="block">{authorName}</span>}
         {showDivider && <div className="h-[12px] border-l-2 border-slate-700"></div>}
       </div>
 

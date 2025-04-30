@@ -5,10 +5,10 @@ import PostDropdown from '@/components/Card/Post/PostDropdown';
 import AuthorInfo from '@/components/Card/Comment/AuthorInfo';
 import AddComment from '@/components/Card/Comment/AddComment';
 import BoardComment from '@/components/Card/Comment/BoardComment';
+import { comments, testPosts } from '@/components/Card/testPosts';
 
 export default function ArticleDetail() {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
 
   const toggleDropdown = () => {
     setIsDropDownOpen((prev) => !prev);
@@ -16,7 +16,7 @@ export default function ArticleDetail() {
 
   /* Dropdown 수정 */
   const handleEdit = () => {
-    setIsEditing(true);
+    console.log('수정 눌렀다.');
   };
 
   /* Dropdown 삭제 */
@@ -32,28 +32,33 @@ export default function ArticleDetail() {
           {/* 타이틀 영역 */}
           <div className="mt-10 flex w-full max-w-[1200px] items-center justify-between">
             <p className="text-2lg-medium flex font-bold">게시물 제목 영역입니다.</p>
-            <Image
-              className="cursor-pointer"
-              src="/icons/kebab.svg"
-              alt="Kebab Icon"
-              width={16}
-              height={16}
-              onClick={toggleDropdown}
-            />
+
+            {/* 케밥 아이콘 + 드롭다운 */}
+            <div className="relative">
+              <Image
+                className="cursor-pointer"
+                src="/icons/kebab.svg"
+                alt="Kebab Icon"
+                width={16}
+                height={16}
+                onClick={toggleDropdown}
+              />
+
+              {isDropDownOpen && (
+                <PostDropdown
+                  type="kebab"
+                  textJustify="center"
+                  options={[
+                    { label: '수정', action: handleEdit },
+                    { label: '삭제', action: handleDelete },
+                  ]}
+                  isOpen={isDropDownOpen}
+                  toggleDropdown={toggleDropdown}
+                  toppercent="150%"
+                />
+              )}
+            </div>
           </div>
-          {isDropDownOpen && (
-            <PostDropdown
-              type="kebab"
-              textJustify="center"
-              options={[
-                { label: '수정', action: handleEdit },
-                { label: '삭제', action: handleDelete },
-              ]}
-              isOpen={isDropDownOpen}
-              toggleDropdown={toggleDropdown}
-              toppercent="15%"
-            />
-          )}
           <div className="my-4 h-px w-full bg-[#F8FAFC1A]" />
 
           <AuthorInfo
@@ -79,11 +84,19 @@ export default function ArticleDetail() {
 
         {/* 댓글 */}
         <div className="scroll-area mt-10 flex h-full max-h-[262px] flex-col gap-4 overflow-y-auto">
-          <BoardComment type="free" />
-          <BoardComment type="free" />
-          <BoardComment type="free" />
-          <BoardComment type="free" />
-          <BoardComment type="free" />
+          {Array.isArray(comments) && comments.length > 0 ? (
+            comments.map((comment) => (
+              <BoardComment
+                key={comment.id}
+                type="free"
+                author={comment.author}
+                content={comment.content}
+                date={comment.date}
+              />
+            ))
+          ) : (
+            <p className="text-lg-medium text-gray400 text-center">아직 작성된 댓글이 없습니다.</p>
+          )}
         </div>
       </div>
     </div>
