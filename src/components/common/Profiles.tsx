@@ -19,7 +19,7 @@ function BaseProfile({ imageUrl, width, showEditIcon }: BaseProfileProps) {
           className="bg-bg100 relative overflow-hidden rounded-full"
           style={{ width: `${innerWidth}px`, height: `${innerWidth}px` }}
         >
-          <Image src={imageUrl} alt="프로필 이미지" fill style={{ objectFit: 'cover' }} />
+          <Image src={imageUrl} alt="프로필 이미지" fill className="object-cover" />
         </div>
       </div>
 
@@ -32,7 +32,7 @@ function BaseProfile({ imageUrl, width, showEditIcon }: BaseProfileProps) {
             outlineWidth: `${editIconOutline}px`,
           }}
         >
-          <Image src="/icons/pencil.svg" alt="프로필 바꾸기" fill style={{ objectFit: 'cover' }} />
+          <Image src="/icons/pencil.svg" alt="프로필 바꾸기" fill className="object-cover" />
         </div>
       )}
     </div>
