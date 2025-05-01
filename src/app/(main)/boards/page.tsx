@@ -47,35 +47,50 @@ export default function BoardPage() {
           />
         </div>
 
-        <div className="mt-10 max-h-[300px]">
-          <div className="flex w-full items-center justify-between">
-            <h2 className="w-full font-bold sm:text-xl">베스트 게시글</h2>
-            <p className="text-md-regular text-gray400 flex cursor-pointer items-center whitespace-nowrap">
-              더보기&nbsp;{'>'}
-            </p>
+        {searchTerm && filteredData.length === 0 ? (
+          <div className="text-gray400 flex h-[300px] w-full items-center justify-center text-lg">
+            검색하신 게시글이 없습니다.
           </div>
+        ) : (
+          <>
+            {/* 베스트 게시글 */}
+            <div className="mt-10 max-h-[300px]">
+              <div className="flex w-full items-center justify-between">
+                <h2 className="w-full font-bold sm:text-xl">베스트 게시글</h2>
+                <p className="text-md-regular text-gray400 flex cursor-pointer items-center whitespace-nowrap">
+                  더보기&nbsp;{'>'}
+                </p>
+              </div>
 
-          <div className="mt-15 flex w-full justify-center gap-4">
-            {filteredData.slice(0, bestVisiblePosts).map((post) => (
-              <BestPost key={post.id} {...post} />
-            ))}
-          </div>
-        </div>
+              <div className="mt-15 flex w-full justify-center gap-4">
+                {filteredData.slice(0, bestVisiblePosts).map((post) => (
+                  <BestPost key={post.id} {...post} />
+                ))}
+              </div>
+            </div>
 
-        <div className="mt-10">
-          <div className="flex w-full items-center justify-between">
-            <h2 className="w-full font-bold sm:text-xl">게시글</h2>
-            <p className="text-md-regular text-gray400 flex items-center whitespace-nowrap">
-              dropdown
-            </p>
-          </div>
+            {/* 일반 게시글 */}
+            <div className="mt-10">
+              <div className="flex w-full items-center justify-between">
+                <h2 className="w-full font-bold sm:text-xl">게시글</h2>
+                <p className="text-md-regular text-gray400 flex items-center whitespace-nowrap">
+                  dropdown
+                </p>
+              </div>
 
-          <div className="scroll-area mt-10 grid max-h-[600px] grid-cols-1 justify-items-center gap-4 overflow-y-auto lg:grid-cols-2">
-            {filteredData.map((post) => (
-              <GeneralPost key={post.id} title={post.title} imgUrl={post.imgUrl} date={post.date} />
-            ))}
-          </div>
-        </div>
+              <div className="scroll-area mt-10 grid max-h-[600px] grid-cols-1 justify-items-center gap-4 overflow-y-auto lg:grid-cols-2">
+                {filteredData.map((post) => (
+                  <GeneralPost
+                    key={post.id}
+                    title={post.title}
+                    imgUrl={post.imgUrl}
+                    date={post.date}
+                  />
+                ))}
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
