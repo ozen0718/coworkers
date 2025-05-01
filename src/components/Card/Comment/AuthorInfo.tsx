@@ -5,10 +5,6 @@ import { useState } from 'react';
 import IconHeart from '@/assets/icons/IconHeart';
 import { AuthorInfoProps } from '../CardType';
 
-/**
- * @fixme 추후 type 파일 만들어서 정리하기
- */
-
 // 임시 데이터
 export default function AuthorInfo({
   showDivider = true, // 선 유무
@@ -49,7 +45,7 @@ export default function AuthorInfo({
                 <Image
                   className="mr-1.5 cursor-pointer"
                   src="/icons/comment.svg"
-                  alt="Kebab Icon"
+                  alt="comment Icon"
                   width={16}
                   height={16}
                 />
