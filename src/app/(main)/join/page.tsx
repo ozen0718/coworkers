@@ -42,7 +42,7 @@ export default function JoinTeamPage() {
   };
 
   const mainClassName = clsx(
-    'bg-bg300 flex min-h-screen flex-col items-center justify-start p-4',
+    'bg-bg300 flex flex-col items-center justify-start p-4',
     'pt-[72px] md:pt-[100px] lg:pt-[140px]'
   );
 
