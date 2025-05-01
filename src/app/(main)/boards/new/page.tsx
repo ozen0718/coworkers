@@ -1,6 +1,7 @@
 'use client';
 import { TextAreaInput } from '@/components/common/Inputs';
 import ImgUpload from '@/components/Card/ImgUpload';
+import Button from '@/components/common/Button/Button';
 
 export default function CreateBoard() {
   return (
@@ -10,7 +11,7 @@ export default function CreateBoard() {
           {/* 타이틀 + 버튼 */}
           <div className="mt-15 flex w-full max-w-[1200px] items-center justify-between">
             <p className="text-xl-bold flex">게시글 쓰기</p>
-            <div className="relative">
+            <div className="relative max-[620px]:hidden">
               <button className="text-lg-semibold bg-primary hover:bg-primary-hover active:bg-primary-pressed max-[620px]:text-md-semibold flex h-12 w-[184px] items-center justify-center rounded-xl text-white max-[620px]:h-8 max-[620px]:w-[100px]">
                 등록
               </button>
@@ -42,6 +43,10 @@ export default function CreateBoard() {
             <div className="mt-10 flex flex-col gap-4">
               <p>이미지</p>
               <ImgUpload />
+            </div>
+
+            <div className="mt-10 flex justify-center min-[621px]:hidden">
+              <Button size="large">등록</Button>
             </div>
           </div>
         </div>
