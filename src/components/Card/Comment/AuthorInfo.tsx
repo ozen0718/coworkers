@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import IconHeart from '@/assets/icons/IconHeart';
+import { AuthorInfoProps } from '../CardType';
 
 // 임시 데이터
 export default function AuthorInfo({
@@ -11,8 +12,9 @@ export default function AuthorInfo({
   showDate = true,
   authorName = '우지은',
   date = '2024.07.25',
-  showKabab = false,
-}) {
+  showKebab = false,
+  showComment = false, // 댓글 수 유무
+}: AuthorInfoProps) {
   const [isLiked, setIsLiked] = useState(false);
 
   const toggleLike = () => {
@@ -24,7 +26,7 @@ export default function AuthorInfo({
       {/* 프로필 + 이름 + 구분선*/}
       <div className="flex items-center gap-[7px]">
         <Image src="/icons/initialprofile.svg" alt="프로필 사진" width={32} height={32} />
-        <span className="block">{authorName}</span>
+        {authorName && <span className="block">{authorName}</span>}
         {showDivider && <div className="h-[12px] border-l-2 border-slate-700"></div>}
       </div>
 
@@ -35,7 +37,20 @@ export default function AuthorInfo({
         </span>
       )}
 
-      <div className={`ml-2 flex items-center ${showDivider ? 'ml-auto' : 'ml-[0px]'}`}>
+      <div className={'ml-auto flex items-center'}>
+        {showComment && (
+          <div className="mr-4 flex">
+            <Image
+              className="mr-1.5 cursor-pointer"
+              src="/icons/comment.svg"
+              alt="comment Icon"
+              width={16}
+              height={16}
+            />
+            <p className="text-gray400">3</p>
+          </div>
+        )}
+
         {showLike && (
           <div className="flex items-center">
             <IconHeart
@@ -48,7 +63,7 @@ export default function AuthorInfo({
           </div>
         )}
 
-        {showKabab && (
+        {showKebab && (
           <Image
             className="ml-1 cursor-pointer"
             src="/icons/kebab.svg"
