@@ -15,7 +15,7 @@ export default function ImgUpload() {
 
   return (
     <div
-      className="bg-bg200 relative flex aspect-square max-h-[282px] w-full max-w-[282px] cursor-pointer items-center justify-center overflow-hidden rounded-xl"
+      className="bg-bg200 relative flex aspect-square max-h-[282px] w-full max-w-[282px] cursor-pointer items-center justify-center overflow-hidden rounded-xl border border-[#F8FAFC1A]"
       onClick={() => fileInput.current?.click()}
     >
       {image ? (
