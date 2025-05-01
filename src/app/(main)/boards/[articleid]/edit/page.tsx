@@ -18,7 +18,7 @@ export default function EditBoard() {
             </div>
           </div>
 
-          <div className="my-4 mt-10 h-px w-full bg-[#F8FAFC1A]" />
+          <div className="mt -10 my-4 h-px w-full bg-[#F8FAFC1A]" />
 
           {/* 제목 + 내용 + 이미지 */}
           <div className="text-lg-medium mt-15 max-h-[713px] flex-col gap-4">
