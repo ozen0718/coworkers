@@ -4,7 +4,7 @@ import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import clsx from 'clsx';
-import Header from '@/components/layout/Gnb/Header';
+
 import Button from '@/components/common/Button/Button';
 
 export default function AddTeamPage() {
@@ -16,10 +16,6 @@ export default function AddTeamPage() {
   const [name, setName] = useState('');
   const [error, setError] = useState<string | null>(null);
   const isCreateDisabled = name.trim().length === 0 || Boolean(error);
-
-  const onOpenSideMenu = () => {
-    console.log('사이드 메뉴 열기');
-  };
 
   const handleFileClick = () => fileInputRef.current?.click();
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,8 +76,6 @@ export default function AddTeamPage() {
 
   return (
     <>
-      <Header onOpenSideMenu={onOpenSideMenu} />
-
       <main className={mainClassName}>
         <h1 className={titleClassName}>팀 생성하기</h1>
 

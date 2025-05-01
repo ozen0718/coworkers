@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
 
-import Header from '@/components/layout/Gnb/Header';
 import Button from '@/components/common/Button/Button';
 
 export default function JoinTeamPage() {
@@ -64,8 +63,6 @@ export default function JoinTeamPage() {
 
   return (
     <>
-      <Header onOpenSideMenu={() => {}} />
-
       <main className={mainClassName}>
         <h1 className={titleClassName}>팀 참여하기</h1>
 
