@@ -14,6 +14,18 @@ export const HEADER_VISIBILITY_CONFIG: Record<
     showFreeBoardLink: false,
     showProfile: false,
   },
+  '/boards': {
+    //자유 게시판 페이지
+    showTeamSelector: true,
+    showFreeBoardLink: true,
+    showProfile: true,
+  },
+  '/boards/create': {
+    //자유 게시판 - 게시글 쓰기 페이지
+    showTeamSelector: true,
+    showFreeBoardLink: true,
+    showProfile: true,
+  },
   '/mypage': {
     //계정 설정 페이지
     showTeamSelector: true,
