@@ -8,6 +8,12 @@ export const HEADER_VISIBILITY_CONFIG: Record<
     showFreeBoardLink: false,
     showProfile: false,
   },
+  '/login': {
+    //로그인 페이지
+    showTeamSelector: false,
+    showFreeBoardLink: false,
+    showProfile: false,
+  },
   '/mypage': {
     //계정 설정 페이지
     showTeamSelector: true,

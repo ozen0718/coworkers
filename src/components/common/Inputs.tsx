@@ -42,7 +42,11 @@ export function EmailInput() {
   );
 }
 
-export function PasswordInput() {
+export function PasswordInput({
+  placeholder = '비밀번호를 입력하세요.',
+}: {
+  placeholder?: string;
+}) {
   const [showPassword, setShowPassword] = useState(false);
 
   const { value, isInvalid, onChange, onBlur } = useValidatedInput((pw) => passwordRegex.test(pw));
@@ -53,7 +57,7 @@ export function PasswordInput() {
         <input
           type={showPassword ? 'text' : 'password'}
           className={`w-full focus:outline-none ${isInvalid ? 'border-red-500' : ''}`}
-          placeholder="비밀번호를 입력하세요."
+          placeholder={placeholder}
           value={value}
           onChange={onChange}
           onBlur={onBlur}
@@ -96,7 +100,7 @@ export function CurrentEmail({ email }: CurrentEmailProp) {
 export function CurrentPassword(props: ButtonProps) {
   return (
     <div className={`${CurrentValueStyle} flex items-center justify-between`}>
-      <div className="">{'•'.repeat(8)}</div>
+      <div className="">{'\u2022'.repeat(8)}</div>
       <Button size="small" {...props}>
         변경하기
       </Button>
@@ -152,7 +156,6 @@ export function ToggleInput({ options, onSelect }: ToggleInputProps) {
 
 export function TodoCardReplyInput() {
   const [value, setValue] = useState('');
-
   const isEmpty = value.trim() === '';
 
   return (
@@ -172,9 +175,7 @@ export function TodoCardReplyInput() {
       <button
         disabled={isEmpty}
         className={`flex h-6 w-6 items-center justify-center rounded-full ${
-          value.trim() === ''
-            ? 'bg-gray500 cursor-not-allowed'
-            : 'bg-primary hover:bg-primary-hover'
+          isEmpty ? 'bg-gray500 cursor-not-allowed' : 'bg-primary hover:bg-primary-hover'
         }`}
       >
         <Image src="/icons/arrow_up.svg" width={16} height={16} alt="댓글 달기" />
