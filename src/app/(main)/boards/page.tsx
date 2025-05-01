@@ -3,27 +3,41 @@
 import { BestPost } from '@/components/Card/Post/BestPost';
 import { GeneralPost } from '@/components/Card/Post/GeneralPost';
 import { useWindowSize } from '@/hooks/useWindowSize';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 /* 테스트 데이터 */
 import { testPosts } from '@/components/Card/testPosts';
 
 export default function BoardPage() {
   const windowWidth = useWindowSize();
-
   let bestVisiblePosts = 1;
-
   if (windowWidth >= 1024) {
     bestVisiblePosts = 3;
   } else if (windowWidth >= 640) {
     bestVisiblePosts = 2;
   }
 
+  /* 검색 데이터 */
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredData = testPosts.filter((item) =>
     item.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  /* 로딩 */
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  if (!hasMounted) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <div className="h-6 w-6 animate-spin rounded-full border-t-2 border-b-2 border-gray-400"></div>
+        <span className="text-gray400 ml-2">로딩 중입니다...</span>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-bg300 flex min-h-screen flex-col items-center text-white">
@@ -61,7 +75,6 @@ export default function BoardPage() {
                   더보기&nbsp;{'>'}
                 </p>
               </div>
-
               <div className="mt-15 flex w-full justify-center gap-4">
                 {filteredData.slice(0, bestVisiblePosts).map((post) => (
                   <BestPost key={post.id} {...post} />
