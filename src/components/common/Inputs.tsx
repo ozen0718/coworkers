@@ -8,7 +8,7 @@ import {
 } from '@/types/inputtypes';
 import useClickOutside from '@/hooks/useClickOutside';
 import useValidatedInput from '@/hooks/useValidatedInput';
-import Button from '@/components/common/Button/Button';
+import Button, { ButtonProps } from '@/components/common/Button/Button';
 import { emailRegex, passwordRegex } from '@/utils/regex';
 import { useState, useRef } from 'react';
 import Image from 'next/image';
@@ -93,11 +93,13 @@ export function CurrentEmail({ email }: CurrentEmailProp) {
   return <div className={`${CurrentValueStyle} flex items-center`}>{email}</div>;
 }
 
-export function CurrentPassword() {
+export function CurrentPassword(props: ButtonProps) {
   return (
     <div className={`${CurrentValueStyle} flex items-center justify-between`}>
       <div className="">{'•'.repeat(8)}</div>
-      <Button size="small">변경하기</Button>
+      <Button size="small" {...props}>
+        변경하기
+      </Button>
     </div>
   );
 }
