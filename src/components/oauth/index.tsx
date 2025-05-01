@@ -1,4 +1,4 @@
-import OAuthButtonGroup from './OuthBtn';
+import OAuthButtonGroup from './OAuthBtn';
 
 interface OAuthUIProps {
   authType: 'login' | 'signup';
