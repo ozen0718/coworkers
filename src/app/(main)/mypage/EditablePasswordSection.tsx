@@ -23,16 +23,14 @@ export default function EditablePasswordSection() {
         isOpen={isOpen}
         onClose={close}
       >
-        <div className='flex flex-col gap-4 mt-4'>
+        <div className="mt-4 flex flex-col gap-4 min-w-[280px]">
           <div className="flex flex-col gap-2">
             <label>새 비밀번호</label>
-            {/* TODO: PasswordInput - placeholder 수정 */}
-            <PasswordInput />
+            <PasswordInput placeholder="새 비밀번호를 입력해주세요." />
           </div>
           <div className="flex flex-col gap-2">
             <label>새 비밀번호 확인</label>
-            {/* TODO: PasswordInput - placeholder 수정 */}
-            <PasswordInput />
+            <PasswordInput placeholder="새 비밀번호를 다시 한 번 입력해주세요." />
           </div>
         </div>
       </Modal>
