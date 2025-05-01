@@ -3,17 +3,17 @@ import { TextAreaInput } from '@/components/common/Inputs';
 import ImgUpload from '@/components/Card/ImgUpload';
 import Button from '@/components/common/Button/Button';
 
-export default function CreateBoard() {
+export default function EditBoard() {
   return (
     <div className="text-gray100 flex flex-col items-center">
       <div className="max-h-[841px] w-full max-w-[1200px] px-5">
         <div className="w-full flex-col">
           {/* 타이틀 + 버튼 */}
           <div className="mt-15 flex w-full max-w-[1200px] items-center justify-between">
-            <p className="text-xl-bold flex">게시글 쓰기</p>
+            <p className="text-xl-bold flex">게시글 수정</p>
             <div className="relative max-[620px]:hidden">
               <button className="text-lg-semibold bg-primary hover:bg-primary-hover active:bg-primary-pressed max-[620px]:text-md-semibold flex h-12 w-[184px] items-center justify-center rounded-xl text-white max-[620px]:h-8 max-[620px]:w-[100px]">
-                등록
+                수정하기
               </button>
             </div>
           </div>
@@ -47,7 +47,7 @@ export default function CreateBoard() {
 
             {/* 모바일용 버튼 */}
             <div className="mt-10 flex justify-center min-[620px]:hidden">
-              <Button size="large">등록</Button>
+              <Button size="large">수정하기</Button>
             </div>
           </div>
         </div>
