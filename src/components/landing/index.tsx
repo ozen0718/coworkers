@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import LandingHeader from './LandingHeader';
 import LandingBody from './LandingBody';
 import LandingFooter from './LandingFooter';
@@ -8,6 +8,7 @@ import LandingFooter from './LandingFooter';
 export default function Landing() {
   const [topImageSrc, setTopImageSrc] = useState('/images/landing-top-large.png');
   const [bottomImageSrc, setBottomImageSrc] = useState('/images/landing-bottom-large.png');
+  const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -24,9 +25,23 @@ export default function Landing() {
       }
     };
 
+    const debouncedResize = () => {
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
+      resizeTimeoutRef.current = setTimeout(() => {
+        handleResize();
+      }, 200);
+    };
+
     handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener('resize', debouncedResize);
+    return () => {
+      window.removeEventListener('resize', debouncedResize);
+      if (resizeTimeoutRef.current) {
+        clearTimeout(resizeTimeoutRef.current);
+      }
+    };
   }, []);
 
   return (
