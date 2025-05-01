@@ -31,7 +31,7 @@ export default function Landing() {
       }
       resizeTimeoutRef.current = setTimeout(() => {
         handleResize();
-      }, 200);
+      }, 200); //디바운싱 딜레이 시간 유저가 200ms 동안 변경없을시 실행
     };
 
     handleResize();
