@@ -27,7 +27,7 @@ export default function BoardPage() {
 
   return (
     <div className="bg-bg300 flex min-h-screen flex-col items-center text-white">
-      <div className="w-full max-w-[1200px] px-4">
+      <div className="w-full max-w-[1200px] px-5">
         <div className="w-full max-w-[1200px]">
           <p className="text-gray100 mt-10 font-bold sm:text-2xl">자유게시판</p>
         </div>
