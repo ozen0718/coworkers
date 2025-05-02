@@ -1,3 +1,8 @@
+export interface InputProps {
+  id?: string;
+  placeholder?: string;
+}
+
 export type ToggleInputProps = {
   options: string[];
   onSelect?: (selectedOption: string) => void;

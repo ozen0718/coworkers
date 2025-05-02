@@ -23,11 +23,11 @@ import TeamHeader from '@/components/common/TeamHeader';
 export default function Test() {
   return (
     <div className="w-100svw flex h-full flex-col gap-5 overflow-x-clip bg-black p-5">
-      <NameInput />
-      <EmailInput />
-      <PasswordInput />
+      <NameInput placeholder="이름을 입력하세요." id="name" />
+      <EmailInput placeholder="이메일을 입력하세요." />
+      <PasswordInput placeholder="비밀번호를 입력하세요." />
       <ToggleInput options={['기본상태', '선택옵션1', '선택옵션2']} />
-      <CurrentName name="한국인" />
+      <CurrentName name="김이박" />
       <CurrentEmail email="sample@email.com" />
       <CurrentPassword />
       <TodoCardReplyInput />

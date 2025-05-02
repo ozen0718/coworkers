@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  InputProps,
   ToggleInputProps,
   CurrentEmailProp,
   TextInputProps,
@@ -15,22 +16,22 @@ import { useState, useRef } from 'react';
 import Image from 'next/image';
 
 const BaseInputStyle =
-  'w-full h-12 mobile:h-11 bg-bg200 border border-gray100/10 rounded-xl px-4 focus:border-primary hover:border-primary-hover';
+  'w-full sm:h-12 h-11 bg-bg200 border border-gray100/10 rounded-xl px-4 focus:border-primary hover:border-primary-hover';
 
-const EmailInputStyle = `${BaseInputStyle} focus:outline-none text-gray100 placeholder:text-gray500 text-4 text-lg-regular mobile:text-md-regular mobile:text-3.5`;
+const EmailInputStyle = `${BaseInputStyle} focus:outline-none text-gray100 placeholder:text-gray500 sm:text-4 sm:text-lg-regular text-md-regular text-3.5`;
 
 const PasswordInputStyle =
-  'w-full focus:outline-none text-gray100 text-4 text-lg-regular mobile:text-md-regular mobile:text-3.5 placeholder:text-gray500';
+  'w-full focus:outline-none text-gray100 sm:text-4 sm:text-lg-regular text-md-regular text-3.5 placeholder:text-gray500';
 
 const InputStyle =
-  'w-full h-12 mobile:h-11 bg-bg200 border border-gray100/10 rounded-xl px-4 focus:outline-none focus:border-primary hover:border-primary-hover text-gray100 text-4 text-lg-regular mobile:text-md-regular mobile:text-3.5 placeholder:text-gray500';
+  'w-full sm:h-12 h-11 bg-bg200 border border-gray100/10 rounded-xl px-4 focus:outline-none focus:border-primary hover:border-primary-hover text-gray100 sm:text-4 sm:text-lg-regular text-md-regular text-3.5 placeholder:text-gray500';
 
 const CurrentValueStyle =
-  'w-full h-12 mobile:h-11 bg-bg100 border border-gray100/10 rounded-xl px-4 text-gray500 text-4 mobile:text-3.5 text-lg-regular mobile:text-md-regular';
+  'w-full sm:h-12 h-11 bg-bg100 border border-gray100/10 rounded-xl px-4 text-gray500 sm:text-4 text-3.5 sm:text-lg-regular text-md-regular';
 
-const InvalidMessageStyle = 'text-md-medium/[17px] text-danger mt-2';
+const InvalidMessageStyle = 'text-md-medium text-danger mt-2';
 
-export function NameInput() {
+export function NameInput({ id, placeholder }: InputProps) {
   const { value, isInvalid, onChange, onBlur } = useValidatedInput((name) => nameRegex.test(name));
 
   return (
@@ -38,7 +39,8 @@ export function NameInput() {
       <input
         type="text"
         className={`${EmailInputStyle} peer ${isInvalid ? 'border-red-500' : ''}`}
-        placeholder="이름을 입력하세요."
+        placeholder={placeholder}
+        id={id}
         value={value}
         onChange={onChange}
         onBlur={onBlur}
@@ -53,7 +55,7 @@ export function NameInput() {
   );
 }
 
-export function EmailInput() {
+export function EmailInput({ id, placeholder }: InputProps) {
   const { value, isInvalid, onChange, onBlur } = useValidatedInput((email) =>
     emailRegex.test(email)
   );
@@ -63,7 +65,8 @@ export function EmailInput() {
       <input
         type="email"
         className={`${EmailInputStyle} peer ${isInvalid ? 'border-red-500' : ''}`}
-        placeholder="이메일을 입력하세요."
+        placeholder={placeholder}
+        id={id}
         value={value}
         onChange={onChange}
         onBlur={onBlur}
@@ -78,11 +81,7 @@ export function EmailInput() {
   );
 }
 
-export function PasswordInput({
-  placeholder = '비밀번호를 입력하세요.',
-}: {
-  placeholder?: string;
-}) {
+export function PasswordInput({ id, placeholder }: InputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const { value, isInvalid, onChange, onBlur } = useValidatedInput((pw) => passwordRegex.test(pw));
@@ -94,8 +93,9 @@ export function PasswordInput({
       >
         <input
           type={showPassword ? 'text' : 'password'}
-          className={`${PasswordInputStyle} `}
+          className={PasswordInputStyle}
           placeholder={placeholder}
+          id={id}
           value={value}
           onChange={onChange}
           onBlur={onBlur}
