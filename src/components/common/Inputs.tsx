@@ -13,6 +13,14 @@ import { emailRegex, passwordRegex } from '@/utils/regex';
 import { useState, useRef } from 'react';
 import Image from 'next/image';
 
+const BaseInputStyle =
+  'w-full h-12 mobile:h-11 bg-bg200 border border-gray100/10 rounded-xl px-4 focus:border-primary hover:border-primary-hover';
+
+const EmailInputStyle = `${BaseInputStyle} focus:outline-none text-gray100 placeholder:text-gray500 text-4 text-lg-regular mobile:text-md-regular mobile:text-3.5`;
+
+const PasswordInputStyle =
+  'w-full focus:outline-none text-gray100 text-4 text-lg-regular mobile:text-md-regular mobile:text-3.5 placeholder:text-gray500';
+
 const InputStyle =
   'w-full h-12 mobile:h-11 bg-bg200 border border-gray100/10 rounded-xl px-4 focus:outline-none focus:border-primary hover:border-primary-hover text-gray100 text-4 text-lg-regular mobile:text-md-regular mobile:text-3.5 placeholder:text-gray500';
 
@@ -30,14 +38,18 @@ export function EmailInput() {
     <div>
       <input
         type="email"
-        className={`${InputStyle} peer ${isInvalid ? 'border-red-500' : ''}`}
+        className={`${EmailInputStyle} peer ${isInvalid ? 'border-red-500' : ''}`}
         placeholder="이메일을 입력하세요."
         value={value}
         onChange={onChange}
         onBlur={onBlur}
         required
       />
-      {isInvalid && <p className={InvalidMessageStyle}>유효한 이메일이 아닙니다.</p>}
+      {isInvalid && (
+        <p className={InvalidMessageStyle}>
+          {value.length === 0 ? '이메일을 입력하세요.' : '유효한 이메일이 아닙니다.'}
+        </p>
+      )}
     </div>
   );
 }
@@ -53,10 +65,12 @@ export function PasswordInput({
 
   return (
     <div>
-      <div className={`${InputStyle} flex items-center justify-between gap-3`}>
+      <div
+        className={`${BaseInputStyle} flex items-center justify-between gap-3 ${isInvalid ? 'border-red-500' : ''}`}
+      >
         <input
           type={showPassword ? 'text' : 'password'}
-          className={`w-full focus:outline-none ${isInvalid ? 'border-red-500' : ''}`}
+          className={`${PasswordInputStyle} `}
           placeholder={placeholder}
           value={value}
           onChange={onChange}
