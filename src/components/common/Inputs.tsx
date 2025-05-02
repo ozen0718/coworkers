@@ -5,11 +5,12 @@ import {
   CurrentEmailProp,
   TextInputProps,
   TextAreaInputProps,
+  CurrentNameProp,
 } from '@/types/inputtypes';
 import useClickOutside from '@/hooks/useClickOutside';
 import useValidatedInput from '@/hooks/useValidatedInput';
 import Button from '@/components/common/Button/Button';
-import { emailRegex, passwordRegex } from '@/utils/regex';
+import { nameRegex, emailRegex, passwordRegex } from '@/utils/regex';
 import { useState, useRef } from 'react';
 import Image from 'next/image';
 
@@ -28,6 +29,29 @@ const CurrentValueStyle =
   'w-full h-12 mobile:h-11 bg-bg100 border border-gray100/10 rounded-xl px-4 text-gray500 text-4 mobile:text-3.5 text-lg-regular mobile:text-md-regular';
 
 const InvalidMessageStyle = 'text-md-medium/[17px] text-danger mt-2';
+
+export function NameInput() {
+  const { value, isInvalid, onChange, onBlur } = useValidatedInput((name) => nameRegex.test(name));
+
+  return (
+    <div>
+      <input
+        type="text"
+        className={`${EmailInputStyle} peer ${isInvalid ? 'border-red-500' : ''}`}
+        placeholder="이름을 입력하세요."
+        value={value}
+        onChange={onChange}
+        onBlur={onBlur}
+        required
+      />
+      {isInvalid && (
+        <p className={InvalidMessageStyle}>
+          {value.length === 0 ? '이름을 입력하세요.' : '이름은 두 글자 이상 입력해주세요.'}
+        </p>
+      )}
+    </div>
+  );
+}
 
 export function EmailInput() {
   const { value, isInvalid, onChange, onBlur } = useValidatedInput((email) =>
@@ -103,6 +127,15 @@ export function PasswordInput({
           비밀번호는 영문과 숫자를 포함한 4~12자로 입력해주세요.
         </p>
       )}
+    </div>
+  );
+}
+
+export function CurrentName({ name }: CurrentNameProp) {
+  return (
+    <div className={`${CurrentValueStyle} flex items-center justify-between`}>
+      <input type="email" placeholder="이메일을 입력하세요." value={name} />
+      <Button size="small">변경하기</Button>
     </div>
   );
 }

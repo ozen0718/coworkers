@@ -3,9 +3,13 @@ export type ToggleInputProps = {
   onSelect?: (selectedOption: string) => void;
 };
 
-export interface CurrentEmailProp {
+export type CurrentNameProp = {
+  name: string;
+};
+
+export type CurrentEmailProp = {
   email: string;
-}
+};
 
 export interface TextInputProps {
   placeholder?: string;
