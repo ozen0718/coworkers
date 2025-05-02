@@ -4,11 +4,14 @@ import { BestPost } from '@/components/Card/Post/BestPost';
 import { GeneralPost } from '@/components/Card/Post/GeneralPost';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { useState, useEffect } from 'react';
+import ArrowDropdown from '@/components/common/ArrowDropdown';
 
 /* 테스트 데이터 */
 import { testPosts } from '@/components/Card/testPosts';
 
 export default function BoardPage() {
+  const [selectedOption, setSelectedOption] = useState('최신순');
+
   const windowWidth = useWindowSize();
   let bestVisiblePosts = 1;
   if (windowWidth >= 1024) {
@@ -86,9 +89,13 @@ export default function BoardPage() {
             <div className="mt-10">
               <div className="flex w-full items-center justify-between">
                 <h2 className="w-full font-bold sm:text-xl">게시글</h2>
-                <p className="text-md-regular text-gray400 flex items-center whitespace-nowrap">
-                  dropdown
-                </p>
+
+                <ArrowDropdown
+                  size="lg"
+                  options={['최신순', '좋아요 많은 순']}
+                  selected={selectedOption}
+                  onSelect={(value) => setSelectedOption(value)}
+                />
               </div>
 
               <div className="scroll-area mt-10 grid max-h-[600px] grid-cols-1 justify-items-center gap-4 overflow-y-auto lg:grid-cols-2">
