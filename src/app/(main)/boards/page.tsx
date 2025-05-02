@@ -5,6 +5,7 @@ import { GeneralPost } from '@/components/Card/Post/GeneralPost';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { useState, useEffect } from 'react';
 import ArrowDropdown from '@/components/common/ArrowDropdown';
+import Link from 'next/link';
 
 /* 테스트 데이터 */
 import { testPosts } from '@/components/Card/testPosts';
@@ -74,9 +75,11 @@ export default function BoardPage() {
             <div className="mt-10 max-h-[300px]">
               <div className="flex w-full items-center justify-between">
                 <h2 className="w-full font-bold sm:text-xl">베스트 게시글</h2>
-                <p className="text-md-regular text-gray400 flex cursor-pointer items-center whitespace-nowrap">
-                  더보기&nbsp;{'>'}
-                </p>
+                <Link href="/boards/best">
+                  <p className="text-md-regular text-gray400 flex cursor-pointer items-center whitespace-nowrap">
+                    더보기&nbsp;{'>'}
+                  </p>
+                </Link>
               </div>
               <div className="mt-15 flex w-full justify-center gap-4">
                 {filteredData.slice(0, bestVisiblePosts).map((post) => (

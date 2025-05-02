@@ -32,8 +32,8 @@ export default function ArrowDropdown({
         onClick={toggleDropdown}
         className={clsx(
           'text-md-regular flex items-center justify-between rounded-xl px-2',
-          size === 'md' && 'text-gray500 h-[44px] w-[109px]',
           size === 'sm' && 'text-gray100 h-[40px] w-[94px]',
+          size === 'md' && 'text-gray500 h-[44px] w-[109px]',
           size === 'lg' && 'text-gray100 h-[44px] w-[120px]',
           isOpen ? 'bg-bg100' : size === 'md' ? 'bg-[#18212F]' : 'bg-bg200'
         )}
@@ -48,8 +48,8 @@ export default function ArrowDropdown({
         <div
           className={clsx(
             'bg-bg200 text-md-regular absolute z-[999] mt-1 w-full overflow-hidden rounded-xl shadow-lg',
-            size === 'md' ? 'border border-[#F8FAFC1A]' : 'border border-[#334155]',
             size === 'sm' && 'min-h-[80px] min-w-[120px]',
+            size === 'md' ? 'border border-[#F8FAFC1A]' : 'border border-[#334155]',
             size === 'lg' && 'min-h-[80px] min-w-[120px]'
           )}
         >
