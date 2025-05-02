@@ -17,8 +17,8 @@ import {
   TeamProfile,
 } from '@/components/common/Profiles';
 import { EditReplyItem, ReplyItem } from '@/components/common/ReplyItem';
-import { ProgressBadge, TaskListTab, TasksItem } from '@/components/common/TaskElements';
-import TeamHeader from '@/components/common/TeamHeader';
+import { ProgressBadge, TaskListTab, TasksItem } from '@/components/teampage/TaskElements';
+import TeamHeader from '@/components/teampage/TeamHeader';
 
 export default function Test() {
   return (

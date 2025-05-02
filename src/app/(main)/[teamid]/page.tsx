@@ -1,6 +1,6 @@
-import { TasksItem } from '@/components/common/TaskElements';
-import TeamHeader from '@/components/common/TeamHeader';
-import Report from '@/components/Report';
+import { TasksItem } from '@/components/teampage/TaskElements';
+import TeamHeader from '@/components/teampage/TeamHeader';
+import Report from '@/components/teampage/Report';
 import Member from '@/components/common/Member';
 
 export default function TeamPage() {

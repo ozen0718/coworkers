@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import ReportProgress from '@/components/ReportProgress';
+import ReportProgress from '@/components/teampage/ReportProgress';
 import { ProgressProp } from '@/types/teampagetypes';
 
 const rightSideBoxStyle =
