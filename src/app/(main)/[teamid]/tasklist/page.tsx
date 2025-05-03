@@ -8,7 +8,7 @@ import clsx from 'clsx';
 
 import Modal from '@/components/common/Modal';
 import ModalHeader from '@/components/common/Modal/ModalHeader';
-import ModalButtons from '@/components/common/Modal/ModalButtons';
+//import ModalButtons from '@/components/common/Modal/ModalButtons';
 import { TextInput } from '@/components/common/Inputs';
 import TodoFullCreateModal, { TodoFullCreateModalProps } from '@/components/TodoFullCreateModal';
 import TodoItem from '@/components/List/todo';
