@@ -11,6 +11,9 @@ export default function ImgUpload() {
   /* 이미지 삭제 */
   const handleDeleteImage = () => {
     setImage(null);
+    if (fileInput.current) {
+      fileInput.current.value = '';
+    }
   };
 
   return (
@@ -46,6 +49,8 @@ export default function ImgUpload() {
         onChange={(e) => {
           const file = e.target.files?.[0];
           if (!file) return;
+
+          console.log('file', file);
 
           // 10MB 초과 검사
           if (file.size > 10 * 1024 * 1024) {
