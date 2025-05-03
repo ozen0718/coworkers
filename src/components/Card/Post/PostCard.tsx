@@ -6,16 +6,7 @@ import AuthorInfo from '../Comment/AuthorInfo';
 import PostDropdown from '../Post/PostDropdown';
 import { useState } from 'react';
 import ActionMenu from '@/components/common/ActionMenu';
-
-type PostCardProps = {
-  type?: 'best' | 'general';
-  size?: 'large' | 'medium' | 'small';
-  title: string;
-  imgUrl?: string;
-  date?: string;
-  showKebab?: boolean;
-  topshowKebab?: boolean;
-};
+import { PostCardProps } from '../CardType';
 
 const sizeClass = {
   large: 'min-h-[176px] w-full',
