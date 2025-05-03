@@ -6,54 +6,38 @@ import { addDays, format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import clsx from 'clsx';
 
-// 공통 Modal 컴포넌트
 import Modal from '@/components/common/Modal';
 import ModalHeader from '@/components/common/Modal/ModalHeader';
 import ModalButtons from '@/components/common/Modal/ModalButtons';
-
-// Inputs.tsx 에서 export된 TextInput
 import { TextInput } from '@/components/common/Inputs';
-
-// 할 일 추가용 풀 모달
 import TodoFullCreateModal, { TodoFullCreateModalProps } from '@/components/TodoFullCreateModal';
-
-// 리스트 아이템
 import TodoItem from '@/components/List/todo';
 
 interface Todo {
   id: number;
   title: string;
-  // 화면에 표시할 포맷된 문자열
   date: string;
-  // 실제 날짜 객체 (필터링 용)
   dateObj: Date;
   time: string;
   recurring: boolean;
   comments: number;
   completed: boolean;
 }
-
 type TodosMap = Record<string, Todo[]>;
 
 export default function TaskListPage() {
-  // ─ 날짜 네비게이션
   const [currentDate, setCurrentDate] = useState(new Date());
   const prevDay = () => setCurrentDate((d) => addDays(d, -1));
   const nextDay = () => setCurrentDate((d) => addDays(d, +1));
 
-  // ─ 탭 및 탭별 할 일 상태
   const [tabs, setTabs] = useState<string[]>([]);
   const [selectedTab, setSelectedTab] = useState<string>('');
   const [todosMap, setTodosMap] = useState<TodosMap>({});
 
-  // ─ "새로운 목록" 모달 상태
   const [newListName, setNewListName] = useState('');
   const [isListModalOpen, setListModalOpen] = useState(false);
-
-  // ─ 할 일 추가 풀 모달 상태
   const [isTodoModalOpen, setTodoModalOpen] = useState(false);
 
-  // ─ 새 탭(목록) 생성 핸들러
   const handleAddList = () => {
     const name = newListName.trim();
     if (!name) return;
@@ -64,7 +48,6 @@ export default function TaskListPage() {
     setListModalOpen(false);
   };
 
-  // ─ 할 일 생성 핸들러
   const handleCreateTodo: TodoFullCreateModalProps['onSubmit'] = ({
     title,
     date,
@@ -72,11 +55,11 @@ export default function TaskListPage() {
     repeat,
   }) => {
     if (!selectedTab || !date) return;
-    const formattedDate = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
+    const formatted = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
     const newTodo: Todo = {
       id: Date.now(),
       title,
-      date: formattedDate,
+      date: formatted,
       dateObj: date,
       time,
       recurring: repeat !== '반복 안함',
@@ -90,7 +73,6 @@ export default function TaskListPage() {
     setTodoModalOpen(false);
   };
 
-  // ─ 현재 탭의 해당 날짜 할 일만 렌더링
   const visibleTodos = tabs.includes(selectedTab)
     ? (todosMap[selectedTab] || []).filter(
         (todo) => todo.dateObj.toDateString() === currentDate.toDateString()
@@ -99,42 +81,38 @@ export default function TaskListPage() {
 
   return (
     <>
-      {/* 전체 배경 & 세로 패딩 */}
-      <div className="bg-slate-900 py-6">
-        {/* 중앙 컨테이너: mt-6 (모바일/태블릿) → lg:mt-10, max-width 1200px, 반응형 padding */}
+      <main className="min-h-screen bg-slate-900 py-6">
         <div className="mx-auto mt-6 max-w-[1200px] space-y-6 px-4 sm:px-6 md:px-8 lg:mt-10">
-          {/* 헤더 */}
-          <h1 className="text-2xl-medium text-white">할 일</h1>
-
-          {/* 날짜 네비게이션 + 새 목록 만들기 */}
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="text-gray300 flex items-center space-x-3 text-base">
-              <button onClick={prevDay}>
-                <Image src="/icons/type=left.svg" alt="이전" width={16} height={16} />
-              </button>
-              <p className="text-white">{format(currentDate, 'M월 d일 (eee)', { locale: ko })}</p>
-              <button onClick={nextDay}>
-                <Image src="/icons/type=right.svg" alt="다음" width={16} height={16} />
-              </button>
+          <header className="space-y-4">
+            <h1 className="text-2xl-medium text-white">할 일</h1>
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="text-gray300 flex items-center space-x-3 text-base">
+                <button onClick={prevDay}>
+                  <Image src="/icons/type=left.svg" alt="이전" width={16} height={16} />
+                </button>
+                <p className="text-white">{format(currentDate, 'M월 d일 (eee)', { locale: ko })}</p>
+                <button onClick={nextDay}>
+                  <Image src="/icons/type=right.svg" alt="다음" width={16} height={16} />
+                </button>
+                <button
+                  onClick={() => {
+                    /* 캘린더 */
+                  }}
+                >
+                  <Image src="/icons/icon_calendar.svg" alt="캘린더" width={16} height={16} />
+                </button>
+              </div>
               <button
-                onClick={() => {
-                  /* 달력 오픈 로직 */
-                }}
+                className="text-primary text-sm font-medium hover:underline"
+                onClick={() => setListModalOpen(true)}
               >
-                <Image src="/icons/icon_calendar.svg" alt="캘린더" width={16} height={16} />
+                + 새로운 목록 추가하기
               </button>
             </div>
-            <button
-              className="text-primary text-sm font-medium hover:underline"
-              onClick={() => setListModalOpen(true)}
-            >
-              + 새로운 목록 추가하기
-            </button>
-          </div>
+          </header>
 
-          {/* 탭 메뉴 */}
           {tabs.length > 0 && (
-            <div className="flex flex-wrap space-x-6 border-b border-slate-700 pb-2">
+            <nav className="flex flex-wrap space-x-6 border-b border-slate-700 pb-2">
               {tabs.map((tab) => (
                 <button
                   key={tab}
@@ -147,21 +125,23 @@ export default function TaskListPage() {
                   {tab}
                 </button>
               ))}
-            </div>
+            </nav>
           )}
 
-          {/* 할 일 리스트 */}
-          {visibleTodos.length > 0 ? (
-            <div className="space-y-4">
-              {visibleTodos.map((todo) => (
-                <TodoItem key={todo.id} {...todo} />
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray500 text-center">등록된 할 일이 없습니다.</p>
-          )}
+          <section>
+            {visibleTodos.length > 0 ? (
+              <ul className="space-y-4">
+                {visibleTodos.map((todo) => (
+                  <li key={todo.id}>
+                    <TodoItem {...todo} />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray500 text-center">등록된 할 일이 없습니다.</p>
+            )}
+          </section>
 
-          {/* 할 일 생성 버튼 (컨테이너 안) */}
           <div className="hidden justify-end md:flex">
             <button
               className="bg-primary rounded-full px-4 py-2 text-white shadow-lg"
@@ -171,9 +151,8 @@ export default function TaskListPage() {
             </button>
           </div>
         </div>
-      </div>
+      </main>
 
-      {/* 할 일 생성 풀 모달 */}
       <TodoFullCreateModal
         isOpen={isTodoModalOpen}
         onClose={() => setTodoModalOpen(false)}
@@ -181,7 +160,6 @@ export default function TaskListPage() {
         disabled={!selectedTab}
       />
 
-      {/* 새로운 목록 추가 모달 */}
       <Modal
         isOpen={isListModalOpen}
         onClose={() => setListModalOpen(false)}
@@ -204,15 +182,15 @@ export default function TaskListPage() {
         />
       </Modal>
 
-      {/* 할 일 추가 버튼 (모바일 고정) */}
-      <div className="fixed right-0 bottom-4 flex justify-end px-4 md:hidden">
+      {/* 모바일*/}
+      <footer className="md:hidden">
         <button
-          className="bg-primary rounded-full px-4 py-3 text-white shadow-lg"
+          className="bg-primary fixed inset-x-4 bottom-4 rounded-full px-4 py-2 text-center text-white shadow-lg"
           onClick={() => setTodoModalOpen(true)}
         >
           + 할 일 추가
         </button>
-      </div>
+      </footer>
     </>
   );
 }
