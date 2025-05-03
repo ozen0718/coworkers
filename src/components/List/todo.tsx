@@ -26,7 +26,6 @@ export default function TodoItem({
 
   return (
     <div className="flex flex-col space-y-2 rounded-lg bg-slate-800 p-3">
-      {/* 상단: 체크 · 제목 · 댓글/숫자 · 케밥 */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <button onClick={toggleChecked} aria-pressed={isChecked} className="cursor-pointer p-1">
@@ -47,7 +46,6 @@ export default function TodoItem({
             {title}
           </span>
 
-          {/* 댓글 버튼 + 숫자 */}
           <button className="flex items-center space-x-1">
             <Image
               src="/icons/icon_comment.svg"
@@ -60,7 +58,6 @@ export default function TodoItem({
           </button>
         </div>
 
-        {/* 케밥 버튼 */}
         <button>
           <Image
             src="/icons/kebab.svg"
@@ -72,7 +69,7 @@ export default function TodoItem({
         </button>
       </div>
 
-      {/* 하단: 날짜 · 시간 · 반복 */}
+      {/* 날짜 시간 반복 */}
       <div className="flex items-center space-x-4 text-xs text-gray-400">
         <div className="flex items-center space-x-1">
           <Image
