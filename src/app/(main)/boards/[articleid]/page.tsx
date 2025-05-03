@@ -26,7 +26,7 @@ export default function ArticleDetail() {
 
   return (
     <div className="text-gray300 flex flex-col items-center">
-      <div className="w-full max-w-[1200px] px-4">
+      <div className="w-full max-w-[1200px] px-5">
         {/* 타이틀 + 작성 정보 */}
         <div className="max-h-[128px] w-full flex-col">
           {/* 타이틀 영역 */}

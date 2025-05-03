@@ -11,11 +11,14 @@ export default function ImgUpload() {
   /* 이미지 삭제 */
   const handleDeleteImage = () => {
     setImage(null);
+    if (fileInput.current) {
+      fileInput.current.value = '';
+    }
   };
 
   return (
     <div
-      className="bg-bg200 relative flex aspect-square max-h-[282px] w-full max-w-[282px] cursor-pointer items-center justify-center overflow-hidden rounded-xl"
+      className="bg-bg200 relative flex aspect-square max-h-[282px] w-full max-w-[282px] cursor-pointer items-center justify-center overflow-hidden rounded-xl border border-[#F8FAFC1A]"
       onClick={() => fileInput.current?.click()}
     >
       {image ? (
@@ -46,6 +49,8 @@ export default function ImgUpload() {
         onChange={(e) => {
           const file = e.target.files?.[0];
           if (!file) return;
+
+          console.log('file', file);
 
           // 10MB 초과 검사
           if (file.size > 10 * 1024 * 1024) {
