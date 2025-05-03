@@ -95,9 +95,8 @@ export default function TaskListPage() {
 
   return (
     <>
-      <main className="min-h-screen bg-slate-900 py-6">
+      <main className="bg-slate-900 py-6">
         <div className="mx-auto mt-6 max-w-[1200px] space-y-6 px-4 sm:px-6 md:px-8 lg:mt-10">
-          {/* 헤더 */}
           <header className="space-y-4">
             <h1 className="text-2xl-medium text-white">할 일</h1>
             <div className="flex flex-wrap items-center justify-between gap-4">
@@ -126,7 +125,6 @@ export default function TaskListPage() {
             </div>
           </header>
 
-          {/* 탭 메뉴 */}
           {visibleTabs.length > 0 && (
             <nav className="flex flex-wrap space-x-6 border-b border-slate-700 pb-2">
               {visibleTabs.map((tab) => (
@@ -144,7 +142,6 @@ export default function TaskListPage() {
             </nav>
           )}
 
-          {/* 할 일 리스트 */}
           <section>
             {visibleTodos.length > 0 ? (
               <ul className="space-y-4">
@@ -157,24 +154,16 @@ export default function TaskListPage() {
             ) : null}
           </section>
 
-          {/* '아직 할 일 목록이 없습니다.' + PC/태블릿용 버튼 */}
           {visibleTodos.length === 0 && (
-            <div className="pointer-events-none fixed inset-0 flex flex-col items-center justify-center">
-              <p className="text-gray500 pointer-events-auto mb-4 text-center">
+            <div className="pointer-events-none fixed inset-0 flex items-center justify-center">
+              <p className="text-gray500 pointer-events-auto text-center">
                 아직 할 일 목록이 없습니다.
               </p>
-              <button
-                className="bg-primary pointer-events-auto hidden rounded-full px-4 py-2 text-white shadow-lg md:block"
-                onClick={() => setTodoModalOpen(true)}
-              >
-                + 할 일 추가
-              </button>
             </div>
           )}
         </div>
       </main>
 
-      {/* 할 일 생성 모달 */}
       <TodoFullCreateModal
         isOpen={isTodoModalOpen}
         onClose={() => setTodoModalOpen(false)}
@@ -182,7 +171,6 @@ export default function TaskListPage() {
         disabled={!selectedTab}
       />
 
-      {/* 목록 생성 모달 */}
       <Modal
         isOpen={isListModalOpen}
         onClose={() => setListModalOpen(false)}
@@ -204,11 +192,9 @@ export default function TaskListPage() {
           className="w-full bg-slate-700 text-gray-300 placeholder-gray-500"
         />
       </Modal>
-
-      {/* 모바일용 고정 버튼 */}
-      <footer className="md:hidden">
+      <footer className="">
         <button
-          className="bg-primary fixed right-4 bottom-4 rounded-full px-4 py-2 text-white shadow-lg"
+          className="bg-primary fixed right-6 bottom-6 rounded-full px-4 py-3 text-white shadow-lg"
           onClick={() => setTodoModalOpen(true)}
         >
           + 할 일 추가
