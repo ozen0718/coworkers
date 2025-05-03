@@ -7,7 +7,6 @@ export default function noTeamPage() {
     // TODO: 페이지 레이아웃 조정 후, h-calc 삭제
     <div className="mx-auto flex h-[calc(100vh-60px)] max-w-[560px] min-w-[375px] flex-col items-center justify-center px-8 md:min-w-[520px] md:px-0 lg:min-w-[810px]">
       <Image src="images/noTeam.svg" width={810} height={255} alt="no team image" />
-      {/* <p className="text-md-medium md:text-lg-medium text-gray500 mt-12 mb-20 text-center"> */}
       <p className="text-gray500 mt-8 mb-12 text-center text-[14px] leading-[17px] font-medium md:mt-12 md:mb-20 md:text-[16px] md:leading-[19px]">
         아직 소속됨 팀이 없습니다.
         <br />
