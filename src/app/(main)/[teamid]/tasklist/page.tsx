@@ -100,7 +100,7 @@ export default function TaskListPage() {
   return (
     <>
       {/* 전체 배경 & 세로 패딩 */}
-      <div className="min-h-screen bg-slate-900 py-6">
+      <div className="bg-slate-900 py-6">
         {/* 중앙 컨테이너: mt-6 (모바일/태블릿) → lg:mt-10, max-width 1200px, 반응형 padding */}
         <div className="mx-auto mt-6 max-w-[1200px] space-y-6 px-4 sm:px-6 md:px-8 lg:mt-10">
           {/* 헤더 */}
@@ -203,13 +203,16 @@ export default function TaskListPage() {
           className="w-full bg-slate-700 text-gray-300 placeholder-gray-500"
         />
       </Modal>
+
       {/* 할 일 추가 버튼 (모바일 고정) */}
-      <button
-        className="bg-primary fixed inset-x-4 bottom-4 block rounded-full px-4 py-3 text-center text-white shadow-lg md:hidden"
-        onClick={() => setTodoModalOpen(true)}
-      >
-        + 할 일 추가
-      </button>
+      <div className="fixed right-0 bottom-4 flex justify-end px-4 md:hidden">
+        <button
+          className="bg-primary rounded-full px-4 py-3 text-white shadow-lg"
+          onClick={() => setTodoModalOpen(true)}
+        >
+          + 할 일 추가
+        </button>
+      </div>
     </>
   );
 }
