@@ -51,11 +51,7 @@ export default function Modal({
         onClick={(e) => e.stopPropagation()}
       >
         {closeIcon && (
-          <button
-            type="button"
-            onClick={onClose}
-            className="absolute top-4 right-4"
-          >
+          <button type="button" onClick={onClose} className="absolute top-4 right-4">
             <Image src="/icons/close.svg" alt="" width={24} height={24} className="h-6 w-6" />
           </button>
         )}

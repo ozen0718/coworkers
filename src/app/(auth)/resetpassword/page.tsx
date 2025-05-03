@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { PasswordInput } from '@/components/common/Inputs';
 import Button from '@/components/common/Button/Button';
-import ResetPasswordRequestModal from '@/components/Resetpw';
+import ResetPasswordRequestModal from '@/components/ResetPw';
 
 export default function ResetPasswordPage() {
   const [showModal, setShowModal] = useState(false);
