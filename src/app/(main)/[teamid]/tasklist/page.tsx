@@ -15,7 +15,7 @@ import TodoItem from '@/components/List/todo';
 interface Todo {
   id: number;
   title: string;
-  dateLabel: string;
+  date: string;
   time: string;
   recurring: boolean;
   comments: number;
@@ -73,7 +73,7 @@ export default function TaskListPage() {
     const newTodo: Todo = {
       id: Date.now(),
       title,
-      dateLabel,
+      date: dateLabel,
       time,
       recurring: repeat !== '반복 안함',
       comments: 0,
@@ -95,7 +95,7 @@ export default function TaskListPage() {
 
   return (
     <>
-      <main className="bg-slate-900 py-6">
+      <main className="bg-slate-900">
         <div className="mx-auto mt-6 max-w-[1200px] space-y-6 px-4 sm:px-6 md:px-8 lg:mt-10">
           <header className="space-y-4">
             <h1 className="text-2xl-medium text-white">할 일</h1>
@@ -142,27 +142,29 @@ export default function TaskListPage() {
             </nav>
           )}
 
-          <section>
-            {visibleTodos.length > 0 ? (
-              <ul className="space-y-4">
-                {visibleTodos.map((todo) => (
-                  <li key={todo.id}>
-                    <TodoItem date={''} {...todo} />
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </section>
-
-          {visibleTodos.length === 0 && (
-            <div className="pointer-events-none fixed inset-0 flex items-center justify-center">
-              <p className="text-gray500 pointer-events-auto text-center">
-                아직 할 일 목록이 없습니다.
-              </p>
-            </div>
-          )}
+          <div className="min-h-[calc(100vh-16rem)]">
+            <section>
+              {visibleTodos.length > 0 ? (
+                <ul className="space-y-4">
+                  {visibleTodos.map((todo) => (
+                    <li key={todo.id}>
+                      <TodoItem {...todo} />
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </section>
+          </div>
         </div>
       </main>
+
+      {visibleTodos.length === 0 && (
+        <div className="pointer-events-none fixed inset-0 flex items-center justify-center">
+          <p className="text-gray500 pointer-events-auto text-center">
+            아직 할 일 목록이 없습니다.
+          </p>
+        </div>
+      )}
 
       <TodoFullCreateModal
         isOpen={isTodoModalOpen}
@@ -192,13 +194,18 @@ export default function TaskListPage() {
           className="w-full bg-slate-700 text-gray-300 placeholder-gray-500"
         />
       </Modal>
-      <footer className="">
-        <button
-          className="bg-primary fixed right-6 bottom-6 rounded-full px-4 py-3 text-white shadow-lg"
-          onClick={() => setTodoModalOpen(true)}
-        >
-          + 할 일 추가
-        </button>
+
+      <footer className="fixed right-0 bottom-0 left-0">
+        <div className="mx-auto max-w-[1200px] px-4 pb-6 sm:px-6 md:px-8">
+          <div className="flex justify-end">
+            <button
+              className="bg-primary rounded-full px-5 py-3.5 text-white shadow-lg"
+              onClick={() => setTodoModalOpen(true)}
+            >
+              + 할 일 추가
+            </button>
+          </div>
+        </div>
       </footer>
     </>
   );
