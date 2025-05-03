@@ -26,4 +26,10 @@ export const HEADER_VISIBILITY_CONFIG: Record<
     showFreeBoardLink: true,
     showProfile: true,
   },
+  '/mypage': {
+    //계정 설정 페이지
+    showTeamSelector: true,
+    showFreeBoardLink: true,
+    showProfile: true,
+  },
 };
