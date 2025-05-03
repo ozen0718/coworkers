@@ -162,7 +162,7 @@ export default function TaskListPage() {
           )}
 
           {/* 할 일 생성 버튼 (컨테이너 안) */}
-          <div className="flex justify-end">
+          <div className="hidden justify-end md:flex">
             <button
               className="bg-primary rounded-full px-4 py-2 text-white shadow-lg"
               onClick={() => setTodoModalOpen(true)}
@@ -203,6 +203,13 @@ export default function TaskListPage() {
           className="w-full bg-slate-700 text-gray-300 placeholder-gray-500"
         />
       </Modal>
+      {/* 할 일 추가 버튼 (모바일 고정) */}
+      <button
+        className="bg-primary fixed inset-x-4 bottom-4 block rounded-full px-4 py-3 text-center text-white shadow-lg md:hidden"
+        onClick={() => setTodoModalOpen(true)}
+      >
+        + 할 일 추가
+      </button>
     </>
   );
 }
