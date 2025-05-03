@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 export function useWindowSize() {
   const [windowWidth, setWindowWidth] = useState<number>(0);
+
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
     window.addEventListener('resize', handleResize); // 브라우저 창 크기 변할 때마다 실행

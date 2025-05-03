@@ -55,8 +55,8 @@ export default function AuthorInfo({
           <div className="flex items-center">
             <IconHeart
               className="mr-1.5 cursor-pointer"
-              fillColor={isLiked ? '#EF4444' : 'none'}
-              strokeColor={isLiked ? '#EF4444' : '#64748B'}
+              fillColor={isLiked ? 'var(--color-danger)' : 'none'}
+              strokeColor={isLiked ? 'var(--color-danger)' : 'var(--color-gray500)'}
               onClick={toggleLike}
             />
             <span className="text-gray400">9999+</span>
