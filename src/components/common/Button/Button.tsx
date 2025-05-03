@@ -25,6 +25,7 @@ export interface ButtonProps extends React.ComponentPropsWithoutRef<'button'> {
     height?: number | string;
     color?: string;
   };
+  fullWidth?: boolean;
 }
 
 function Button({
@@ -34,6 +35,7 @@ function Button({
   className,
   icon,
   iconProps,
+  fullWidth = false,
   ...props
 }: ButtonProps) {
   const baseStyles = 'flex items-center justify-center font-pretendard font-medium';
@@ -98,6 +100,7 @@ function Button({
         baseStyles,
         sizeStyles[size],
         !disabled ? variantStyles[variant] : disabledStyles[variant],
+        fullWidth && 'w-full',
         className
       )}
       disabled={disabled}
