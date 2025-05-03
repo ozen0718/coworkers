@@ -14,6 +14,18 @@ export const HEADER_VISIBILITY_CONFIG: Record<
     showFreeBoardLink: false,
     showProfile: false,
   },
+  // '/$teamid/edit': {
+  //   //팀 수정하기 페이지
+  //   showTeamSelector: true,
+  //   showFreeBoardLink: true,
+  //   showProfile: true,
+  // },
+  '/noteam': {
+    //No-team 페이지
+    showTeamSelector: true,
+    showFreeBoardLink: true,
+    showProfile: true,
+  },
   '/boards': {
     //자유 게시판 페이지
     showTeamSelector: true,
