@@ -7,10 +7,12 @@ import { ko } from 'date-fns/locale';
 import clsx from 'clsx';
 
 import Modal from '@/components/common/Modal';
-import ModalHeader from '@/components/common/Modal/ModalHeader';
-import { TextInput } from '@/components/common/Inputs';
 import TodoFullCreateModal, { TodoFullCreateModalProps } from '@/components/TodoFullCreateModal';
 import TodoItem from '@/components/List/todo';
+import ModalHeader from '@/components/common/Modal/ModalHeader';
+import { TextInput } from '@/components/common/Inputs';
+
+const MAX_LIST_NAME_LENGTH = 15;
 
 interface Todo {
   id: number;
@@ -44,7 +46,7 @@ export default function TaskListPage() {
   const visibleTodos = selectedTab ? todosMap[dateKey]?.[selectedTab] || [] : [];
 
   const handleAddList = () => {
-    const name = newListName.trim();
+    const name = newListName.trim().slice(0, MAX_LIST_NAME_LENGTH);
     if (!name) return;
     setTabsMap((prev) => ({
       ...prev,
@@ -69,11 +71,11 @@ export default function TaskListPage() {
     repeat,
   }) => {
     if (!selectedTab || !date) return;
-    const dateLabel = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
+    const formatted = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
     const newTodo: Todo = {
       id: Date.now(),
       title,
-      date: dateLabel,
+      date: formatted,
       time,
       recurring: repeat !== '반복 안함',
       comments: 0,
@@ -95,8 +97,8 @@ export default function TaskListPage() {
 
   return (
     <>
-      <main className="bg-slate-900">
-        <div className="mx-auto mt-6 max-w-[1200px] space-y-6 px-4 sm:px-6 md:px-8 lg:mt-10">
+      <main className="bg-primary-background py-6">
+        <div className="relative mx-auto mt-6 max-w-[1200px] space-y-6 px-4 sm:px-6 md:px-8 lg:mt-10">
           <header className="space-y-4">
             <h1 className="text-2xl-medium text-white">할 일</h1>
             <div className="flex flex-wrap items-center justify-between gap-4">
@@ -110,7 +112,7 @@ export default function TaskListPage() {
                 </button>
                 <button
                   onClick={() => {
-                    /* 캘린더 */
+                    /* 캘린더 열기 */
                   }}
                 >
                   <Image src="/icons/icon_calendar.svg" alt="캘린더" width={16} height={16} />
@@ -142,31 +144,45 @@ export default function TaskListPage() {
             </nav>
           )}
 
-          <div className="min-h-[calc(100vh-16rem)]">
-            <section>
-              {visibleTodos.length > 0 ? (
-                <ul className="space-y-4">
-                  {visibleTodos.map((todo) => (
-                    <li key={todo.id}>
-                      <TodoItem {...todo} />
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-            </section>
-          </div>
+          <section className="min-h-[calc(100vh-16rem)]">
+            {visibleTodos.length > 0 ? (
+              <ul className="space-y-4">
+                {visibleTodos.map((todo) => (
+                  <li key={todo.id}>
+                    <TodoItem {...todo} />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="pointer-events-none fixed inset-0 flex items-center justify-center">
+                <p className="text-gray500 pointer-events-auto text-center">
+                  아직 할 일 목록이 없습니다.
+                </p>
+              </div>
+            )}
+          </section>
+
+          <button
+            disabled={visibleTabs.length === 0}
+            onClick={() => {
+              if (visibleTabs.length === 0) {
+                alert('먼저 목록을 만들어주세요.');
+              } else {
+                setTodoModalOpen(true);
+              }
+            }}
+            className={clsx(
+              'bg-primary absolute right-6 bottom-6 rounded-full px-4 py-2 text-white shadow-lg',
+              visibleTabs.length === 0 && 'cursor-not-allowed opacity-50'
+            )}
+          >
+            + 할 일 추가
+          </button>
         </div>
       </main>
 
-      {visibleTodos.length === 0 && (
-        <div className="pointer-events-none fixed inset-0 flex items-center justify-center">
-          <p className="text-gray500 pointer-events-auto text-center">
-            아직 할 일 목록이 없습니다.
-          </p>
-        </div>
-      )}
-
       <TodoFullCreateModal
+        key={isTodoModalOpen ? 'todo-open' : 'todo-closed'}
         isOpen={isTodoModalOpen}
         onClose={() => setTodoModalOpen(false)}
         onSubmit={handleCreateTodo}
@@ -174,39 +190,25 @@ export default function TaskListPage() {
       />
 
       <Modal
+        key={isListModalOpen ? 'list-open' : 'list-closed'}
         isOpen={isListModalOpen}
         onClose={() => setListModalOpen(false)}
         onSubmit={handleAddList}
         submitButtonLabel="만들기"
-        cancelButtonLabel={undefined}
         disabled={!newListName.trim()}
+        title="새로운 목록 추가"
+        description={`할 일에 대한 목록을 추가하고 
+        목록별 할 일을 만들 수 있습니다.`}
       >
-        <ModalHeader title="새로운 목록 추가" />
-        <p className="text-gray300 mt-2 mb-4 text-center text-sm">
-          할 일에 대한 목록을 추가하고
-          <br />
-          목록별 할 일을 만들 수 있습니다.
-        </p>
-        <TextInput
-          placeholder="목록 이름을 입력해주세요."
-          value={newListName}
-          onChange={(e) => setNewListName(e.target.value)}
-          className="w-full bg-slate-700 text-gray-300 placeholder-gray-500"
-        />
-      </Modal>
-
-      <footer className="fixed right-0 bottom-0 left-0">
-        <div className="mx-auto max-w-[1200px] px-4 pb-6 sm:px-6 md:px-8">
-          <div className="flex justify-end">
-            <button
-              className="bg-primary rounded-full px-5 py-3.5 text-white shadow-lg"
-              onClick={() => setTodoModalOpen(true)}
-            >
-              + 할 일 추가
-            </button>
-          </div>
+        <div className="mt-4">
+          <TextInput
+            value={newListName}
+            onChange={(e) => setNewListName(e.target.value)}
+            placeholder="목록 이름을 입력해주세요."
+            className="w-full bg-slate-700 text-gray-300 placeholder-gray-500"
+          />
         </div>
-      </footer>
+      </Modal>
     </>
   );
 }
