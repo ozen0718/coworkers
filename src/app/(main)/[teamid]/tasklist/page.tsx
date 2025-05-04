@@ -97,7 +97,7 @@ export default function TaskListPage() {
 
   return (
     <>
-      <main className="bg-primary-background py-6">
+      <main className="py-6">
         <div className="relative mx-auto mt-6 max-w-[1200px] space-y-6 px-4 sm:px-6 md:px-8 lg:mt-10">
           <header className="space-y-4">
             <h1 className="text-2xl-medium text-white">할 일</h1>
@@ -205,7 +205,7 @@ export default function TaskListPage() {
             value={newListName}
             onChange={(e) => setNewListName(e.target.value)}
             placeholder="목록 이름을 입력해주세요."
-            className="w-full bg-slate-700 text-gray-300 placeholder-gray-500"
+            className="w-full text-gray-300 placeholder-gray-500"
           />
         </div>
       </Modal>
