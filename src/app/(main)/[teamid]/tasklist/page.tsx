@@ -164,13 +164,7 @@ export default function TaskListPage() {
 
           <button
             disabled={visibleTabs.length === 0}
-            onClick={() => {
-              if (visibleTabs.length === 0) {
-                alert('먼저 목록을 만들어주세요.');
-              } else {
-                setTodoModalOpen(true);
-              }
-            }}
+            onClick={() => setTodoModalOpen(true)}
             className={clsx(
               'bg-primary absolute right-6 bottom-6 rounded-full px-4 py-2 text-white shadow-lg',
               visibleTabs.length === 0 && 'cursor-not-allowed opacity-50'
