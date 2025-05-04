@@ -39,12 +39,12 @@ export default function Modal({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 sm:items-center"
       onClick={onClose}
     >
       <div
         className={clsx(
-          'bg-bg200 relative flex w-[375px] flex-col md:w-[384px]',
+          'bg-bg200 relative flex w-full flex-col sm:w-[384px]',
           paddingStyle[padding],
           radiusStyle[borderRadius]
         )}
