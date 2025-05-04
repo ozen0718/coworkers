@@ -30,7 +30,12 @@ export default function ModalButtons({
           {cancelButtonLabel}
         </Button>
       )}
-      <Button fullWidth variant={submitButtonVariant} onClick={handleClickSubmit} disabled={disabled}>
+      <Button
+        fullWidth
+        variant={submitButtonVariant}
+        onClick={handleClickSubmit}
+        disabled={disabled}
+      >
         {submitButtonLabel}
       </Button>
     </div>
