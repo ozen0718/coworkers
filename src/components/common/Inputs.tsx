@@ -134,7 +134,7 @@ export function PasswordInput({ id, placeholder }: InputProps) {
 export function CurrentName({ name }: CurrentNameProp) {
   return (
     <div className={`${CurrentValueStyle} flex items-center justify-between`}>
-      <input type="email" placeholder="이메일을 입력하세요." value={name} />
+      <div>{name}</div>
       <Button size="small">변경하기</Button>
     </div>
   );
