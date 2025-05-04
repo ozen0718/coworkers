@@ -2,7 +2,7 @@
 
 import { createContext, useContext, ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
-import { HEADER_VISIBILITY_CONFIG } from './Headerconfig';
+import { getHeaderConfig } from './Headerconfig';
 
 interface HeaderState {
   showTeamSelector: boolean;
@@ -23,10 +23,7 @@ export const useHeader = () => useContext(HeaderContext);
 export function HeaderProvider({ children }: { children: ReactNode }) {
   const pathname = usePathname();
 
-  const visibility: HeaderState = {
-    ...defaultState,
-    ...HEADER_VISIBILITY_CONFIG[pathname],
-  };
+  const visibility: HeaderState = getHeaderConfig(pathname);
 
   return <HeaderContext.Provider value={visibility}>{children}</HeaderContext.Provider>;
 }
