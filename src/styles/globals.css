@@ -39,7 +39,7 @@
   --color-gray300: #cbd5e1;
   --color-gray400: #94a3b8;
   --color-gray500: #64748b;
-  --color-danger: #dc2626;
+  --color-danger: #ef4444;
 }
 
 @layer utilities {
