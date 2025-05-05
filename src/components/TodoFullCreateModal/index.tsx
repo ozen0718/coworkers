@@ -3,11 +3,11 @@
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import Modal from '@/components/common/Modal';
-import SelectableDropdown from '@/components/dropdown/SelectableDropdown';
 import DatePickerCalendar from '@/components/TodoFullCreateModal/DatePickerCalender';
 import DatePickerInput from '@/components/TodoFullCreateModal/DatePickerInput';
 import { TextInput, TextAreaInput } from '@/components/common/Inputs';
 import './style.css';
+import ArrowDropdown from '../common/ArrowDropdown';
 
 export interface TodoFullCreateModalProps {
   isOpen: boolean;
@@ -58,7 +58,7 @@ export default function TodoFullCreateModal({
       <div className="scrollbar-hide mt-6 mb-2 flex max-h-[70vh] flex-col gap-6 overflow-y-auto">
         {/* 제목 */}
         <div className="flex flex-col gap-4">
-          <label htmlFor="todo-title">할 일 제목</label>
+          <label htmlFor="todo-title" className='text-lg-medium'>할 일 제목</label>
           <TextInput
             id="todo-title"
             placeholder="할 일 제목을 입력해주세요."
@@ -69,7 +69,7 @@ export default function TodoFullCreateModal({
 
         {/* 날짜 + 시간 */}
         <div className="flex flex-col gap-4">
-          <label>시작 날짜 및 시간</label>
+          <h2 className='text-lg-medium'>시작 날짜 및 시간</h2>
           <div className="flex gap-2">
             <div className="flex-1">
               <DatePickerCalendar startDate={startDate} setStartDate={setStartDate} />
@@ -92,45 +92,44 @@ export default function TodoFullCreateModal({
 
         {/* 반복 설정 */}
         <div className="flex flex-col gap-4">
-          <label>반복 설정</label>
-          <SelectableDropdown
+          <h2 className='text-lg-medium'>반복 설정</h2>
+          <ArrowDropdown
+            size="md"
             options={todoRepeatOptions}
-            size="sm"
-            placement="top-full"
-            dropDownOpenBtn={
-              <div className="text-md-medium text-gray500 flex h-10 w-[150px] items-center rounded-xl bg-[#18212f] px-4">
-                {repeat}
-              </div>
-            }
-            onSelect={(e) => setRepeat(e.currentTarget.innerText!)}
+            selected={repeat}
+            onSelect={(value) => setRepeat(value)}
+            className="w-[109px]"
           />
           {repeat === '주 반복' && (
-            <div className="grid grid-cols-7 gap-1">
-              {weekDays.map((day, idx) => {
-                const key = String(idx);
-                const active = repeatDays.includes(key);
-                return (
-                  <button
-                    key={day}
-                    type="button"
-                    className={`rounded border p-2 ${active ? 'bg-blue-500 text-white' : ''}`}
-                    onClick={() =>
-                      setRepeatDays((prev) =>
-                        prev.includes(key) ? prev.filter((d) => d !== key) : [...prev, key]
-                      )
-                    }
-                  >
-                    {day}
-                  </button>
-                );
-              })}
+            <div className="flex flex-col gap-3">
+              <h2 className='text-lg-medium'>반복 요일</h2>
+              <div className="grid grid-cols-7 gap-1">
+                {weekDays.map((day, idx) => {
+                  const key = String(idx);
+                  const active = repeatDays.includes(key);
+                  return (
+                    <button
+                      key={day}
+                      type="button"
+                      className={`bg-bg500 text-md-medium h-12 rounded-xl p-2 ${active ? 'bg-primary' : ''}`}
+                      onClick={() =>
+                        setRepeatDays((prev) =>
+                          prev.includes(key) ? prev.filter((d) => d !== key) : [...prev, key]
+                        )
+                      }
+                    >
+                      {day}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
 
         {/* 메모 */}
         <div className="flex flex-col gap-4">
-          <label htmlFor="todo-memo">메모</label>
+          <label htmlFor="todo-memo" className='text-lg-medium'>메모</label>
           <TextAreaInput
             id="todo-memo"
             placeholder="메모를 입력해주세요."
