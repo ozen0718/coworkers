@@ -57,7 +57,7 @@ export function TasksItem({ tasksTitle, completed, total }: TasksItemProp) {
         <div className="h-10 w-3" style={{ backgroundColor: trimColor }} />
         <p className="text-md-medium w-full text-left">{tasksTitle}</p>
       </button>
-      <div className="mr-2 flex w-21.5 items-center justify-end gap-1">
+      <div className="mr-2 flex w-fit items-center justify-end gap-1">
         <ProgressBadge completedTaskNumber={completed} totalTaskNumber={total} />
         <ActionMenu
           trigger={<Image src="/icons/kebab.svg" width={16} height={16} alt="메뉴" />}

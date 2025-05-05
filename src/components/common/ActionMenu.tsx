@@ -15,7 +15,7 @@ export default function ActionMenu({
   useClickOutside(ref, () => setIsOpen(false));
 
   return (
-    <div className="relative" ref={ref}>
+    <div className="relative shrink-0" ref={ref}>
       <div onClick={() => setIsOpen((prev) => !prev)} className="cursor-pointer">
         {trigger}
       </div>
