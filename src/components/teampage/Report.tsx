@@ -108,7 +108,7 @@ function UrgentTasksReportColumn() {
 export default function Report() {
   return (
     <div className="relative w-full">
-      <div className="bg-bg200 grid grid-cols-2 gap-4 rounded-xl p-2 sm:grid-cols-3">
+      <div className="bg-bg200 grid grid-cols-2 gap-4 rounded-xl px-2 py-2 sm:grid-cols-3 sm:px-6">
         <LeftSide percentage={25} />
         <div className="hidden justify-center sm:flex">
           <UrgentTasksReportColumn />

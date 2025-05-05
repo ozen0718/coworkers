@@ -71,7 +71,6 @@ export default function TeamPage() {
             </div>
           </Modal>
 
-          {/* 토스트 메시지 */}
           <Toast message={message} visible={visible} />
         </header>
 
