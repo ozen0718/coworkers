@@ -14,7 +14,7 @@ export default function TeamPage() {
   const sectionStyle = 'w-full py-6 flex flex-col items-center justify-start gap-4';
   const sectionHeaderStyle = 'flex w-full items-center justify-between';
   const sectionHeaderTitleStyle = 'flex items-center justtify-start gap-2';
-  const sectionHeaderH2Style = 'text-lg-medium font-semibold text-gray100';
+  const sectionHeaderH2Style = 'text-lg-medium font-semibold';
   const sectionHeaderPSTyle = 'text-lg-regular text-gray500';
   const sectionHeaderButtonStyle = 'text-md-regular text-primary';
 

@@ -45,7 +45,7 @@ export default function BoardPage() {
 
   return (
     <div className="my-10">
-      <h1 className="text-gray100 text-lg font-bold sm:text-2xl">자유게시판</h1>
+      <h1 className="text-lg font-bold sm:text-2xl">자유게시판</h1>
 
       <div className="relative mt-10 w-full">
         <img

@@ -61,7 +61,7 @@ export default function JoinTeamPage() {
         <h1 className={PageTitleStyle}>팀 참여하기</h1>
 
         <div className="w-full max-w-lg">
-          <label htmlFor="teamLink" className="text-lg-medium text-gray100 mb-3 block">
+          <label htmlFor="teamLink" className="text-lg-medium mb-3 block">
             팀 링크
           </label>
           <input
@@ -85,7 +85,7 @@ export default function JoinTeamPage() {
             </Button>
           </div>
 
-          <p className="text-sm-regular text-gray100 mt-6 text-center">
+          <p className="text-sm-regular mt-6 text-center">
             공유받은 팀 링크를 입력해 참여할 수 있어요.
           </p>
         </div>

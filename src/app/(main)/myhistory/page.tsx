@@ -22,7 +22,7 @@ const temporaryData: Record<string, MyHistoryItemProps[]> = {
 export default function MyHistoryPage() {
   return (
     <div className="flex max-w-300 min-w-[375px] flex-col gap-10 py-10">
-      <h1 className="text-xl-bold text-gray100">마이 히스토리</h1>
+      <h1 className="text-xl-bold">마이 히스토리</h1>
       {Object.entries(temporaryData).map(([date, history]) => (
         <TaskHistoryByDate key={date} date={date} history={history} />
       ))}

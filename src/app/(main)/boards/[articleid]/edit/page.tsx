@@ -27,7 +27,7 @@ export default function EditBoard() {
           <input
             type="text"
             placeholder="제목을 입력해주세요."
-            className="bg-bg200 border-gray100/10 focus:border-primary hover:border-primary-hover text-gray100 text-4 text-lg-regular placeholder:text-gray500 h-[48px] w-full resize-none rounded-xl border px-4 py-3 focus:outline-none"
+            className="bg-bg200 border-gray100/10 focus:border-primary hover:border-primary-hover text-4 text-lg-regular placeholder:text-gray500 h-[48px] w-full resize-none rounded-xl border px-4 py-3 focus:outline-none"
           />
         </div>
 

@@ -3,7 +3,8 @@
 @layer base {
   body {
     font-family: 'Pretendard', sans-serif;
-    color: var(--color-gray100);
+    /* color: var(--color-gray100); */
+    color: var(--color-blue);
     background-color: var(--color-bg300);
   }
   button {

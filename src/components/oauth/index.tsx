@@ -12,7 +12,7 @@ export default function OAuth({ authType }: OAuthUIProps) {
       {/* OR 라인 */}
       <div className="flex items-center gap-4">
         <div className="h-px flex-1 bg-[var(--color-border)]" />
-        <p className="text-md-medium text-white">OR</p>
+        <p className="text-md-medium">OR</p>
         <div className="h-px flex-1 bg-[var(--color-border)]" />
       </div>
 

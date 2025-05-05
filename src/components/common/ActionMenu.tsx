@@ -22,7 +22,7 @@ export default function ActionMenu({
 
       {isOpen && (
         <div
-          className={`border-gray100/10 bg-bg200 text-md-regular text-gray100 absolute z-10 mt-2 w-36 overflow-hidden rounded-xl border ${
+          className={`border-gray100/10 bg-bg200 text-md-regular absolute z-10 mt-2 w-36 overflow-hidden rounded-xl border ${
             menuPosition === 'right' ? 'right-0' : 'left-0'
           }`}
         >

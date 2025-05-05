@@ -74,7 +74,7 @@ export default function AddTeamPage() {
         <h1 className={PageTitleStyle}>팀 생성하기</h1>
 
         <div className="w-full max-w-lg">
-          <span className="text-lg-medium text-gray100 mb-3 block">팀 프로필</span>
+          <span className="text-lg-medium mb-3 block">팀 프로필</span>
           <div className="relative mb-4 inline-block">
             <Image
               src={file ? URL.createObjectURL(file) : '/icons/initialteamprofile.svg'}
@@ -101,7 +101,7 @@ export default function AddTeamPage() {
             />
           </div>
 
-          <label htmlFor="teamName" className="text-lg-medium text-gray100 mb-3 block">
+          <label htmlFor="teamName" className="text-lg-medium mb-3 block">
             팀 이름
           </label>
           <input
@@ -125,7 +125,7 @@ export default function AddTeamPage() {
             </Button>
           </div>
 
-          <p className="text-sm-regular text-gray100 mt-6 text-center">
+          <p className="text-sm-regular mt-6 text-center">
             팀 이름은 회사명이나 모임 이름 등으로 설정하면 좋아요.
           </p>
         </div>

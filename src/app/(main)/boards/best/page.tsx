@@ -17,7 +17,7 @@ export default function BoardPage() {
 
   return (
     <div className="my-10">
-      <p className="text-gray100 font-bold sm:text-2xl">베스트 게시글</p>
+      <p className="font-bold sm:text-2xl">베스트 게시글</p>
 
       <div className="relative mt-10">
         <img
