@@ -67,13 +67,15 @@ export default function DetailPost({ title, onClose, showComplete }: DetailPostP
         </span>
       </div>
 
-      <TodoCardReplyInput />
+      <div className="mt-2">
+        <TodoCardReplyInput />
+      </div>
 
       <div className="scroll-area max-h-[400px] w-full overflow-y-auto">
-        <BoardComment type="list" content="ddd" />
-        <BoardComment type="list" />
-        <BoardComment type="list" />
-        <BoardComment type="list" />
+        <BoardComment type="list" content="테스트" />
+        <BoardComment type="list" content="테스트2" />
+        <BoardComment type="list" content="테스트3" />
+        <BoardComment type="list" content="테스트4" />
       </div>
 
       <Button
