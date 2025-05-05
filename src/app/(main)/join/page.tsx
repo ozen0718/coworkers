@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import clsx from 'clsx';
 
 import Button from '@/components/common/Button/Button';
+import { AuthPagesLayout, PageTitleStyle } from '@/styles/pageStyle';
 
 export default function JoinTeamPage() {
   const router = useRouter();
@@ -41,13 +42,6 @@ export default function JoinTeamPage() {
     router.push(`/main/${id}`);
   };
 
-  const mainClassName = clsx(
-    'bg-bg300 flex flex-col items-center justify-start p-4',
-    'pt-[72px] md:pt-[100px] lg:pt-[140px]'
-  );
-
-  const titleClassName = clsx('text-4xl-medium text-gray100 mt-6 mb-20');
-
   const inputClassName = clsx(
     'bg-bg100 text-lg-regular placeholder:text-gray500 h-12 w-full rounded-xl border px-4 focus:outline-none',
     {
@@ -63,8 +57,8 @@ export default function JoinTeamPage() {
 
   return (
     <>
-      <main className={mainClassName}>
-        <h1 className={titleClassName}>팀 참여하기</h1>
+      <div className={clsx(AuthPagesLayout, 'mt-18')}>
+        <h1 className={PageTitleStyle}>팀 참여하기</h1>
 
         <div className="w-full max-w-lg">
           <label htmlFor="teamLink" className="text-lg-medium text-gray100 mb-3 block">
@@ -95,7 +89,7 @@ export default function JoinTeamPage() {
             공유받은 팀 링크를 입력해 참여할 수 있어요.
           </p>
         </div>
-      </main>
+      </div>
     </>
   );
 }
