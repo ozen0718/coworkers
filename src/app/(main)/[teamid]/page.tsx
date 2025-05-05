@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { TextInput } from '@/components/common/Inputs';
 import { TasksItem } from '@/components/teampage/TaskElements';
 import TeamHeader from '@/components/teampage/TeamHeader';
 import Report from '@/components/teampage/Report';
@@ -18,11 +19,20 @@ export default function TeamPage() {
   const sectionHeaderButtonStyle = 'text-md-regular text-primary';
 
   const [isInviteModalOpen, setInviteModalOpen] = useState(false);
+  const [isCreateListModalOpen, setCreateListModalOpen] = useState(false);
+  const [newListName, setNewListName] = useState('');
 
   const openModal = () => setInviteModalOpen(true);
   const closeModal = () => setInviteModalOpen(false);
 
   const { message, visible, showToast } = useToast(3000);
+
+  const handleCreateList = () => {
+    if (!newListName.trim()) return;
+    setCreateListModalOpen(false);
+    showToast('새로운 목록이 생성되었습니다.');
+    setNewListName('');
+  };
 
   const handleCopyLink = async () => {
     await navigator.clipboard.writeText('https://your-invite-link.com');
@@ -39,7 +49,30 @@ export default function TeamPage() {
             <h2 className={sectionHeaderH2Style}>할 일 목록</h2>
             <p className={sectionHeaderPSTyle}>(4개)</p>
           </div>
-          <button className={sectionHeaderButtonStyle}>+ 새로운 목록 추가하기</button>
+          <button className={sectionHeaderButtonStyle} onClick={() => setCreateListModalOpen(true)}>
+            + 새로운 목록 추가하기
+          </button>
+
+          <Modal
+            isOpen={isCreateListModalOpen}
+            onClose={() => setCreateListModalOpen(false)}
+            submitButtonLabel="만들기"
+            closeIcon
+            title="할 일 목록"
+            submitButtonVariant="primary"
+            onSubmit={handleCreateList}
+          >
+            <div className="mt-6">
+              <TextInput
+                placeholder="목록 명을 입력해주세요."
+                value={newListName}
+                onChange={(e) => setNewListName(e.target.value)}
+              />
+            </div>
+          </Modal>
+
+          {/* 토스트 메시지 */}
+          <Toast message={message} visible={visible} />
         </header>
 
         <TasksItem completed={1} total={3} tasksTitle="할일목록 1" />

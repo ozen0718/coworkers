@@ -231,8 +231,16 @@ export function TodoCardReplyInput() {
   );
 }
 
-export function TextInput({ placeholder }: TextInputProps) {
-  return <input type="text" className={InputStyle} placeholder={placeholder} />;
+export function TextInput({ placeholder, value, onChange }: TextInputProps) {
+  return (
+    <input
+      type="text"
+      className={InputStyle}
+      placeholder={placeholder}
+      value={value}
+      onChange={onChange}
+    />
+  );
 }
 
 export function TextAreaInput({ placeholder, height }: TextAreaInputProps) {
