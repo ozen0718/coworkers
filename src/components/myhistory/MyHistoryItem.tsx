@@ -30,7 +30,7 @@ export default function TodoItem({ title, completed }: MyHistoryItemProps) {
         <span
           className={clsx('text-left font-medium break-all whitespace-normal', {
             'text-gray-400 line-through': isChecked,
-            'text-white': !isChecked,
+            'text-gray100': !isChecked,
           })}
         >
           {title}
