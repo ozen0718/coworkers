@@ -240,7 +240,7 @@ export function TextAreaInput({ height = '', ...props }: TextAreaInputProps) {
   );
 }
 
-export function DateInput({ placeholder }: TextInputProps) {
+export function DateInput({ placeholder }: InputProps) {
   return (
     <input
       readOnly
