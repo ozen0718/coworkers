@@ -35,7 +35,7 @@ export default function ArrowDropdown({
           size === 'sm' && 'text-gray100 h-[40px] w-[94px]',
           size === 'md' && 'text-gray500 h-[44px] w-[109px]',
           size === 'lg' && 'text-gray100 h-[44px] w-[120px]',
-          isOpen ? 'bg-bg100' : size === 'md' ? 'bg-[#18212F]' : 'bg-bg200'
+          isOpen ? 'bg-bg100' : size === 'md' ? 'bg-bg500' : 'bg-bg200'
         )}
       >
         {selected || options[0]}
