@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import '@/styles/globals.css';
 import 'react-datepicker/dist/react-datepicker.css';
+import '@/styles/globals.css';
 import { HeaderProvider } from '@/components/layout/Gnb/HeaderContext';
 import ClientHeaderLayout from '@/components/layout/ClientHeaderLayout';
 
@@ -12,10 +12,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
-      <body className="bg-bg300 min-h-screen text-white">
+      <body className="bg-bg300 flex min-h-screen w-full flex-col text-white">
         <HeaderProvider>
           <ClientHeaderLayout />
-          <main>{children}</main>
+          <main className="flex-grow">
+            <div className="mx-auto max-w-[1200px] px-4 sm:px-6">{children}</div>
+          </main>
         </HeaderProvider>
       </body>
     </html>
