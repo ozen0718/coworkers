@@ -147,6 +147,8 @@ export function CurrentEmail({ email }: CurrentEmailProp) {
 export function CurrentPassword(props: ButtonProps) {
   return (
     <div className={`${CurrentValueStyle} flex items-center justify-between`}>
+      <div>{'\u2022'.repeat(8)}</div>
+      <Button size="small">변경하기</Button>
       <div className="">{'\u2022'.repeat(8)}</div>
       <Button size="small" {...props}>
         변경하기
@@ -231,23 +233,12 @@ export function TodoCardReplyInput() {
   );
 }
 
-export function TextInput({ placeholder, value, onChange }: TextInputProps) {
-  return (
-    <input
-      type="text"
-      className={InputStyle}
-      placeholder={placeholder}
-      value={value}
-      onChange={onChange}
-    />
-  );
+export function TextInput({ className, ...rest }: TextInputProps) {
+  return <input {...rest} className={`${InputStyle} ${className ?? ''}`} />;
 }
 
-export function TextAreaInput({ placeholder, height }: TextAreaInputProps) {
+export function TextAreaInput({ height = '', ...props }: TextAreaInputProps) {
   return (
-    <textarea
-      className={`bg-bg200 border-gray100/10 focus:border-primary hover:border-primary-hover text-gray100 text-4 text-lg-regular placeholder:text-gray500 w-full resize-none rounded-xl border px-4 py-3 focus:outline-none ${height}`}
-      placeholder={placeholder}
-    />
+    <textarea {...props} className={`${InputStyle.replace('h-12', '')} ${height} resize-none`} />
   );
 }
