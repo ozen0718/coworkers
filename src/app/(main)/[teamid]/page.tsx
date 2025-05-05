@@ -40,7 +40,7 @@ export default function TeamPage() {
   };
 
   return (
-    <div className="mx-auto min-h-[100vh] w-full max-w-300 min-w-[375px] px-4 py-6 sm:px-6">
+    <div className="py-6">
       <TeamHeader title="팀이름" />
 
       <section className={sectionStyle}>
