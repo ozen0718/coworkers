@@ -12,6 +12,7 @@ import Button, { ButtonProps } from '@/components/common/Button/Button';
 import { emailRegex, passwordRegex } from '@/utils/regex';
 import { useState, useRef } from 'react';
 import Image from 'next/image';
+import clsx from 'clsx';
 
 const InputStyle =
   'w-full h-12 mobile:h-11 bg-bg200 border border-gray100/10 rounded-xl px-4 focus:outline-none focus:border-primary hover:border-primary-hover text-gray100 text-4 text-lg-regular mobile:text-md-regular mobile:text-3.5 placeholder:text-gray500';
@@ -192,6 +193,17 @@ export function TextAreaInput({ placeholder, height }: TextAreaInputProps) {
   return (
     <textarea
       className={`bg-bg200 border-gray100/10 focus:border-primary hover:border-primary-hover text-gray100 text-4 text-lg-regular placeholder:text-gray500 w-full resize-none rounded-xl border px-4 py-3 focus:outline-none ${height}`}
+      placeholder={placeholder}
+    />
+  );
+}
+
+export function DateInput({ placeholder }: TextInputProps) {
+  return (
+    <input
+      readOnly
+      type="text"
+      className={clsx(InputStyle, 'cursor-pointer')}
       placeholder={placeholder}
     />
   );
