@@ -7,3 +7,8 @@ export interface MemberProps {
 export type ProgressProp = {
   percentage: number;
 };
+
+export interface UrgentTaskProps {
+  title: string;
+  dueDate: string;
+}
