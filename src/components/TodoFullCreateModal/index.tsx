@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import Modal from '@/components/common/Modal';
-import SelectableDropdown from '@/components/dropdown/SelectableDropdown';
 import DatePickerCalendar from '@/components/TodoFullCreateModal/DatePickerCalender';
 import DatePickerInput from '@/components/TodoFullCreateModal/DatePickerInput';
 import { TextInput, TextAreaInput } from '@/components/common/Inputs';
@@ -59,7 +58,7 @@ export default function TodoFullCreateModal({
       <div className="scrollbar-hide mt-6 mb-2 flex max-h-[70vh] flex-col gap-6 overflow-y-auto">
         {/* 제목 */}
         <div className="flex flex-col gap-4">
-          <label htmlFor="todo-title">할 일 제목</label>
+          <label htmlFor="todo-title" className='text-lg-medium'>할 일 제목</label>
           <TextInput
             id="todo-title"
             placeholder="할 일 제목을 입력해주세요."
@@ -70,7 +69,7 @@ export default function TodoFullCreateModal({
 
         {/* 날짜 + 시간 */}
         <div className="flex flex-col gap-4">
-          <label>시작 날짜 및 시간</label>
+          <h2 className='text-lg-medium'>시작 날짜 및 시간</h2>
           <div className="flex gap-2">
             <div className="flex-1">
               <DatePickerCalendar startDate={startDate} setStartDate={setStartDate} />
@@ -93,7 +92,7 @@ export default function TodoFullCreateModal({
 
         {/* 반복 설정 */}
         <div className="flex flex-col gap-4">
-          <label>반복 설정</label>
+          <h2 className='text-lg-medium'>반복 설정</h2>
           <ArrowDropdown
             size="md"
             options={todoRepeatOptions}
@@ -103,7 +102,7 @@ export default function TodoFullCreateModal({
           />
           {repeat === '주 반복' && (
             <div className="flex flex-col gap-3">
-              <h2>반복 요일</h2>
+              <h2 className='text-lg-medium'>반복 요일</h2>
               <div className="grid grid-cols-7 gap-1">
                 {weekDays.map((day, idx) => {
                   const key = String(idx);
@@ -130,7 +129,7 @@ export default function TodoFullCreateModal({
 
         {/* 메모 */}
         <div className="flex flex-col gap-4">
-          <label htmlFor="todo-memo">메모</label>
+          <label htmlFor="todo-memo" className='text-lg-medium'>메모</label>
           <TextAreaInput
             id="todo-memo"
             placeholder="메모를 입력해주세요."
