@@ -8,6 +8,7 @@ import DatePickerCalendar from '@/components/TodoFullCreateModal/DatePickerCalen
 import DatePickerInput from '@/components/TodoFullCreateModal/DatePickerInput';
 import { TextInput, TextAreaInput } from '@/components/common/Inputs';
 import './style.css';
+import ArrowDropdown from '../common/ArrowDropdown';
 
 export interface TodoFullCreateModalProps {
   isOpen: boolean;
@@ -93,16 +94,12 @@ export default function TodoFullCreateModal({
         {/* 반복 설정 */}
         <div className="flex flex-col gap-4">
           <label>반복 설정</label>
-          <SelectableDropdown
+          <ArrowDropdown
+            size="md"
             options={todoRepeatOptions}
-            size="sm"
-            placement="top-full"
-            dropDownOpenBtn={
-              <div className="text-md-medium text-gray500 flex h-10 w-[150px] items-center rounded-xl bg-[#18212f] px-4">
-                {repeat}
-              </div>
-            }
-            onSelect={(e) => setRepeat(e.currentTarget.innerText!)}
+            selected={repeat}
+            onSelect={(value) => setRepeat(value)}
+            className="w-[109px]"
           />
           {repeat === '주 반복' && (
             <div className="grid grid-cols-7 gap-1">
