@@ -1,7 +1,13 @@
+'use client';
+
+import { useState } from 'react';
 import { TasksItem } from '@/components/teampage/TaskElements';
 import TeamHeader from '@/components/teampage/TeamHeader';
 import Report from '@/components/teampage/Report';
 import Member from '@/components/common/Member';
+import Modal from '@/components/common/Modal';
+import Toast from '@/components/common/Toast';
+import useToast from '@/hooks/useToast';
 
 export default function TeamPage() {
   const sectionStyle = 'w-full py-6 flex flex-col items-center justify-start gap-4';
@@ -10,6 +16,18 @@ export default function TeamPage() {
   const sectionHeaderH2Style = 'text-lg-medium font-semibold text-gray100';
   const sectionHeaderPSTyle = 'text-lg-regular text-gray500';
   const sectionHeaderButtonStyle = 'text-md-regular text-primary';
+
+  const [isInviteModalOpen, setInviteModalOpen] = useState(false);
+
+  const openModal = () => setInviteModalOpen(true);
+  const closeModal = () => setInviteModalOpen(false);
+
+  const { message, visible, showToast } = useToast(3000);
+
+  const handleCopyLink = async () => {
+    await navigator.clipboard.writeText('https://your-invite-link.com');
+    showToast('복사되었습니다.');
+  };
 
   return (
     <div className="mx-auto min-h-[100vh] w-full max-w-300 min-w-[375px] px-4 py-6 sm:px-6">
@@ -46,7 +64,24 @@ export default function TeamPage() {
             <h2 className={sectionHeaderH2Style}>멤버</h2>
             <p className={sectionHeaderPSTyle}>(8명)</p>
           </div>
-          <button className={sectionHeaderButtonStyle}>+ 새로운 목록 추가하기</button>
+          <div>
+            <button className={sectionHeaderButtonStyle} onClick={openModal}>
+              + 새로운 멤버 추가하기
+            </button>
+
+            <Modal
+              isOpen={isInviteModalOpen}
+              onClose={closeModal}
+              submitButtonLabel="링크 복사하기"
+              closeIcon
+              title="멤버 초대"
+              description="그룹에 참여할 수 있는 링크를 복사합니다."
+              submitButtonVariant="primary"
+              onSubmit={handleCopyLink}
+            />
+
+            <Toast message={message} visible={visible} />
+          </div>
         </header>
         <div className="grid-rows-auto grid w-full grid-cols-[1fr_1fr] gap-4 sm:grid-cols-[1fr_1fr_1fr]">
           <Member name="가나다" email="abc123@email.com" />
