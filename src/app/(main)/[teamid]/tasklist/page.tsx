@@ -9,7 +9,6 @@ import clsx from 'clsx';
 import Modal from '@/components/common/Modal';
 import TodoFullCreateModal, { TodoFullCreateModalProps } from '@/components/TodoFullCreateModal';
 import TodoItem from '@/components/List/todo';
-import ModalHeader from '@/components/common/Modal/ModalHeader';
 import { TextInput } from '@/components/common/Inputs';
 
 const MAX_LIST_NAME_LENGTH = 15;
@@ -97,10 +96,9 @@ export default function TaskListPage() {
 
   return (
     <>
-      <main className="py-6">
-        <div className="relative mx-auto mt-6 max-w-[1200px] space-y-6 px-4 sm:px-6 md:px-8 lg:mt-10">
+        <div className="relative mt-6 space-y-6 lg:mt-10">
           <header className="space-y-4">
-            <h1 className="text-2xl-medium text-white">할 일</h1>
+            <h1 className="text-2lg-bold md:!text-xl">할 일</h1>
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="text-gray300 flex items-center space-x-3 text-base">
                 <button onClick={prevDay}>
@@ -173,7 +171,6 @@ export default function TaskListPage() {
             + 할 일 추가
           </button>
         </div>
-      </main>
 
       <TodoFullCreateModal
         key={isTodoModalOpen ? 'todo-open' : 'todo-closed'}
