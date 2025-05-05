@@ -6,6 +6,7 @@ import Image from 'next/image';
 import clsx from 'clsx';
 
 import Button from '@/components/common/Button/Button';
+import { AuthPagesLayout, PageTitleStyle } from '@/styles/pageStyle';
 
 export default function AddTeamPage() {
   const router = useRouter();
@@ -54,13 +55,6 @@ export default function AddTeamPage() {
     router.push(`/main/${id}`);
   };
 
-  const mainClassName = clsx(
-    'bg-bg300 flex  flex-col items-center justify-start p-4',
-    'pt-[72px] md:pt-[100px] lg:pt-[140px]'
-  );
-
-  const titleClassName = clsx('text-4xl-medium text-gray100 mt-6 mb-20');
-
   const inputClassName = clsx(
     'bg-bg100 text-lg-regular placeholder:text-gray500 h-12 w-full rounded-xl border px-4 focus:outline-none',
     {
@@ -76,11 +70,11 @@ export default function AddTeamPage() {
 
   return (
     <>
-      <main className={mainClassName}>
-        <h1 className={titleClassName}>팀 생성하기</h1>
+      <div className={clsx(AuthPagesLayout, 'mt-18')}>
+        <h1 className={PageTitleStyle}>팀 생성하기</h1>
 
         <div className="w-full max-w-lg">
-          <span className="text-md-medium text-gray100 mb-4 block">팀 프로필</span>
+          <span className="text-lg-medium text-gray100 mb-3 block">팀 프로필</span>
           <div className="relative mb-4 inline-block">
             <Image
               src={file ? URL.createObjectURL(file) : '/icons/initialteamprofile.svg'}
@@ -135,7 +129,7 @@ export default function AddTeamPage() {
             팀 이름은 회사명이나 모임 이름 등으로 설정하면 좋아요.
           </p>
         </div>
-      </main>
+      </div>
     </>
   );
 }
