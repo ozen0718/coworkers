@@ -12,13 +12,14 @@ import BoardComment from '@/components/Card/Comment/BoardComment';
 type DetailPostProps = {
   title: string;
   onClose: () => void;
+  showComplete: boolean;
 };
 
-export default function DetailPost({ title, onClose }: DetailPostProps) {
-  const [showComplete, setShowComplete] = useState(false);
+export default function DetailPost({ title, onClose, showComplete }: DetailPostProps) {
+  const [isComplete, setIsComplete] = useState(showComplete);
 
   const handleToggleComplete = () => {
-    setShowComplete((prev) => !prev);
+    setIsComplete((prev) => !prev);
   };
 
   return (
@@ -26,19 +27,19 @@ export default function DetailPost({ title, onClose }: DetailPostProps) {
       style={{ borderLeft: '1px solid var(--Border-Primary, #F8FAFC1A)' }}
       className="bg-bg200 relative flex h-full min-h-[698px] w-full flex-col gap-[10px] overflow-x-hidden p-5"
     >
-      <div className="text-lg-regular flex w-full items-start justify-between">
+      <div className="text-lg-regular mt-5 flex w-full items-start justify-between">
         <IconDelete className="cursor-pointer" onClick={onClose} />
       </div>
 
       <div className="flex flex-col">
-        {showComplete && (
+        {isComplete && (
           <div className="flex items-center gap-1">
             <IconCheck color="#a3e635" />
             <p className="text-tertiary text-xs font-medium">완료</p>
           </div>
         )}
         <div className="text-xl-bold mt-2 flex items-center md:w-[747px]">
-          <span className={showComplete ? 'line-through' : ''}>{title}</span>
+          <span className={isComplete ? 'line-through' : ''}>{title}</span>
           <Image
             className="ml-auto flex h-[24px] min-h-[21px] max-w-[699px] cursor-pointer"
             src="/icons/kebab.svg"
@@ -50,10 +51,10 @@ export default function DetailPost({ title, onClose }: DetailPostProps) {
       </div>
 
       <div className="w-full max-w-[739px]">
-        <AuthorInfo showLike={false} showDivider={false} />
+        <AuthorInfo type="detail" showLike={false} showDivider={false} />
       </div>
 
-      {!showComplete && (
+      {!isComplete && (
         <div className="mt-2">
           <DateInfo date="2025-04-25T00:00:00Z" time="15:30" repeatinfo="DAILY" />
         </div>
@@ -69,20 +70,20 @@ export default function DetailPost({ title, onClose }: DetailPostProps) {
       <TodoCardReplyInput />
 
       <div className="scroll-area max-h-[400px] w-full overflow-y-auto">
-        <BoardComment type="list" />
+        <BoardComment type="list" content="ddd" />
         <BoardComment type="list" />
         <BoardComment type="list" />
         <BoardComment type="list" />
       </div>
 
       <Button
-        variant={showComplete ? 'cancel' : 'complete'}
-        size={showComplete ? 'cancel' : 'complete'}
+        variant={isComplete ? 'cancel' : 'complete'}
+        size={isComplete ? 'cancel' : 'complete'}
         icon="check"
         className="absolute right-5 bottom-5"
         onClick={handleToggleComplete}
       >
-        {showComplete ? '완료 취소하기' : '완료하기'}
+        {isComplete ? '완료 취소하기' : '완료하기'}
       </Button>
     </div>
   );

@@ -95,7 +95,7 @@ export default function BoardComment({ type, author, content, date }: BoardComme
             </Button>
           </div>
         ) : (
-          <AuthorInfo showDivider={type !== 'list'} showLike={type !== 'list'} />
+          <AuthorInfo type="detail" showDivider={type !== 'list'} showLike={type !== 'list'} />
         )}
       </div>
       {type === 'list' && <div className="mt-2 h-[1px] w-full bg-[#F8FAFC1A]"></div>}
