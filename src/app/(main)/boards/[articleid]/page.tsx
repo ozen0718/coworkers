@@ -25,12 +25,11 @@ export default function ArticleDetail() {
   };
 
   return (
-    <div className="text-gray300 flex flex-col items-center">
-      <div className="w-full max-w-[1200px] px-5">
+    <div className="my-16 md:my-20 text-gray300 flex flex-col">
         {/* 타이틀 + 작성 정보 */}
-        <div className="max-h-[128px] w-full flex-col">
+        <div className="max-h-[128px] flex-col">
           {/* 타이틀 영역 */}
-          <div className="mt-15 flex w-full max-w-[1200px] items-center justify-between">
+          <div className="flex items-center justify-between">
             <p className="text-2lg-medium flex font-bold">게시물 제목 영역입니다.</p>
 
             {/* 케밥 아이콘 + 드롭다운 */}
@@ -100,7 +99,6 @@ export default function ArticleDetail() {
             </p>
           )}
         </div>
-      </div>
     </div>
   );
 }
