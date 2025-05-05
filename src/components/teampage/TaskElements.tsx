@@ -52,12 +52,12 @@ export function TasksItem({ tasksTitle, completed, total }: TasksItemProp) {
   const trimColor = getTrimColor(tasksTitle);
 
   return (
-    <div className="bg-bg200 flex h-10 w-full items-center justify-between rounded-xl hover:cursor-pointer">
-      <div className="flex items-center justify-start gap-3 overflow-hidden rounded-xl">
+    <div className="bg-bg200 flex h-10 w-full items-center justify-between rounded-xl">
+      <button className="flex w-full items-center justify-start gap-3 overflow-hidden rounded-xl">
         <div className="h-10 w-3" style={{ backgroundColor: trimColor }} />
-        <p className="text-md-medium">{tasksTitle}</p>
-      </div>
-      <div className="mr-2 flex w-21.5 items-center justify-end gap-1">
+        <p className="text-md-medium w-full text-left">{tasksTitle}</p>
+      </button>
+      <div className="mr-2 flex w-fit items-center justify-end gap-1">
         <ProgressBadge completedTaskNumber={completed} totalTaskNumber={total} />
         <ActionMenu
           trigger={<Image src="/icons/kebab.svg" width={16} height={16} alt="메뉴" />}

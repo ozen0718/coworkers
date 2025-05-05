@@ -16,7 +16,7 @@ export default function ReportProgress({ percentage }: ProgressProp) {
           trailColor: 'var(--color-bg100)',
         })}
       >
-        <div className="flex flex-col items-center justify-center gap-0.5 sm:hidden">
+        <div className="flex flex-col items-center justify-center gap-0.5 lg:hidden">
           <p className="text-xs-medium text-gray300">오늘</p>
           <p className="text-xl-bold from-primary to-tertiary bg-gradient-to-r bg-clip-text text-transparent">
             {percentage}%

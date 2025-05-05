@@ -1,4 +1,4 @@
-import MyHistoryItem from '@/components/common/MyHistoryItem';
+import MyHistoryItem from '@/components/myhistory/MyHistoryItem';
 import { MyHistoryByDateProps } from '@/types/myhistorytypes';
 import getKoreanDateString from '@/utils/date';
 

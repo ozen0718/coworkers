@@ -1,4 +1,4 @@
-import TaskHistoryByDate from '@/components/MyHistoryByDate';
+import TaskHistoryByDate from '@/components/myhistory/MyHistoryByDate';
 import { MyHistoryItemProps } from '@/types/myhistorytypes';
 
 const temporaryData: Record<string, MyHistoryItemProps[]> = {
