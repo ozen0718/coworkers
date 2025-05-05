@@ -36,10 +36,9 @@
   color: #ffffff;
 }
 
-/* 반응형 width값 임시적용 */
-@media (max-width: 768px) {
+@media (max-width: 639px) {
   .calendar-picker .react-datepicker {
-    width: 326px;
+    width: calc(100vw - 48px);
   }
 }
 
@@ -83,6 +82,14 @@
   border-radius: 8px;
 }
 
+@media (max-width: 639px) {
+  .react-datepicker__day,
+  .react-datepicker__day-name {
+    aspect-ratio: 1.36 / 1;
+    height: auto;
+  }
+}
+
 .react-datepicker__day-name {
   font-weight: 600;
 }
@@ -103,3 +110,7 @@
   color: black;
   border-radius: 8px;
 }
+
+/* ========================= */
+/* Time */
+/* ========================= */

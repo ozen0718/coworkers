@@ -26,11 +26,16 @@ export default function ModalButtons({
   return (
     <div className="mt-6 flex gap-2">
       {cancelButtonLabel && (
-        <Button variant={cancelButtonVariant} onClick={onClose}>
+        <Button fullWidth variant={cancelButtonVariant} onClick={onClose}>
           {cancelButtonLabel}
         </Button>
       )}
-      <Button variant={submitButtonVariant} onClick={handleClickSubmit} disabled={disabled}>
+      <Button
+        fullWidth
+        variant={submitButtonVariant}
+        onClick={handleClickSubmit}
+        disabled={disabled}
+      >
         {submitButtonLabel}
       </Button>
     </div>

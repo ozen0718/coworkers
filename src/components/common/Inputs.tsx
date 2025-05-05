@@ -14,6 +14,7 @@ import Button, { ButtonProps } from '@/components/common/Button/Button';
 import { nameRegex, emailRegex, passwordRegex } from '@/utils/regex';
 import { useState, useRef } from 'react';
 import Image from 'next/image';
+import clsx from 'clsx';
 
 const BaseInputStyle =
   'w-full sm:h-12 h-11 bg-bg200 border border-gray100/10 rounded-xl px-4 focus:border-primary hover:border-primary-hover';
@@ -236,5 +237,16 @@ export function TextInput({ className, ...rest }: TextInputProps) {
 export function TextAreaInput({ height = '', ...props }: TextAreaInputProps) {
   return (
     <textarea {...props} className={`${InputStyle.replace('h-12', '')} ${height} resize-none`} />
+  );
+}
+
+export function DateInput({ placeholder }: TextInputProps) {
+  return (
+    <input
+      readOnly
+      type="text"
+      className={clsx(InputStyle, 'cursor-pointer')}
+      placeholder={placeholder}
+    />
   );
 }
