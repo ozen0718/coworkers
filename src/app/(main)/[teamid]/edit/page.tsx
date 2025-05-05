@@ -1,6 +1,8 @@
 import EditableTeamProfileSection from './EditableTeamProfileSection';
 import EditableTeamNameSection from './EditableTeamNameSection';
 import EditButton from './EditButton';
+import clsx from 'clsx';
+import { AuthPagesLayout, PageTitleStyle } from '@/styles/pageStyle';
 
 export default function TeamEditPage() {
   const mockTeamData = {
@@ -9,15 +11,15 @@ export default function TeamEditPage() {
   };
 
   return (
-    <div className="mx-auto flex w-[375px] flex-col justify-center px-4 py-14 md:w-[460px] md:py-25">
-      <h2 className="text-center text-2xl leading-[28px] font-medium lg:text-[40px] lg:leading-[48px]">
+    <div className={clsx(AuthPagesLayout, 'mt-14')}>
+      <h2 className={PageTitleStyle}>
         팀 수정하기
       </h2>
 
       <div className="mt-6 flex flex-col gap-6 md:mt-20">
         <EditableTeamProfileSection teamProfileUrl={mockTeamData.image} />
         {/* TODO: Input 교체 후 {mockTeamData.name} 추가 */}
-        <EditableTeamNameSection/>
+        <EditableTeamNameSection />
       </div>
 
       <EditButton />
