@@ -102,25 +102,28 @@ export default function TodoFullCreateModal({
             className="w-[109px]"
           />
           {repeat === '주 반복' && (
-            <div className="grid grid-cols-7 gap-1">
-              {weekDays.map((day, idx) => {
-                const key = String(idx);
-                const active = repeatDays.includes(key);
-                return (
-                  <button
-                    key={day}
-                    type="button"
-                    className={`rounded border p-2 ${active ? 'bg-blue-500 text-white' : ''}`}
-                    onClick={() =>
-                      setRepeatDays((prev) =>
-                        prev.includes(key) ? prev.filter((d) => d !== key) : [...prev, key]
-                      )
-                    }
-                  >
-                    {day}
-                  </button>
-                );
-              })}
+            <div className="flex flex-col gap-3">
+              <h2>반복 요일</h2>
+              <div className="grid grid-cols-7 gap-1">
+                {weekDays.map((day, idx) => {
+                  const key = String(idx);
+                  const active = repeatDays.includes(key);
+                  return (
+                    <button
+                      key={day}
+                      type="button"
+                      className={`bg-bg500 text-md-medium h-12 rounded-xl p-2 ${active ? 'bg-primary' : ''}`}
+                      onClick={() =>
+                        setRepeatDays((prev) =>
+                          prev.includes(key) ? prev.filter((d) => d !== key) : [...prev, key]
+                        )
+                      }
+                    >
+                      {day}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           )}
         </div>
