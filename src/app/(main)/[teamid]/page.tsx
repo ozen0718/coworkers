@@ -33,8 +33,13 @@ export default function TeamPage() {
     setNewListName('');
   };
 
-  const handleCopyLink = async () => {
+  const handleCopyPageLink = async () => {
     await navigator.clipboard.writeText('https://your-invite-link.com');
+    showToast('복사되었습니다.');
+  };
+
+  const handleCopyMemberEmail = async () => {
+    await navigator.clipboard.writeText('email@email.com');
     showToast('복사되었습니다.');
   };
 
@@ -108,7 +113,7 @@ export default function TeamPage() {
               title="멤버 초대"
               description="그룹에 참여할 수 있는 링크를 복사합니다."
               submitButtonVariant="primary"
-              onSubmit={handleCopyLink}
+              onSubmit={handleCopyPageLink}
             />
 
             <Toast message={message} visible={visible} />
@@ -130,6 +135,7 @@ export default function TeamPage() {
           onClose={close}
           submitButtonLabel="이메일 복사하기"
           closeIcon
+          onSubmit={handleCopyMemberEmail}
         >
           <div className="flex flex-col items-center gap-6">
             <Profile width={52} />
