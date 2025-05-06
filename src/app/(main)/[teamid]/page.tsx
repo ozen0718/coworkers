@@ -9,6 +9,8 @@ import Member from '@/components/common/Member';
 import Modal from '@/components/common/Modal';
 import Toast from '@/components/common/Toast';
 import useToast from '@/hooks/useToast';
+import { Profile } from '@/components/common/Profiles';
+import { useModal } from '@/hooks/useModal';
 
 export default function TeamPage() {
   const sectionStyle = 'w-full py-6 flex flex-col items-center justify-start gap-4';
@@ -24,6 +26,8 @@ export default function TeamPage() {
 
   const openModal = () => setInviteModalOpen(true);
   const closeModal = () => setInviteModalOpen(false);
+
+  const { isOpen, open, close } = useModal();
 
   const { message, visible, showToast } = useToast(3000);
 
@@ -116,15 +120,25 @@ export default function TeamPage() {
           </div>
         </header>
         <div className="grid-rows-auto grid w-full grid-cols-[1fr_1fr] gap-4 sm:grid-cols-[1fr_1fr_1fr]">
-          <Member name="가나다" email="abc123@email.com" />
-          <Member name="가나다" email="abc123@email.com" />
-          <Member name="가나다" email="abc123@email.com" />
-          <Member name="가나다" email="abc123@email.com" />
-          <Member name="가나다" email="abc123@email.com" />
-          <Member name="가나다" email="abc123@email.com" />
-          <Member name="가나다" email="abc123@email.com" />
-          <Member name="가나다" email="abc123@email.com" />
+          <Member name="가나다" email="abc123@email.com" onClick={open} />
+          <Member name="가나다" email="abc123@email.com" onClick={open} />
+          <Member name="가나다" email="abc123@email.com" onClick={open} />
+          <Member name="가나다" email="abc123@email.com" onClick={open} />
+          <Member name="가나다" email="abc123@email.com" onClick={open} />
+          <Member name="가나다" email="abc123@email.com" onClick={open} />
+          <Member name="가나다" email="abc123@email.com" onClick={open} />
+          <Member name="가나다" email="abc123@email.com" onClick={open} />
         </div>
+
+        <Modal isOpen={isOpen} onClose={close} submitButtonLabel="이메일 복사하기" closeIcon>
+          <div className="flex flex-col items-center gap-6">
+            <Profile width={52} />
+            <div className="flex flex-col items-center gap-2 text-center">
+              <p className="text-md-medium">우지은</p>
+              <p className="text-xs-regular">이메일</p>
+            </div>
+          </div>
+        </Modal>
       </section>
     </div>
   );
