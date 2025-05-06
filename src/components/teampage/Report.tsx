@@ -16,7 +16,7 @@ function LeftSide({ percentage }: ProgressProp) {
       </div>
       <div className="flex w-full justify-center">
         <div className="hidden flex-col items-start justify-center gap-1 lg:flex">
-          <p className="text-md-medium text-gray100">
+          <p className="text-md-medium">
             오늘의
             <br />
             진행 상황
@@ -84,7 +84,7 @@ function UrgentTaskForMobile({ title, dueDate }: UrgentTaskProps) {
         <Alert className="text-white" />
         <div className="flex flex-col items-center justify-center">
           <p className="text-xs-regular text-tertiary whitespace-nowrap">마감 임박</p>
-          <p className="text-lg-medium text-gray100 h-fit w-fit rounded-l-full whitespace-nowrap">
+          <p className="text-lg-medium h-fit w-fit rounded-l-full whitespace-nowrap">
             {dueDate}
           </p>
         </div>

@@ -30,7 +30,7 @@ export default function SideMenu({ teams, isOpen, onClose }: SideMenuProps) {
           {teams.map((team) => (
             <div
               key={team.id}
-              className="text-md-medium text-gray100 hover:bg-bg300 cursor-pointer rounded px-2 py-1"
+              className="text-md-medium hover:bg-bg300 cursor-pointer rounded px-2 py-1"
             >
               {team.name}
             </div>

@@ -9,7 +9,7 @@ interface ProfileItemProps {
 }
 
 export default function ProfileItem({ text, href, onClick }: ProfileItemProps) {
-  const commonClass = 'text-md-regular text-gray100 cursor-pointer';
+  const commonClass = 'text-md-regular cursor-pointer';
 
   if (onClick) {
     return (

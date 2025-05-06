@@ -13,7 +13,7 @@ export default function Member({ profileUrl, name, email }: MemberProps) {
           <div className="col-span-1 row-span-1 flex min-w-0 flex-col items-start justify-center sm:row-span-2 sm:items-center">
             <Profile width={32} profileUrl={profileUrl} />
           </div>
-          <p className="text-md-medium text-gray100 col-span-1 col-start-2 row-span-1 row-start-1 self-center text-left">
+          <p className="text-md-medium col-span-1 col-start-2 row-span-1 row-start-1 self-center text-left">
             {name}
           </p>
           <p className="text-xs-regular text-gray300 col-span-2 col-start-1 row-span-1 row-start-2 mt-0.5 text-left break-all whitespace-normal sm:col-span-1 sm:col-start-2">

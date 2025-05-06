@@ -21,7 +21,7 @@ export default function DropDownGroupsItem({ group }: DropDownGroupsItemProps) {
 
   return (
     <div className="hover:bg-bg100 flex w-[186px] cursor-pointer items-center justify-between rounded-lg px-2 py-[7px]">
-      <Link href={`/${id}`} className="text-lg-md text-gray400 flex items-center gap-3">
+      <Link href={`/${id}`} className="text-lg-md text-white flex items-center gap-3">
         <Image
           src={image || '/default-team.png'}
           width={32}
