@@ -12,6 +12,14 @@ import useToast from '@/hooks/useToast';
 import { Profile } from '@/components/common/Profiles';
 import { useModalGroup } from '@/hooks/useModalGroup';
 
+const mockMembers = [
+  { name: '우지은', email: 'coworkers@code.com' },
+  { name: '김하늘', email: 'skyblue@example.com' },
+  { name: '박서준', email: 'seojoon@example.com' },
+  { name: '이수민', email: 'soomin@example.com' },
+  { name: '정해인', email: 'haein@example.com' },
+];
+
 export default function TeamPage() {
   const sectionStyle = 'w-full py-6 flex flex-col items-center justify-start gap-4';
   const sectionHeaderStyle = 'flex w-full items-center justify-between';
@@ -21,6 +29,9 @@ export default function TeamPage() {
   const sectionHeaderButtonStyle = 'text-md-regular text-primary';
 
   const [newListName, setNewListName] = useState('');
+  const [selectedMember, setSelectedMember] = useState<{ name: string; email: string } | null>(
+    null
+  );
 
   const { open, close, isOpen } = useModalGroup<'invite' | 'createList' | 'memberProfile'>();
 
@@ -39,8 +50,14 @@ export default function TeamPage() {
   };
 
   const handleCopyMemberEmail = async () => {
-    await navigator.clipboard.writeText('email@email.com');
+    if (!selectedMember) return;
+    await navigator.clipboard.writeText(selectedMember.email);
     showToast('복사되었습니다.');
+  };
+
+  const handleOpenProfile = (member: { name: string; email: string }) => {
+    setSelectedMember(member);
+    open('memberProfile');
   };
 
   return (
@@ -120,14 +137,14 @@ export default function TeamPage() {
           </div>
         </header>
         <div className="grid-rows-auto grid w-full grid-cols-[1fr_1fr] gap-4 sm:grid-cols-[1fr_1fr_1fr]">
-          <Member name="가나다" email="abc123@email.com" onClick={() => open('memberProfile')} />
-          <Member name="가나다" email="abc123@email.com" onClick={() => open('memberProfile')} />
-          <Member name="가나다" email="abc123@email.com" onClick={() => open('memberProfile')} />
-          <Member name="가나다" email="abc123@email.com" onClick={() => open('memberProfile')} />
-          <Member name="가나다" email="abc123@email.com" onClick={() => open('memberProfile')} />
-          <Member name="가나다" email="abc123@email.com" onClick={() => open('memberProfile')} />
-          <Member name="가나다" email="abc123@email.com" onClick={() => open('memberProfile')} />
-          <Member name="가나다" email="abc123@email.com" onClick={() => open('memberProfile')} />
+          {mockMembers.map((member) => (
+            <Member
+              key={member.email} // API 연동 후 수정
+              name={member.name}
+              email={member.email}
+              onClick={() => handleOpenProfile(member)}
+            />
+          ))}
         </div>
 
         <Modal
@@ -140,8 +157,8 @@ export default function TeamPage() {
           <div className="flex flex-col items-center gap-6">
             <Profile width={52} />
             <div className="flex flex-col items-center gap-2 text-center">
-              <p className="text-md-medium">우지은</p>
-              <p className="text-xs-regular">이메일</p>
+              <p className="text-md-medium">{selectedMember?.name}</p>
+              <p className="text-xs-regular">{selectedMember?.email}</p>
             </div>
           </div>
         </Modal>
