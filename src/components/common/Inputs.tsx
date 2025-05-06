@@ -1,22 +1,62 @@
 'use client';
 
-import { ToggleInputProps, CurrentEmailProp } from '@/types/inputtypes';
+import {
+  InputProps,
+  ToggleInputProps,
+  CurrentEmailProp,
+  TextInputProps,
+  TextAreaInputProps,
+  CurrentNameProp,
+} from '@/types/inputtypes';
 import useClickOutside from '@/hooks/useClickOutside';
 import useValidatedInput from '@/hooks/useValidatedInput';
 import Button, { ButtonProps } from '@/components/common/Button/Button';
-import { emailRegex, passwordRegex } from '@/utils/regex';
+import { nameRegex, emailRegex, passwordRegex } from '@/utils/regex';
 import { useState, useRef } from 'react';
 import Image from 'next/image';
+import clsx from 'clsx';
+
+const BaseInputStyle =
+  'w-full sm:h-12 h-11 bg-bg200 border border-gray100/10 rounded-xl px-4 focus:border-primary hover:border-primary-hover';
+
+const EmailInputStyle = `${BaseInputStyle} focus:outline-none text-gray100 placeholder:text-gray500 sm:text-4 sm:text-lg-regular text-md-regular text-3.5`;
+
+const PasswordInputStyle =
+  'w-full focus:outline-none text-gray100 sm:text-4 sm:text-lg-regular text-md-regular text-3.5 placeholder:text-gray500';
 
 const InputStyle =
-  'w-full h-12 mobile:h-11 bg-bg200 border border-gray100/10 rounded-xl px-4 py-3 focus:outline-none focus:border-primary hover:border-primary-hover text-gray100 text-4 text-lg-regular mobile:text-md-regular mobile:text-3.5 placeholder:text-gray500';
+  'w-full sm:h-12 h-11 bg-bg200 border border-gray100/10 rounded-xl px-4 focus:outline-none focus:border-primary hover:border-primary-hover text-gray100 sm:text-4 sm:text-lg-regular text-md-regular text-3.5 placeholder:text-gray500';
 
 const CurrentValueStyle =
-  'w-full h-12 mobile:h-11 bg-bg100 border border-gray100/10 rounded-xl px-4 text-gray500 text-4 mobile:text-3.5 text-lg-regular mobile:text-md-regular';
+  'w-full sm:h-12 h-11 bg-bg100 border border-gray100/10 rounded-xl px-4 text-gray500 sm:text-4 text-3.5 sm:text-lg-regular text-md-regular';
 
-const InvalidMessageStyle = 'text-md-medium/[17px] text-danger mt-2';
+const InvalidMessageStyle = 'text-md-medium text-danger mt-2';
 
-export function EmailInput() {
+export function NameInput({ id, placeholder }: InputProps) {
+  const { value, isInvalid, onChange, onBlur } = useValidatedInput((name) => nameRegex.test(name));
+
+  return (
+    <div>
+      <input
+        type="text"
+        className={`${EmailInputStyle} peer ${isInvalid ? 'border-red-500' : ''}`}
+        placeholder={placeholder}
+        id={id}
+        value={value}
+        onChange={onChange}
+        onBlur={onBlur}
+        required
+      />
+      {isInvalid && (
+        <p className={InvalidMessageStyle}>
+          {value.length === 0 ? '이름을 입력하세요.' : '이름은 두 글자 이상 입력해주세요.'}
+        </p>
+      )}
+    </div>
+  );
+}
+
+export function EmailInput({ id, placeholder }: InputProps) {
   const { value, isInvalid, onChange, onBlur } = useValidatedInput((email) =>
     emailRegex.test(email)
   );
@@ -25,34 +65,38 @@ export function EmailInput() {
     <div>
       <input
         type="email"
-        className={`${InputStyle} peer ${isInvalid ? 'border-red-500' : ''}`}
-        placeholder="이메일을 입력하세요."
+        className={`${EmailInputStyle} peer ${isInvalid ? 'border-red-500' : ''}`}
+        placeholder={placeholder}
+        id={id}
         value={value}
         onChange={onChange}
         onBlur={onBlur}
         required
       />
-      {isInvalid && <p className={InvalidMessageStyle}>유효한 이메일이 아닙니다.</p>}
+      {isInvalid && (
+        <p className={InvalidMessageStyle}>
+          {value.length === 0 ? '이메일을 입력하세요.' : '유효한 이메일이 아닙니다.'}
+        </p>
+      )}
     </div>
   );
 }
 
-export function PasswordInput({
-  placeholder = '비밀번호를 입력하세요.',
-}: {
-  placeholder?: string;
-}) {
+export function PasswordInput({ id, placeholder }: InputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const { value, isInvalid, onChange, onBlur } = useValidatedInput((pw) => passwordRegex.test(pw));
 
   return (
     <div>
-      <div className={`${InputStyle} flex items-center justify-between gap-3`}>
+      <div
+        className={`${BaseInputStyle} flex items-center justify-between gap-3 ${isInvalid ? 'border-red-500' : ''}`}
+      >
         <input
           type={showPassword ? 'text' : 'password'}
-          className={`w-full focus:outline-none ${isInvalid ? 'border-red-500' : ''}`}
+          className={PasswordInputStyle}
           placeholder={placeholder}
+          id={id}
           value={value}
           onChange={onChange}
           onBlur={onBlur}
@@ -88,6 +132,15 @@ export function PasswordInput({
   );
 }
 
+export function CurrentName({ name }: CurrentNameProp) {
+  return (
+    <div className={`${CurrentValueStyle} flex items-center justify-between`}>
+      <div>{name}</div>
+      <Button size="small">변경하기</Button>
+    </div>
+  );
+}
+
 export function CurrentEmail({ email }: CurrentEmailProp) {
   return <div className={`${CurrentValueStyle} flex items-center`}>{email}</div>;
 }
@@ -97,10 +150,6 @@ export function CurrentPassword(props: ButtonProps) {
     <div className={`${CurrentValueStyle} flex items-center justify-between`}>
       <div>{'\u2022'.repeat(8)}</div>
       <Button size="small">변경하기</Button>
-      <div className="">{'\u2022'.repeat(8)}</div>
-      <Button size="small" {...props}>
-        변경하기
-      </Button>
     </div>
   );
 }
@@ -181,16 +230,23 @@ export function TodoCardReplyInput() {
   );
 }
 
-export interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
-export function TextInput(props: TextInputProps) {
-  return <input {...props} className={InputStyle} />;
+export function TextInput({ className, ...rest }: TextInputProps) {
+  return <input {...rest} className={`${InputStyle} ${className ?? ''}`} />;
 }
 
-export interface TextAreaInputProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  height?: string;
-}
 export function TextAreaInput({ height = '', ...props }: TextAreaInputProps) {
   return (
     <textarea {...props} className={`${InputStyle.replace('h-12', '')} ${height} resize-none`} />
+  );
+}
+
+export function DateInput({ placeholder }: TextInputProps) {
+  return (
+    <input
+      readOnly
+      type="text"
+      className={clsx(InputStyle, 'cursor-pointer')}
+      placeholder={placeholder}
+    />
   );
 }
