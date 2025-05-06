@@ -45,8 +45,8 @@ export default function BoardComment({ type, author, content, date }: BoardComme
     >
       <div className="text-lg-regular flex w-full items-start justify-between">
         {isEditing ? (
-          <div className="relative flex w-full items-start">
-            <TextAreaInput />
+          <div className="relative mt-3 flex h-full w-full items-start">
+            <TextAreaInput height="h-[65px]" />
           </div>
         ) : (
           <div
