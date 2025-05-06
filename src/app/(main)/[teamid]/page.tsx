@@ -10,7 +10,7 @@ import Modal from '@/components/common/Modal';
 import Toast from '@/components/common/Toast';
 import useToast from '@/hooks/useToast';
 import { Profile } from '@/components/common/Profiles';
-import { useModal } from '@/hooks/useModal';
+import { useModalGroup } from '@/hooks/useModalGroup';
 
 export default function TeamPage() {
   const sectionStyle = 'w-full py-6 flex flex-col items-center justify-start gap-4';
@@ -20,20 +20,15 @@ export default function TeamPage() {
   const sectionHeaderPSTyle = 'text-lg-regular text-gray500';
   const sectionHeaderButtonStyle = 'text-md-regular text-primary';
 
-  const [isInviteModalOpen, setInviteModalOpen] = useState(false);
-  const [isCreateListModalOpen, setCreateListModalOpen] = useState(false);
   const [newListName, setNewListName] = useState('');
 
-  const openModal = () => setInviteModalOpen(true);
-  const closeModal = () => setInviteModalOpen(false);
-
-  const { isOpen, open, close } = useModal();
+  const { open, close, isOpen } = useModalGroup<'invite' | 'createList' | 'memberProfile'>();
 
   const { message, visible, showToast } = useToast(3000);
 
   const handleCreateList = () => {
     if (!newListName.trim()) return;
-    setCreateListModalOpen(false);
+    close();
     showToast('새로운 목록이 생성되었습니다.');
     setNewListName('');
   };
@@ -53,13 +48,13 @@ export default function TeamPage() {
             <h2 className={sectionHeaderH2Style}>할 일 목록</h2>
             <p className={sectionHeaderPSTyle}>(4개)</p>
           </div>
-          <button className={sectionHeaderButtonStyle} onClick={() => setCreateListModalOpen(true)}>
+          <button className={sectionHeaderButtonStyle} onClick={() => open('createList')}>
             + 새로운 목록 추가하기
           </button>
 
           <Modal
-            isOpen={isCreateListModalOpen}
-            onClose={() => setCreateListModalOpen(false)}
+            isOpen={isOpen('createList')}
+            onClose={close}
             submitButtonLabel="만들기"
             closeIcon
             title="할 일 목록"
@@ -101,13 +96,13 @@ export default function TeamPage() {
             <p className={sectionHeaderPSTyle}>(8명)</p>
           </div>
           <div>
-            <button className={sectionHeaderButtonStyle} onClick={openModal}>
+            <button className={sectionHeaderButtonStyle} onClick={() => open('invite')}>
               + 새로운 멤버 추가하기
             </button>
 
             <Modal
-              isOpen={isInviteModalOpen}
-              onClose={closeModal}
+              isOpen={isOpen('invite')}
+              onClose={close}
               submitButtonLabel="링크 복사하기"
               closeIcon
               title="멤버 초대"
@@ -120,17 +115,22 @@ export default function TeamPage() {
           </div>
         </header>
         <div className="grid-rows-auto grid w-full grid-cols-[1fr_1fr] gap-4 sm:grid-cols-[1fr_1fr_1fr]">
-          <Member name="가나다" email="abc123@email.com" onClick={open} />
-          <Member name="가나다" email="abc123@email.com" onClick={open} />
-          <Member name="가나다" email="abc123@email.com" onClick={open} />
-          <Member name="가나다" email="abc123@email.com" onClick={open} />
-          <Member name="가나다" email="abc123@email.com" onClick={open} />
-          <Member name="가나다" email="abc123@email.com" onClick={open} />
-          <Member name="가나다" email="abc123@email.com" onClick={open} />
-          <Member name="가나다" email="abc123@email.com" onClick={open} />
+          <Member name="가나다" email="abc123@email.com" onClick={() => open('memberProfile')} />
+          <Member name="가나다" email="abc123@email.com" onClick={() => open('memberProfile')} />
+          <Member name="가나다" email="abc123@email.com" onClick={() => open('memberProfile')} />
+          <Member name="가나다" email="abc123@email.com" onClick={() => open('memberProfile')} />
+          <Member name="가나다" email="abc123@email.com" onClick={() => open('memberProfile')} />
+          <Member name="가나다" email="abc123@email.com" onClick={() => open('memberProfile')} />
+          <Member name="가나다" email="abc123@email.com" onClick={() => open('memberProfile')} />
+          <Member name="가나다" email="abc123@email.com" onClick={() => open('memberProfile')} />
         </div>
 
-        <Modal isOpen={isOpen} onClose={close} submitButtonLabel="이메일 복사하기" closeIcon>
+        <Modal
+          isOpen={isOpen('memberProfile')}
+          onClose={close}
+          submitButtonLabel="이메일 복사하기"
+          closeIcon
+        >
           <div className="flex flex-col items-center gap-6">
             <Profile width={52} />
             <div className="flex flex-col items-center gap-2 text-center">
