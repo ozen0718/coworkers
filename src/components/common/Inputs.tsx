@@ -236,7 +236,10 @@ export function TextInput({ className, ...rest }: TextInputProps) {
 
 export function TextAreaInput({ height = '', ...props }: TextAreaInputProps) {
   return (
-    <textarea {...props} className={`${InputStyle.replace('h-12', '')} ${height} resize-none`} />
+    <textarea
+      {...props}
+      className={`${InputStyle.replace('h-12', '')} ${height} resize-none pt-3`}
+    />
   );
 }
 
