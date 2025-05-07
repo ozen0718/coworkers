@@ -19,13 +19,13 @@ import clsx from 'clsx';
 const BaseInputStyle =
   'w-full sm:h-12 h-11 bg-bg200 border border-gray100/10 rounded-xl px-4 focus:border-primary hover:border-primary-hover';
 
-const EmailInputStyle = `${BaseInputStyle} focus:outline-none text-gray100 placeholder:text-gray500 sm:text-4 sm:text-lg-regular text-md-regular text-3.5`;
+const EmailInputStyle = `${BaseInputStyle} focus:outline-none placeholder:text-gray500 sm:text-4 sm:text-lg-regular text-md-regular text-3.5`;
 
 const PasswordInputStyle =
-  'w-full focus:outline-none text-gray100 sm:text-4 sm:text-lg-regular text-md-regular text-3.5 placeholder:text-gray500';
+  'w-full focus:outline-none sm:text-4 sm:text-lg-regular text-md-regular text-3.5 placeholder:text-gray500';
 
 const InputStyle =
-  'w-full sm:h-12 h-11 bg-bg200 border border-gray100/10 rounded-xl px-4 focus:outline-none focus:border-primary hover:border-primary-hover text-gray100 sm:text-4 sm:text-lg-regular text-md-regular text-3.5 placeholder:text-gray500';
+  'w-full sm:h-12 h-11 bg-bg200 border border-gray100/10 rounded-xl px-4 focus:outline-none focus:border-primary hover:border-primary-hover sm:text-4 sm:text-lg-regular text-md-regular text-3.5 placeholder:text-gray500';
 
 const CurrentValueStyle =
   'w-full sm:h-12 h-11 bg-bg100 border border-gray100/10 rounded-xl px-4 text-gray500 sm:text-4 text-3.5 sm:text-lg-regular text-md-regular';
@@ -243,7 +243,7 @@ export function TextAreaInput({ height = '', ...props }: TextAreaInputProps) {
   );
 }
 
-export function DateInput({ placeholder }: TextInputProps) {
+export function DateInput({ placeholder }: InputProps) {
   return (
     <input
       readOnly
