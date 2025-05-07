@@ -6,12 +6,12 @@ import { addDays, format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import clsx from 'clsx';
 
-import Modal from '@/../../src/components/common/Modal';
-import TodoFullCreateModal, {
-  TodoFullCreateModalProps,
-} from '@/../../src/components/TodoFullCreateModal';
-import TodoItem from '@/../../src/components/List/todo';
-import { TextInput } from '@/../../src/components/common/Inputs';
+import Modal from '@/components/common/Modal';
+import TodoFullCreateModal, { TodoFullCreateModalProps } from '@/components/TodoFullCreateModal';
+import TodoItem from '@/components/List/todo';
+import { TextInput } from '@/components/common/Inputs';
+import DetailPost from '@/components/Card/Post/Deatil/DetailPost';
+import SlideWrapper from '@/components/Card/SlideWrapper';
 
 const MAX_LIST_NAME_LENGTH = 15;
 
@@ -38,6 +38,9 @@ export default function TaskListPage() {
   const [newListName, setNewListName] = useState('');
   const [isListModalOpen, setListModalOpen] = useState(false);
   const [isTodoModalOpen, setTodoModalOpen] = useState(false);
+
+  const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
+  const [detailopen, setDetailOpen] = useState(false);
 
   useEffect(() => {
     setSelectedTab('');
@@ -96,6 +99,11 @@ export default function TaskListPage() {
     setTodoModalOpen(false);
   };
 
+  const handleOpenDetail = (todo: Todo) => {
+    setSelectedTodo(todo);
+    setDetailOpen(true);
+  };
+
   return (
     <>
       <main className="py-6">
@@ -150,7 +158,9 @@ export default function TaskListPage() {
               <ul className="space-y-4">
                 {visibleTodos.map((todo) => (
                   <li key={todo.id}>
-                    <TodoItem {...todo} />
+                    <div onClick={() => handleOpenDetail(todo)}>
+                      <TodoItem {...todo} />
+                    </div>
                   </li>
                 ))}
               </ul>
@@ -161,6 +171,16 @@ export default function TaskListPage() {
                 </p>
               </div>
             )}
+
+            <SlideWrapper isOpen={detailopen} onClose={() => setDetailOpen(false)}>
+              {selectedTodo && (
+                <DetailPost
+                  title={selectedTodo.title}
+                  showComplete={false}
+                  onClose={() => setDetailOpen(false)}
+                />
+              )}
+            </SlideWrapper>
           </section>
 
           <button

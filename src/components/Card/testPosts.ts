@@ -1,4 +1,5 @@
 import { Comments } from './CardType';
+import { BoardCommentProps } from './CardType';
 
 export const testPosts = [
   {
@@ -40,5 +41,23 @@ export const comments: Comments[] = [
     author: '홍길동',
     content: '두번째 댓글 영역입니다.',
     date: '2025-04-29',
+  },
+];
+
+export const testComments: BoardCommentProps[] = [
+  {
+    author: '우지은1',
+    content: '댓글1',
+    date: '2024.07.25',
+  },
+  {
+    author: '우지은2',
+    content: '댓글2',
+    date: '2024.07.24',
+  },
+  {
+    author: '우지은3',
+    content: '댓글3',
+    date: '2024.07.23',
   },
 ];
