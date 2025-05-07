@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import AuthorInfo from './AuthorInfo';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import PostDropdown from '../Post/PostDropdown';
 import Button from '@/components/common/Button/Button';
 import { TextAreaInput } from '@/components/common/Inputs';

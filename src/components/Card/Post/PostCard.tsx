@@ -5,7 +5,6 @@ import clsx from 'clsx';
 import AuthorInfo from '../Comment/AuthorInfo';
 import PostDropdown from '../Post/PostDropdown';
 import { useState } from 'react';
-import ActionMenu from '@/components/common/ActionMenu';
 import { PostCardProps } from '../CardType';
 
 const sizeClass = {

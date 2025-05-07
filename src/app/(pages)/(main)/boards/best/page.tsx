@@ -1,8 +1,6 @@
 'use client';
 
 import { BestPost } from '@/components/Card/Post/BestPost';
-import { GeneralPost } from '@/components/Card/Post/GeneralPost';
-import { useWindowSize } from '@/hooks/useWindowSize';
 import { useState } from 'react';
 
 /* 테스트 데이터 */
