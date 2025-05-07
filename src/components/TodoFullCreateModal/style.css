@@ -1,0 +1,116 @@
+/* ========================= */
+/* 🌟 공통 설정 */
+/* ========================= */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.static-popper {
+  position: static !important;
+  transform: none !important;
+  inset: 0 auto auto 0 !important;
+}
+
+.react-datepicker-popper[data-placement^='bottom'] {
+  margin-top: 8px !important;
+}
+
+.react-datepicker__triangle {
+  display: none;
+}
+
+/* ========================= */
+/* Calendar */
+/* ========================= */
+
+.calendar-picker .react-datepicker {
+  width: 335px;
+  border: 1px solid var(--color-primary-hover);
+  background-color: var(--color-bg200);
+  border-radius: 12px;
+  padding: 16px;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  line-height: 17px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+@media (max-width: 639px) {
+  .calendar-picker .react-datepicker {
+    width: calc(100vw - 48px);
+  }
+}
+
+.calendar-picker .react-datepicker__month-container {
+  width: 100%;
+}
+
+.react-datepicker__header {
+  width: 100%;
+  height: 66px;
+  background-color: transparent;
+  border-bottom: none;
+  padding: 0;
+}
+
+.react-datepicker__month {
+  width: 100%;
+  margin: 0;
+}
+
+.react-datepicker__week,
+.react-datepicker__day-names {
+  display: flex;
+  width: 100%;
+}
+
+.react-datepicker__day,
+.react-datepicker__day-name {
+  display: flex;
+  width: 100%;
+  height: 32px;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: 'Pretendard', sans-serif;
+  font-size: 14px;
+  line-height: 17px;
+  font-weight: 500;
+  color: #ffffff;
+  border-radius: 8px;
+}
+
+@media (max-width: 639px) {
+  .react-datepicker__day,
+  .react-datepicker__day-name {
+    aspect-ratio: 1.36 / 1;
+    height: auto;
+  }
+}
+
+.react-datepicker__day-name {
+  font-weight: 600;
+}
+
+.react-datepicker .react-datepicker__day:hover {
+  background-color: var(--color-primary-hover);
+  color: #ffffff;
+  border-radius: 8px;
+}
+
+.react-datepicker__day--keyboard-selected {
+  background-color: transparent;
+  color: inherit;
+}
+
+.react-datepicker__day--selected {
+  background-color: var(--color-primary);
+  color: black;
+  border-radius: 8px;
+}
+
+/* ========================= */
+/* Time */
+/* ========================= */
