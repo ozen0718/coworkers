@@ -2,6 +2,7 @@ export interface MemberProps {
   profileUrl?: string;
   name: string;
   email: string;
+  onClick: () => void;
 }
 
 export type ProgressProp = {

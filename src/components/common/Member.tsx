@@ -5,10 +5,10 @@ import { MemberProps } from '@/types/teampagetypes';
 import Image from 'next/image';
 import ActionMenu from '@/components/common/ActionMenu';
 
-export default function Member({ profileUrl, name, email }: MemberProps) {
+export default function Member({ profileUrl, name, email, onClick }: MemberProps) {
   return (
     <div className="bg-bg200 flex h-18 w-full items-center justify-between gap-1.5 rounded-2xl pr-6">
-      <button className="w-full pl-6">
+      <button className="w-full pl-6" onClick={onClick}>
         <div className="grid grid-cols-[min-content_1fr] grid-rows-[auto_auto] gap-x-3">
           <div className="col-span-1 row-span-1 flex min-w-0 flex-col items-start justify-center sm:row-span-2 sm:items-center">
             <Profile width={32} profileUrl={profileUrl} />
