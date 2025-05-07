@@ -8,8 +8,19 @@ export interface SignupRequest {
   passwordConfirmation: string;
 }
 
-export const signup = async ({ teamId, ...body }: SignupRequest): Promise<void> => {
-  await axiosInstance.post(`/team/${teamId}/auth/signUp`, body);
+export const signup = async ({
+  teamId,
+  email,
+  nickname,
+  password,
+  passwordConfirmation,
+}: SignupRequest): Promise<void> => {
+  await axiosInstance.post(`/${teamId}/auth/signUp`, {
+    email,
+    nickname,
+    password,
+    passwordConfirmation,
+  });
 };
 
 export interface LoginRequest {
@@ -25,7 +36,10 @@ export interface LoginResponse {
   userId?: number;
 }
 
-export const login = async ({ teamId, ...body }: LoginRequest): Promise<LoginResponse> => {
-  const response = await axiosInstance.post(`/team/${teamId}/auth/signIn`, body);
+export const login = async ({ teamId, email, password }: LoginRequest): Promise<LoginResponse> => {
+  const response = await axiosInstance.post(`/${teamId}/auth/signIn`, {
+    email,
+    password,
+  });
   return response.data;
 };

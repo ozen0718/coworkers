@@ -1,12 +1,9 @@
-'use client';
-
 import type { Metadata } from 'next';
 import 'react-datepicker/dist/react-datepicker.css';
-import 'react-toastify/dist/ReactToastify.css'; // ✅ Toast 스타일 추가
 import '@/styles/globals.css';
 import { HeaderProvider } from '@/components/layout/Gnb/HeaderContext';
 import ClientHeaderLayout from '@/components/layout/ClientHeaderLayout';
-import { ToastContainer } from 'react-toastify'; // ✅ Toast 컴포넌트 import
+import GlobalToast from '@/components/GlobalToast';
 
 export const metadata: Metadata = {
   title: 'Coworkers',
@@ -21,14 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ClientHeaderLayout />
           <main className="flex-grow">{children}</main>
         </HeaderProvider>
-        <ToastContainer
-          position="top-center"
-          autoClose={2000}
-          hideProgressBar={false}
-          closeOnClick
-          pauseOnHover
-          theme="light"
-        />
+        <GlobalToast />
       </body>
     </html>
   );
