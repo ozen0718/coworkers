@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { signup } from './auth';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+import { AxiosError } from 'axios';
 
 export default function SignupForm() {
   const router = useRouter();
@@ -24,8 +25,9 @@ export default function SignupForm() {
       await signup(form);
       toast.success('회원가입 성공!');
       router.push('/login');
-    } catch (error: any) {
-      toast.error(error?.response?.data?.message || '회원가입 실패');
+    } catch (error) {
+      const err = error as AxiosError<{ message?: string }>;
+      toast.error(err.response?.data?.message || '회원가입 실패');
     }
   };
 
