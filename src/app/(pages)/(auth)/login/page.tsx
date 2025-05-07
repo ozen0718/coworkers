@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { PageTitleStyle } from '@/styles/pageStyle';
 import { login } from '@/app/api/auth';
 import { toast } from 'react-toastify';
+import { AxiosError } from 'axios';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -18,9 +19,9 @@ export default function LoginPage() {
       const teamId = '13-4';
       await login({ teamId, email, password });
       toast.success('로그인 성공!');
-    } catch (error: any) {
-      console.error('로그인 실패:', error.response?.data || error);
-      toast.error(error.response?.data?.message || '로그인 실패');
+    } catch (error) {
+      const err = error as AxiosError<{ message?: string }>;
+      toast.error(err.response?.data?.message || '로그인 실패');
     }
   };
 

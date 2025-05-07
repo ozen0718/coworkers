@@ -37,6 +37,7 @@ export default function PostCard({
 
   /* Dropdown 수정 */
   const handleEdit = () => {
+    console.log(isEditing);
     setIsEditing(true);
   };
 

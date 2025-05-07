@@ -7,9 +7,10 @@ import {
   TextInputProps,
   TextAreaInputProps,
   CurrentNameProp,
+  CurrentPasswordProp,
 } from '@/types/inputtypes';
 import useClickOutside from '@/hooks/useClickOutside';
-import Button, { ButtonProps } from '@/components/common/Button/Button';
+import Button from '@/components/common/Button/Button';
 import { nameRegex, emailRegex, passwordRegex } from '@/utils/regex';
 import { useState, useRef } from 'react';
 import Image from 'next/image';
@@ -143,11 +144,13 @@ export function CurrentEmail({ email }: CurrentEmailProp) {
   return <div className={`${CurrentValueStyle} flex items-center`}>{email}</div>;
 }
 
-export function CurrentPassword(props: ButtonProps) {
+export function CurrentPassword({ onClick }: CurrentPasswordProp) {
   return (
     <div className={`${CurrentValueStyle} flex items-center justify-between`}>
       <div>{'\u2022'.repeat(8)}</div>
-      <Button size="small">변경하기</Button>
+      <Button size="small" onClick={onClick}>
+        변경하기
+      </Button>
     </div>
   );
 }

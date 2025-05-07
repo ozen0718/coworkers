@@ -23,7 +23,7 @@ export default function EditablePasswordSection() {
         isOpen={isOpen}
         onClose={close}
       >
-        <div className="mt-4 flex flex-col gap-4 min-w-[280px]">
+        <div className="mt-4 flex min-w-[280px] flex-col gap-4">
           <div className="flex flex-col gap-2">
             <label>새 비밀번호</label>
             <PasswordInput placeholder="새 비밀번호를 입력해주세요." />

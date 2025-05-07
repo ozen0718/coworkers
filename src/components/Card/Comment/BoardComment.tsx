@@ -8,7 +8,7 @@ import { TextAreaInput } from '@/components/common/Inputs';
 import clsx from 'clsx';
 import { BoardCommentProps } from '../CardType';
 
-export default function BoardComment({ type, author, content, date }: BoardCommentProps) {
+export default function BoardComment({ type, content }: BoardCommentProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -72,8 +72,8 @@ export default function BoardComment({ type, author, content, date }: BoardComme
           type="kebab"
           textJustify="center"
           options={[
-            { label: '수정', action: handleEdit },
-            { label: '삭제', action: handleDelete },
+            { label: '수정', value: '수정', action: handleEdit },
+            { label: '삭제', value: '삭제', action: handleDelete },
           ]}
           isOpen={isDropDownOpen}
           toggleDropdown={toggleDropdown}
