@@ -6,7 +6,7 @@ import OAuth from '@/components/oauth/index';
 import Button from '@/components/common/Button/Button';
 import Link from 'next/link';
 import { PageTitleStyle } from '@/styles/pageStyle';
-import { login } from '@/app/api/auth'; // login 함수
+import { login } from '@/app/api/auth';
 import { toast } from 'react-toastify';
 
 export default function LoginPage() {
@@ -15,10 +15,9 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     try {
-      const teamId = '13-4'; // or use context/store if dynamic
+      const teamId = '13-4';
       await login({ teamId, email, password });
       toast.success('로그인 성공!');
-      // TODO: 토큰 저장 및 라우팅 처리
     } catch (error: any) {
       console.error('로그인 실패:', error.response?.data || error);
       toast.error(error.response?.data?.message || '로그인 실패');
