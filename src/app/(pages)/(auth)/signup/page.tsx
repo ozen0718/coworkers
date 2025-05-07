@@ -3,7 +3,6 @@
 import { EmailInput, PasswordInput, TextInput } from '@/components/common/Inputs';
 import OAuth from '@/components/oauth/index';
 import Button from '@/components/common/Button/Button';
-import Link from 'next/link';
 import { PageTitleStyle } from '@/styles/pageStyle';
 
 export default function SignupPage() {

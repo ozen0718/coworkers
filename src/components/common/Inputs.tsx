@@ -58,11 +58,11 @@ export function NameInput({ id, placeholder }: InputProps) {
 export function EmailInput({
   id,
   placeholder,
-  value,
-  onChange,
+  value = '',
+  onChange = () => {},
 }: InputProps & {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
   const isInvalid = value.length > 0 && !emailRegex.test(value);
 
@@ -89,11 +89,11 @@ export function EmailInput({
 export function PasswordInput({
   id,
   placeholder,
-  value,
-  onChange,
+  value = '',
+  onChange = () => {},
 }: InputProps & {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) {
   const [showPassword, setShowPassword] = useState(false);
   const isInvalid = value.length > 0 && !passwordRegex.test(value);
