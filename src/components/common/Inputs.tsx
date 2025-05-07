@@ -9,7 +9,6 @@ import {
   CurrentNameProp,
 } from '@/types/inputtypes';
 import useClickOutside from '@/hooks/useClickOutside';
-import useValidatedInput from '@/hooks/useValidatedInput';
 import Button, { ButtonProps } from '@/components/common/Button/Button';
 import { nameRegex, emailRegex, passwordRegex } from '@/utils/regex';
 import { useState, useRef } from 'react';
@@ -33,7 +32,8 @@ const CurrentValueStyle =
 const InvalidMessageStyle = 'text-md-medium text-danger mt-2';
 
 export function NameInput({ id, placeholder }: InputProps) {
-  const { value, isInvalid, onChange, onBlur } = useValidatedInput((name) => nameRegex.test(name));
+  const [value, setValue] = useState('');
+  const isInvalid = value.length > 0 && !nameRegex.test(value);
 
   return (
     <div>
@@ -43,8 +43,7 @@ export function NameInput({ id, placeholder }: InputProps) {
         placeholder={placeholder}
         id={id}
         value={value}
-        onChange={onChange}
-        onBlur={onBlur}
+        onChange={(e) => setValue(e.target.value)}
         required
       />
       {isInvalid && (
@@ -56,10 +55,16 @@ export function NameInput({ id, placeholder }: InputProps) {
   );
 }
 
-export function EmailInput({ id, placeholder }: InputProps) {
-  const { value, isInvalid, onChange, onBlur } = useValidatedInput((email) =>
-    emailRegex.test(email)
-  );
+export function EmailInput({
+  id,
+  placeholder,
+  value = '',
+  onChange = () => {},
+}: InputProps & {
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}) {
+  const isInvalid = value.length > 0 && !emailRegex.test(value);
 
   return (
     <div>
@@ -70,7 +75,6 @@ export function EmailInput({ id, placeholder }: InputProps) {
         id={id}
         value={value}
         onChange={onChange}
-        onBlur={onBlur}
         required
       />
       {isInvalid && (
@@ -82,10 +86,17 @@ export function EmailInput({ id, placeholder }: InputProps) {
   );
 }
 
-export function PasswordInput({ id, placeholder }: InputProps) {
+export function PasswordInput({
+  id,
+  placeholder,
+  value = '',
+  onChange = () => {},
+}: InputProps & {
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}) {
   const [showPassword, setShowPassword] = useState(false);
-
-  const { value, isInvalid, onChange, onBlur } = useValidatedInput((pw) => passwordRegex.test(pw));
+  const isInvalid = value.length > 0 && !passwordRegex.test(value);
 
   return (
     <div>
@@ -99,30 +110,17 @@ export function PasswordInput({ id, placeholder }: InputProps) {
           id={id}
           value={value}
           onChange={onChange}
-          onBlur={onBlur}
           required
         />
-        {showPassword ? (
-          <Image
-            src="/icons/visibility_on.svg"
-            alt="비밀번호 숨기기"
-            width={24}
-            height={24}
-            className="cursor-pointer"
-            onClick={() => setShowPassword(false)}
-          />
-        ) : (
-          <Image
-            src="/icons/visibility_off.svg"
-            alt="비밀번호 보기"
-            width={24}
-            height={24}
-            className="cursor-pointer"
-            onClick={() => setShowPassword(true)}
-          />
-        )}
+        <Image
+          src={showPassword ? '/icons/visibility_on.svg' : '/icons/visibility_off.svg'}
+          alt="비밀번호 보기"
+          width={24}
+          height={24}
+          className="cursor-pointer"
+          onClick={() => setShowPassword(!showPassword)}
+        />
       </div>
-
       {isInvalid && (
         <p className={InvalidMessageStyle}>
           비밀번호는 영문과 숫자를 포함한 4~12자로 입력해주세요.

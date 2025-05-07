@@ -3,6 +3,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import '@/styles/globals.css';
 import { HeaderProvider } from '@/components/layout/Gnb/HeaderContext';
 import ClientHeaderLayout from '@/components/layout/ClientHeaderLayout';
+import GlobalToast from '@/components/GlobalToast';
 
 export const metadata: Metadata = {
   title: 'Coworkers',
@@ -17,6 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ClientHeaderLayout />
           <main className="flex-grow">{children}</main>
         </HeaderProvider>
+        <GlobalToast />
       </body>
     </html>
   );
