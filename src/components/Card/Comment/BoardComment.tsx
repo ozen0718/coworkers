@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import AuthorInfo from './AuthorInfo';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import PostDropdown from '../Post/PostDropdown';
 import Button from '@/components/common/Button/Button';
 import { TextAreaInput } from '@/components/common/Inputs';
@@ -45,8 +45,8 @@ export default function BoardComment({ type, author, content, date }: BoardComme
     >
       <div className="text-lg-regular flex w-full items-start justify-between">
         {isEditing ? (
-          <div className="relative flex w-full items-start">
-            <TextAreaInput />
+          <div className="relative mt-3 flex h-full w-full items-start">
+            <TextAreaInput height="h-[65px]" />
           </div>
         ) : (
           <div
@@ -95,7 +95,7 @@ export default function BoardComment({ type, author, content, date }: BoardComme
             </Button>
           </div>
         ) : (
-          <AuthorInfo showDivider={type !== 'list'} showLike={type !== 'list'} />
+          <AuthorInfo type="detail" showDivider={type !== 'list'} showLike={type !== 'list'} />
         )}
       </div>
       {type === 'list' && <div className="mt-2 h-[1px] w-full bg-[#F8FAFC1A]"></div>}

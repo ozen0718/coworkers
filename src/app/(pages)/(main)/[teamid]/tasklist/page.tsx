@@ -9,7 +9,10 @@ import clsx from 'clsx';
 import Modal from '@/components/common/Modal';
 import TodoFullCreateModal, { TodoFullCreateModalProps } from '@/components/TodoFullCreateModal';
 import TodoItem from '@/components/List/todo';
+import ModalHeader from '@/components/common/Modal/ModalHeader';
 import { TextInput } from '@/components/common/Inputs';
+import DetailPost from '@/components/Card/Post/Deatil/DetailPost';
+import SlideWrapper from '@/components/Card/SlideWrapper';
 
 const MAX_LIST_NAME_LENGTH = 15;
 
@@ -36,6 +39,9 @@ export default function TaskListPage() {
   const [newListName, setNewListName] = useState('');
   const [isListModalOpen, setListModalOpen] = useState(false);
   const [isTodoModalOpen, setTodoModalOpen] = useState(false);
+
+  const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
+  const [detailopen, setDetailOpen] = useState(false);
 
   useEffect(() => {
     setSelectedTab('');
@@ -94,83 +100,102 @@ export default function TaskListPage() {
     setTodoModalOpen(false);
   };
 
+  const handleOpenDetail = (todo: Todo) => {
+    setSelectedTodo(todo);
+    setDetailOpen(true);
+  };
+
   return (
     <>
-      <div className="relative mt-6 space-y-6 lg:mt-10">
-        <header className="space-y-4">
-          <h1 className="text-2lg-bold md:!text-xl">할 일</h1>
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center space-x-3 text-base">
-              <button onClick={prevDay}>
-                <Image src="/icons/type=left.svg" alt="이전" width={16} height={16} />
-              </button>
-              <p>{format(currentDate, 'M월 d일 (eee)', { locale: ko })}</p>
-              <button onClick={nextDay}>
-                <Image src="/icons/type=right.svg" alt="다음" width={16} height={16} />
-              </button>
+      <main className="py-6">
+        <div className="relative mx-auto mt-6 max-w-[1200px] space-y-6 px-4 sm:px-6 md:px-8 lg:mt-10">
+          <header className="space-y-4">
+            <h1 className="text-2xl-medium text-white">할 일</h1>
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="text-gray300 flex items-center space-x-3 text-base">
+                <button onClick={prevDay}>
+                  <Image src="/icons/type=left.svg" alt="이전" width={16} height={16} />
+                </button>
+                <p className="text-white">{format(currentDate, 'M월 d일 (eee)', { locale: ko })}</p>
+                <button onClick={nextDay}>
+                  <Image src="/icons/type=right.svg" alt="다음" width={16} height={16} />
+                </button>
+                <button
+                  onClick={() => {
+                    /* 캘린더 열기 */
+                  }}
+                >
+                  <Image src="/icons/icon_calendar.svg" alt="캘린더" width={16} height={16} />
+                </button>
+              </div>
               <button
-                onClick={() => {
-                  /* 캘린더 열기 */
-                }}
+                className="text-primary text-sm font-medium hover:underline"
+                onClick={() => setListModalOpen(true)}
               >
-                <Image src="/icons/icon_calendar.svg" alt="캘린더" width={16} height={16} />
+                + 새로운 목록 추가하기
               </button>
             </div>
-            <button
-              className="text-primary text-sm font-medium hover:underline"
-              onClick={() => setListModalOpen(true)}
-            >
-              + 새로운 목록 추가하기
-            </button>
-          </div>
-        </header>
+          </header>
 
-        {visibleTabs.length > 0 && (
-          <nav className="flex flex-wrap space-x-6 border-b border-slate-700 pb-2">
-            {visibleTabs.map((tab) => (
-              <button
-                key={tab}
-                className={clsx(
-                  'pb-1 text-sm font-medium',
-                  tab === selectedTab ? 'border-b-2 border-white text-white' : 'text-gray400'
-                )}
-                onClick={() => setSelectedTab(tab)}
-              >
-                {tab}
-              </button>
-            ))}
-          </nav>
-        )}
-
-        <section className="min-h-[calc(100vh-16rem)]">
-          {visibleTodos.length > 0 ? (
-            <ul className="space-y-4">
-              {visibleTodos.map((todo) => (
-                <li key={todo.id}>
-                  <TodoItem {...todo} />
-                </li>
+          {visibleTabs.length > 0 && (
+            <nav className="flex flex-wrap space-x-6 border-b border-slate-700 pb-2">
+              {visibleTabs.map((tab) => (
+                <button
+                  key={tab}
+                  className={clsx(
+                    'pb-1 text-sm font-medium',
+                    tab === selectedTab ? 'border-b-2 border-white text-white' : 'text-gray400'
+                  )}
+                  onClick={() => setSelectedTab(tab)}
+                >
+                  {tab}
+                </button>
               ))}
-            </ul>
-          ) : (
-            <div className="pointer-events-none fixed inset-0 flex items-center justify-center">
-              <p className="text-gray500 pointer-events-auto text-center">
-                아직 할 일 목록이 없습니다.
-              </p>
-            </div>
+            </nav>
           )}
-        </section>
 
-        <button
-          disabled={visibleTabs.length === 0}
-          onClick={() => setTodoModalOpen(true)}
-          className={clsx(
-            'bg-primary absolute right-6 bottom-6 rounded-full px-4 py-2 text-white shadow-lg',
-            visibleTabs.length === 0 && 'cursor-not-allowed opacity-50'
-          )}
-        >
-          + 할 일 추가
-        </button>
-      </div>
+          <section className="min-h-[calc(100vh-16rem)]">
+            {visibleTodos.length > 0 ? (
+              <ul className="space-y-4">
+                {visibleTodos.map((todo) => (
+                  <li key={todo.id}>
+                    <div onClick={() => handleOpenDetail(todo)}>
+                      <TodoItem {...todo} />
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="pointer-events-none fixed inset-0 flex items-center justify-center">
+                <p className="text-gray500 pointer-events-auto text-center">
+                  아직 할 일 목록이 없습니다.
+                </p>
+              </div>
+            )}
+
+            <SlideWrapper isOpen={detailopen} onClose={() => setDetailOpen(false)}>
+              {selectedTodo && (
+                <DetailPost
+                  title={selectedTodo.title}
+                  showComplete={false}
+                  onClose={() => setDetailOpen(false)}
+                />
+              )}
+            </SlideWrapper>
+          </section>
+
+          <button
+            disabled={visibleTabs.length === 0}
+            onClick={() => setTodoModalOpen(true)}
+            className={clsx(
+              'bg-primary absolute right-6 bottom-6 rounded-full px-4 py-2 text-white shadow-lg',
+              visibleTabs.length === 0 && 'cursor-not-allowed opacity-50'
+            )}
+          >
+            + 할 일 추가
+          </button>
+        </div>
+      </main>
 
       <TodoFullCreateModal
         key={isTodoModalOpen ? 'todo-open' : 'todo-closed'}

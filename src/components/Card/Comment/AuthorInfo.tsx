@@ -5,15 +5,15 @@ import { useState } from 'react';
 import IconHeart from '@/assets/icons/IconHeart';
 import { AuthorInfoProps } from '../CardType';
 
-// 임시 데이터
 export default function AuthorInfo({
-  showDivider = true, // 선 유무
+  type,
+  showDivider = true,
   showLike = true,
   showDate = true,
   authorName = '우지은',
   date = '2024.07.25',
   showKebab = false,
-  showComment = false, // 댓글 수 유무
+  showComment = false,
 }: AuthorInfoProps) {
   const [isLiked, setIsLiked] = useState(false);
 
@@ -21,9 +21,26 @@ export default function AuthorInfo({
     setIsLiked(!isLiked);
   };
 
+  // 상세 카드 일때만
+  if (type === 'detail') {
+    return (
+      <div className="mt-3 flex w-full items-center justify-between text-[10px] sm:text-sm">
+        {/* 프로필 + 이름 */}
+        <div className="flex items-center gap-[7px]">
+          <Image src="/icons/initialprofile.svg" alt="프로필 사진" width={32} height={32} />
+          {authorName && <span className="block">{authorName}</span>}
+        </div>
+
+        {/* 오른쪽: 날짜 */}
+        {showDate && <span className="text-gray400 whitespace-nowrap">{date}</span>}
+      </div>
+    );
+  }
+
+  // 기본
   return (
     <div className="mt-3 flex w-full items-center text-[10px] sm:text-sm">
-      {/* 프로필 + 이름 + 구분선*/}
+      {/* 프로필 + 이름 + 구분선 */}
       <div className="flex items-center gap-[7px]">
         <Image src="/icons/initialprofile.svg" alt="프로필 사진" width={32} height={32} />
         {authorName && <span className="block">{authorName}</span>}
@@ -37,7 +54,8 @@ export default function AuthorInfo({
         </span>
       )}
 
-      <div className={'ml-auto flex items-center'}>
+      {/* 좋아요, 댓글, 케밥 아이콘 */}
+      <div className="ml-auto flex items-center">
         {showComment && (
           <div className="mr-4 flex">
             <Image
@@ -74,9 +92,5 @@ export default function AuthorInfo({
         )}
       </div>
     </div>
-
-    /**
-     * @fixme api 연결 후 좋아요 개수, 좋아요 여부 데이터로 변경
-     */
   );
 }

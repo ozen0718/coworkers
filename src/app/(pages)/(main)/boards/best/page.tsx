@@ -1,8 +1,6 @@
 'use client';
 
 import { BestPost } from '@/components/Card/Post/BestPost';
-import { GeneralPost } from '@/components/Card/Post/GeneralPost';
-import { useWindowSize } from '@/hooks/useWindowSize';
 import { useState } from 'react';
 
 /* 테스트 데이터 */
@@ -19,7 +17,7 @@ export default function BoardPage() {
     <div className="my-10">
       <p className="font-bold sm:text-2xl">베스트 게시글</p>
 
-      <div className="relative mt-10">
+      <div className="relative mt-10 w-full">
         <img
           src="/icons/search.svg"
           alt="검색 아이콘"
@@ -28,7 +26,7 @@ export default function BoardPage() {
         <input
           type="text"
           placeholder="검색어를 입력해주세요"
-          className="bg-bg200 rounded-xl border border-[#F8FAFC1A] p-4 pl-12"
+          className="bg-bg200 w-full rounded-xl border border-[#F8FAFC1A] p-4 pl-12"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />

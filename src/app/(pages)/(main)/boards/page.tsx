@@ -14,12 +14,8 @@ export default function BoardPage() {
   const [selectedOption, setSelectedOption] = useState('최신순');
 
   const windowWidth = useWindowSize();
-  let bestVisiblePosts = 1;
-  if (windowWidth >= 1024) {
-    bestVisiblePosts = 3;
-  } else if (windowWidth >= 640) {
-    bestVisiblePosts = 2;
-  }
+
+  const bestVisiblePosts = windowWidth >= 1024 ? 3 : windowWidth >= 640 ? 2 : 1;
 
   /* 검색 데이터 */
   const [searchTerm, setSearchTerm] = useState('');

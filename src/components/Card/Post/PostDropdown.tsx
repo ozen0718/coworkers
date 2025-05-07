@@ -6,7 +6,7 @@ import clsx from 'clsx';
 type PostDropdownProps = {
   type?: 'sort' | 'kebab';
   textJustify: 'center' | 'left';
-  options: { label: string; action: () => void }[];
+  options: { label: string; value: string; action: () => void }[];
   isOpen: boolean;
   toggleDropdown: () => void;
   toppercent: string;

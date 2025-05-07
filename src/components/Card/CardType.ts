@@ -7,6 +7,7 @@ export type Comments = {
 
 /* AuthorInfo - 사용자 정보 */
 export type AuthorInfoProps = {
+  type?: 'detail';
   showDivider?: boolean;
   showLike?: boolean;
   showDate?: boolean;
