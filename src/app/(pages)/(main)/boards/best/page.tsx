@@ -26,7 +26,7 @@ export default function BoardPage() {
         <input
           type="text"
           placeholder="검색어를 입력해주세요"
-          className="bg-bg200 rounded-xl border border-[#F8FAFC1A] p-4 pl-12"
+          className="bg-bg200 w-full rounded-xl border border-[#F8FAFC1A] p-4 pl-1"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
