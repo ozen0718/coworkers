@@ -46,21 +46,18 @@ export const comments: Comments[] = [
 
 export const testComments: BoardCommentProps[] = [
   {
-    type: 'free',
-    author: '김민수',
-    content: '이 글 정말 감동적이에요!',
+    author: '우지은1',
+    content: '댓글1',
     date: '2024.07.25',
   },
   {
-    type: 'list',
-    author: '이지은',
-    content: '좋은 정보 감사합니다.',
+    author: '우지은2',
+    content: '댓글2',
     date: '2024.07.24',
   },
   {
-    type: 'free',
-    author: '박지현',
-    content: '질문이 있는데 댓글로 남겨도 될까요?',
+    author: '우지은3',
+    content: '댓글3',
     date: '2024.07.23',
   },
 ];
