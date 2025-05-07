@@ -5,7 +5,7 @@ import PostDropdown from '@/components/Card/Post/PostDropdown';
 import AuthorInfo from '@/components/Card/Comment/AuthorInfo';
 import AddComment from '@/components/Card/Comment/AddComment';
 import BoardComment from '@/components/Card/Comment/BoardComment';
-import { comments, testPosts } from '@/components/Card/testPosts';
+import { comments } from '@/components/Card/testPosts';
 
 export default function ArticleDetail() {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
@@ -82,7 +82,7 @@ export default function ArticleDetail() {
       <div className="my-4 h-px w-full bg-[#F8FAFC1A]" />
 
       {/* 댓글 */}
-      <div className="scroll-area mt-10 flex h-full max-h-[262px] flex-col gap-4 overflow-y-auto">
+      <div className="scroll-area mt-10 flex h-[350px] flex-col gap-4 overflow-y-auto">
         {Array.isArray(comments) && comments.length > 0 ? (
           comments.map((comment) => (
             <BoardComment

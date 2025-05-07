@@ -42,6 +42,12 @@ export const comments: Comments[] = [
     content: '두번째 댓글 영역입니다.',
     date: '2025-04-29',
   },
+  {
+    id: 3,
+    author: '홍길동',
+    content: '두번째 댓글 영역입니다.',
+    date: '2025-04-29',
+  },
 ];
 
 export const testComments: BoardCommentProps[] = [
