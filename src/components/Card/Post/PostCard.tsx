@@ -107,8 +107,8 @@ export default function PostCard({
               type="kebab"
               textJustify="center"
               options={[
-                { label: '수정하기', action: handleEdit },
-                { label: '삭제하기', action: handleDelete },
+                { label: '수정하기', value: '수정', action: handleEdit },
+                { label: '삭제하기', value: '삭제', action: handleDelete },
               ]}
               isOpen={isDropDownOpen}
               toggleDropdown={toggleDropdown}
