@@ -1,6 +1,11 @@
-export interface InputProps {
-  id?: string;
-  placeholder?: string;
+export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+
+export interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  className?: string;
+}
+
+export interface TextAreaInputProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+  height?: string;
 }
 
 export type ToggleInputProps = {
@@ -15,17 +20,6 @@ export type CurrentNameProp = {
 export type CurrentEmailProp = {
   email: string;
 };
-
-export interface TextInputProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'value' | 'onChange'> {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
-
-export interface TextAreaInputProps
-  extends Omit<React.TextareaHTMLAttributes<HTMLTextAreaElement>, 'height'> {
-  height?: string;
-}
 
 export type ReplyItemProps = {
   comment: string;
