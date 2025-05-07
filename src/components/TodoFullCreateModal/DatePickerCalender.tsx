@@ -25,7 +25,6 @@ export default function DatePickerCalendar({ startDate, setStartDate }: DatePick
       customInput={<DatePickerInput />}
       dateFormat="yyyy년 M월 d일"
       popperClassName="static-popper calendar-picker"
-      
       // Calender header layout
       renderCustomHeader={({ monthDate, decreaseMonth, increaseMonth }) => (
         <div className="w-40px flex items-center justify-between pb-[5px]">
