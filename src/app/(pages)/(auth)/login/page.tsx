@@ -16,14 +16,18 @@ export default function LoginPage() {
         <div className="mb-10 flex flex-col gap-6">
           {/* 이메일 필드 */}
           <div className="flex flex-col gap-3">
-            <label className="text-lg-medium">이메일</label>
-            <EmailInput />
+            <label htmlFor="email" className="text-lg-medium">
+              이메일
+            </label>
+            <EmailInput placeholder="이메일을 입력해주세요." id="email" />
           </div>
 
           {/* 비밀번호 필드 */}
           <div className="flex flex-col gap-3">
-            <label className="text-lg-medium">비밀번호</label>
-            <PasswordInput />
+            <label htmlFor="password" className="text-lg-medium">
+              비밀번호
+            </label>
+            <PasswordInput placeholder="비밀번호를 입력해주세요." id="password" />
             <div className="flex justify-end">
               <Link
                 href="/resetpassword"
