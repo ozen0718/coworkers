@@ -25,80 +25,80 @@ export default function ArticleDetail() {
   };
 
   return (
-    <div className="my-16 md:my-20 text-gray300 flex flex-col">
-        {/* 타이틀 + 작성 정보 */}
-        <div className="max-h-[128px] flex-col">
-          {/* 타이틀 영역 */}
-          <div className="flex items-center justify-between">
-            <p className="text-2lg-medium flex font-bold">게시물 제목 영역입니다.</p>
+    <div className="text-gray300 my-16 flex flex-col md:my-20">
+      {/* 타이틀 + 작성 정보 */}
+      <div className="max-h-[128px] flex-col">
+        {/* 타이틀 영역 */}
+        <div className="flex items-center justify-between">
+          <p className="text-2lg-medium flex font-bold">게시물 제목 영역입니다.</p>
 
-            {/* 케밥 아이콘 + 드롭다운 */}
-            <div className="relative">
-              <Image
-                className="cursor-pointer"
-                src="/icons/kebab.svg"
-                alt="Kebab Icon"
-                width={16}
-                height={16}
-                onClick={toggleDropdown}
+          {/* 케밥 아이콘 + 드롭다운 */}
+          <div className="relative">
+            <Image
+              className="cursor-pointer"
+              src="/icons/kebab.svg"
+              alt="Kebab Icon"
+              width={16}
+              height={16}
+              onClick={toggleDropdown}
+            />
+
+            {isDropDownOpen && (
+              <PostDropdown
+                type="kebab"
+                textJustify="center"
+                options={[
+                  { label: '수정', value: '수정', action: handleEdit },
+                  { label: '삭제', value: '삭제', action: handleDelete },
+                ]}
+                isOpen={isDropDownOpen}
+                toggleDropdown={toggleDropdown}
+                toppercent="150%"
               />
-
-              {isDropDownOpen && (
-                <PostDropdown
-                  type="kebab"
-                  textJustify="center"
-                  options={[
-                    { label: '수정', action: handleEdit },
-                    { label: '삭제', action: handleDelete },
-                  ]}
-                  isOpen={isDropDownOpen}
-                  toggleDropdown={toggleDropdown}
-                  toppercent="150%"
-                />
-              )}
-            </div>
+            )}
           </div>
-          <div className="my-4 h-px w-full bg-[#F8FAFC1A]" />
-
-          <AuthorInfo
-            showDivider={true}
-            showLike={true}
-            showDate={true}
-            showKebab={false}
-            showComment={true}
-          />
         </div>
-
-        {/*본문 */}
-        <div className="scroll-area mt-15 h-[72px] w-full overflow-y-auto font-normal sm:h-[104px]">
-          본문이 들어가는 영역입니다.
-        </div>
-
-        {/* 댓글 달기 */}
-        <div className="mt-10 w-full">
-          <AddComment />
-        </div>
-
         <div className="my-4 h-px w-full bg-[#F8FAFC1A]" />
 
-        {/* 댓글 */}
-        <div className="scroll-area mt-10 flex h-full max-h-[262px] flex-col gap-4 overflow-y-auto">
-          {Array.isArray(comments) && comments.length > 0 ? (
-            comments.map((comment) => (
-              <BoardComment
-                key={comment.id}
-                type="free"
-                author={comment.author}
-                content={comment.content}
-                date={comment.date}
-              />
-            ))
-          ) : (
-            <p className="text-lg-medium text-gray400 mt-10 text-center">
-              아직 작성된 댓글이 없습니다.
-            </p>
-          )}
-        </div>
+        <AuthorInfo
+          showDivider={true}
+          showLike={true}
+          showDate={true}
+          showKebab={false}
+          showComment={true}
+        />
+      </div>
+
+      {/*본문 */}
+      <div className="scroll-area mt-15 h-[72px] w-full overflow-y-auto font-normal sm:h-[104px]">
+        본문이 들어가는 영역입니다.
+      </div>
+
+      {/* 댓글 달기 */}
+      <div className="mt-10 w-full">
+        <AddComment />
+      </div>
+
+      <div className="my-4 h-px w-full bg-[#F8FAFC1A]" />
+
+      {/* 댓글 */}
+      <div className="scroll-area mt-10 flex h-full max-h-[262px] flex-col gap-4 overflow-y-auto">
+        {Array.isArray(comments) && comments.length > 0 ? (
+          comments.map((comment) => (
+            <BoardComment
+              key={comment.id}
+              type="free"
+              author={comment.author}
+              content={comment.content}
+              date={comment.date}
+            />
+          ))
+        ) : (
+          <p className="text-lg-medium text-gray400 mt-10 text-center">
+            아직 작성된 댓글이 없습니다.
+          </p>
+        )}
+      </div>
     </div>
   );
 }
