@@ -5,7 +5,7 @@ import PostDropdown from '@/components/Card/Post/PostDropdown';
 import AuthorInfo from '@/components/Card/Comment/AuthorInfo';
 import AddComment from '@/components/Card/Comment/AddComment';
 import BoardComment from '@/components/Card/Comment/BoardComment';
-import { comments, testPosts } from '@/components/Card/testPosts';
+import { comments } from '@/components/Card/testPosts';
 
 export default function ArticleDetail() {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
