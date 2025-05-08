@@ -2,6 +2,7 @@
 
 import PostCard from './PostCard';
 import { useWindowSize } from '@/hooks/useWindowSize';
+import { useRouter } from 'next/navigation';
 
 /**
  * title="자유게시판에 질문을 올릴 수 있어요. 질문을 올려볼까요? 말줄임표 테스트 되는지 볼까요?"
@@ -12,27 +13,35 @@ import { useWindowSize } from '@/hooks/useWindowSize';
  */
 
 type GeneralPostProps = {
+  id: number;
   title: string;
   imgUrl: string;
   date: string;
 };
 
-export function GeneralPost({ title, imgUrl, date }: GeneralPostProps) {
+export function GeneralPost({ id, title, imgUrl, date }: GeneralPostProps) {
   const windowWidth = useWindowSize();
+  const router = useRouter();
 
   let size: 'large' | 'medium' | 'small' = 'large';
   if (windowWidth <= 375) size = 'small';
   else if (windowWidth <= 744) size = 'medium';
 
+  const handleClick = () => {
+    router.push(`/boards/${id}`);
+  };
+
   return (
-    <PostCard
-      type="general"
-      size={size}
-      title={title}
-      imgUrl={imgUrl}
-      date={date}
-      showKebab={size === 'small'}
-      topshowKebab={size !== 'small'}
-    />
+    <div onClick={handleClick} className="w-full cursor-pointer">
+      <PostCard
+        type="general"
+        size={size}
+        title={title}
+        imgUrl={imgUrl}
+        date={date}
+        showKebab={size === 'small'}
+        topshowKebab={size !== 'small'}
+      />
+    </div>
   );
 }
