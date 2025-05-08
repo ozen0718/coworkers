@@ -1,6 +1,5 @@
 'use client';
 
-import { useAuthStore } from '@/stores/useAuthStore';
 import { BestPost } from '@/components/Card/Post/BestPost';
 import { GeneralPost } from '@/components/Card/Post/GeneralPost';
 import { useWindowSize } from '@/hooks/useWindowSize';
@@ -12,20 +11,11 @@ import Link from 'next/link';
 import { testPosts } from '@/components/Card/testPosts';
 
 export default function BoardPage() {
-  const token = useAuthStore((state) => state.accessToken);
   const [selectedOption, setSelectedOption] = useState('최신순');
 
   const windowWidth = useWindowSize();
 
   const [bestVisiblePosts, setBestVisiblePosts] = useState(1);
-
-  useEffect(() => {
-    if (token) {
-      console.log('현재 토큰:', token);
-    } else {
-      console.log('토큰 없음');
-    }
-  }, [token]);
 
   useEffect(() => {
     if (windowWidth >= 1024) {
