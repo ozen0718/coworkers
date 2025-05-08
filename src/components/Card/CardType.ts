@@ -35,3 +35,11 @@ export type PostCardProps = {
   showKebab?: boolean;
   topshowKebab?: boolean;
 };
+
+/* BestPost : 베스트 글 */
+export type BestPostProps = {
+  id: number;
+  title: string;
+  imgUrl: string;
+  date: string;
+};
