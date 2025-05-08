@@ -106,12 +106,7 @@ export default function BoardPage() {
 
             <div className="scroll-area mt-10 grid max-h-[600px] grid-cols-1 justify-items-center gap-4 overflow-y-auto lg:grid-cols-2">
               {filteredData.map((post) => (
-                <GeneralPost
-                  key={post.id}
-                  title={post.title}
-                  imgUrl={post.imgUrl}
-                  date={post.date}
-                />
+                <GeneralPost key={post.id} {...post} />
               ))}
             </div>
           </div>

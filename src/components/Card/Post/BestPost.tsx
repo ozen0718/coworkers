@@ -1,4 +1,7 @@
+'use client';
+
 import PostCard from './PostCard';
+import { useRouter } from 'next/navigation';
 
 /**
  * title="자유게시판에 질문을 올릴 수 있어요 질문을 올려볼까요?"
@@ -7,11 +10,22 @@ import PostCard from './PostCard';
  */
 
 type BestPostProps = {
+  id: number;
   title: string;
   imgUrl: string;
   date: string;
 };
 
-export function BestPost({ title, imgUrl, date }: BestPostProps) {
-  return <PostCard type="best" title={title} imgUrl={imgUrl} date={date} />;
+export function BestPost({ id, title, imgUrl, date }: BestPostProps) {
+  const router = useRouter();
+
+  const handleClick = () => {
+    router.push(`/boards/${id}`);
+  };
+
+  return (
+    <div onClick={handleClick} className="w-full cursor-pointer">
+      <PostCard type="best" title={title} imgUrl={imgUrl} date={date} />
+    </div>
+  );
 }
