@@ -15,7 +15,17 @@ export default function BoardPage() {
 
   const windowWidth = useWindowSize();
 
-  const bestVisiblePosts = windowWidth >= 1024 ? 3 : windowWidth >= 640 ? 2 : 1;
+  const [bestVisiblePosts, setBestVisiblePosts] = useState(1);
+
+  useEffect(() => {
+    if (windowWidth >= 1024) {
+      setBestVisiblePosts(3);
+    } else if (windowWidth >= 640) {
+      setBestVisiblePosts(2);
+    } else {
+      setBestVisiblePosts(1);
+    }
+  }, [windowWidth]);
 
   /* 검색 데이터 */
   const [searchTerm, setSearchTerm] = useState('');
