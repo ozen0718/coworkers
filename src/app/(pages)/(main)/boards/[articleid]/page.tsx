@@ -82,8 +82,8 @@ export default function ArticleDetail() {
       <div className="my-4 h-px w-full bg-[#F8FAFC1A]" />
 
       {/* 댓글 */}
-      <div className="scroll-area mt-10 flex h-full max-h-[262px] flex-col gap-4 overflow-y-auto">
-        {Array.isArray(comments) && comments.length > 0 ? (
+      <div className="scroll-area mt-10 flex h-[350px] flex-col gap-4 overflow-y-auto">
+        {comments?.length > 0 ? (
           comments.map((comment) => (
             <BoardComment
               key={comment.id}

@@ -15,7 +15,17 @@ export default function BoardPage() {
 
   const windowWidth = useWindowSize();
 
-  const bestVisiblePosts = windowWidth >= 1024 ? 3 : windowWidth >= 640 ? 2 : 1;
+  const [bestVisiblePosts, setBestVisiblePosts] = useState(1);
+
+  useEffect(() => {
+    if (windowWidth >= 1024) {
+      setBestVisiblePosts(3);
+    } else if (windowWidth >= 640) {
+      setBestVisiblePosts(2);
+    } else {
+      setBestVisiblePosts(1);
+    }
+  }, [windowWidth]);
 
   /* 검색 데이터 */
   const [searchTerm, setSearchTerm] = useState('');
@@ -96,12 +106,7 @@ export default function BoardPage() {
 
             <div className="scroll-area mt-10 grid max-h-[600px] grid-cols-1 justify-items-center gap-4 overflow-y-auto lg:grid-cols-2">
               {filteredData.map((post) => (
-                <GeneralPost
-                  key={post.id}
-                  title={post.title}
-                  imgUrl={post.imgUrl}
-                  date={post.date}
-                />
+                <GeneralPost key={post.id} {...post} />
               ))}
             </div>
           </div>
