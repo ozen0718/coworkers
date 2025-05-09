@@ -6,6 +6,7 @@ import { useWindowSize } from '@/hooks/useWindowSize';
 import { useState, useEffect } from 'react';
 import ArrowDropdown from '@/components/common/ArrowDropdown';
 import Link from 'next/link';
+import Button from '@/components/common/Button/Button';
 
 /* 테스트 데이터 */
 import { testPosts } from '@/components/Card/testPosts';
@@ -92,7 +93,7 @@ export default function BoardPage() {
           </div>
 
           {/* 일반 게시글 */}
-          <div className="mt-10">
+          <div className="relative mt-10">
             <div className="flex w-full items-center justify-between">
               <h2 className="w-full font-bold sm:text-xl">게시글</h2>
 
@@ -109,6 +110,15 @@ export default function BoardPage() {
                 <GeneralPost key={post.id} {...post} />
               ))}
             </div>
+
+            <Button
+              variant="primary"
+              size="plus"
+              icon="plus"
+              className="absolute right-0 bottom-16"
+            >
+              글쓰기
+            </Button>
           </div>
         </>
       )}

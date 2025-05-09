@@ -19,6 +19,8 @@ export function BestPost({ id, title, imgUrl, date }: BestPostProps) {
   useEffect(() => {
     if (token) {
       console.log('현재 토큰:', token);
+    } else {
+      console.log('토큰 없음');
     }
   }, [token]);
 

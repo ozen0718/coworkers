@@ -2,15 +2,27 @@
 import { TextAreaInput } from '@/components/common/Inputs';
 import ImgUpload from '@/components/Card/ImgUpload';
 import Button from '@/components/common/Button/Button';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { useRouter } from 'next/navigation';
 
 export default function CreateBoard() {
+  const token = useAuthStore((state) => state.accessToken);
+  const router = useRouter();
+
+  const gotoBoards = () => {
+    router.push(`/boards`);
+  };
+
   return (
     <div className="my-14 max-h-[841px]">
       {/* 타이틀 + 버튼 */}
       <div className="flex items-center justify-between">
         <p className="text-xl-bold flex">게시글 쓰기</p>
         <div className="relative max-[620px]:hidden">
-          <button className="text-lg-semibold bg-primary hover:bg-primary-hover active:bg-primary-pressed max-[620px]:text-md-semibold flex h-12 w-[184px] items-center justify-center rounded-xl text-white max-[620px]:h-8 max-[620px]:w-[100px]">
+          <button
+            onClick={gotoBoards}
+            className="text-lg-semibold bg-primary hover:bg-primary-hover active:bg-primary-pressed max-[620px]:text-md-semibold flex h-12 w-[184px] items-center justify-center rounded-xl text-white max-[620px]:h-8 max-[620px]:w-[100px]"
+          >
             등록
           </button>
         </div>
@@ -44,7 +56,7 @@ export default function CreateBoard() {
         </div>
 
         {/* 모바일용 버튼 */}
-        <div className="mt-10 flex justify-center min-[620px]:hidden">
+        <div onClick={gotoBoards} className="mt-10 flex justify-center min-[620px]:hidden">
           <Button size="large">등록</Button>
         </div>
       </div>

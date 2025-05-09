@@ -23,7 +23,31 @@ export const testPosts = [
   },
   {
     id: 4,
-    title: '세 번째 게시글',
+    title: '4 번째 게시글',
+    imgUrl: '',
+    date: '2024-05-03',
+  },
+  {
+    id: 5,
+    title: '5 번째 게시글',
+    imgUrl: '',
+    date: '2024-05-03',
+  },
+  {
+    id: 6,
+    title: '6 번째 게시글',
+    imgUrl: '',
+    date: '2024-05-03',
+  },
+  {
+    id: 7,
+    title: '7 번째 게시글',
+    imgUrl: '',
+    date: '2024-05-03',
+  },
+  {
+    id: 8,
+    title: '8 번째 게시글',
     imgUrl: '',
     date: '2024-05-03',
   },
