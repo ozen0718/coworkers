@@ -1,15 +1,16 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
+import { isBrowser } from '@/utils/env';
 import { ModalProps } from './types';
 import { paddingStyle, radiusStyle } from './style';
 import ModalHeader from './ModalHeader';
 import ModalButtons from './ModalButtons';
-import { isBrowser } from '@/utils/env';
+import useModalEvents from './useModalEvents';
 
 export default function Modal({
   padding = 'default',
@@ -36,6 +37,10 @@ export default function Modal({
     };
   }, [isOpen]);
 
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useModalEvents(modalRef, onClose, isOpen);
+
   if (!isBrowser) return null;
 
   return createPortal(
@@ -46,7 +51,6 @@ export default function Modal({
           initial={{ opacity: 0.8 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onClick={onClose}
         >
           <motion.div
             className={clsx(
@@ -58,7 +62,7 @@ export default function Modal({
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 10, opacity: 0 }}
             transition={{ type: 'tween', duration: 0.05 }}
-            onClick={(e) => e.stopPropagation()}
+            ref={modalRef}
           >
             {closeIcon && (
               <button type="button" onClick={onClose} className="absolute top-4 right-4">
