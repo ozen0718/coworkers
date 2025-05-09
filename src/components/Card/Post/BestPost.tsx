@@ -24,13 +24,9 @@ export function BestPost({ id, title, imgUrl, date }: BestPostProps) {
     }
   }, [token]);
 
-  const handleClick = () => {
-    router.push(`/boards/${id}`);
-  };
-
   return (
-    <div onClick={handleClick} className="w-full cursor-pointer">
-      <PostCard type="best" title={title} imgUrl={imgUrl} date={date} />
+    <div className="w-full">
+      <PostCard type="best" title={title} imgUrl={imgUrl} date={date} id={id} />
     </div>
   );
 }

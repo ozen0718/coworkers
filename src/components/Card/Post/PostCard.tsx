@@ -6,6 +6,7 @@ import AuthorInfo from '../Comment/AuthorInfo';
 import PostDropdown from '../Post/PostDropdown';
 import { useState } from 'react';
 import { PostCardProps } from '../CardType';
+import { useRouter } from 'next/navigation';
 
 const sizeClass = {
   large: 'min-h-[176px] w-full',
@@ -25,11 +26,18 @@ export default function PostCard({
   title,
   imgUrl,
   date,
+  id,
   showKebab = false,
   topshowKebab = true,
 }: PostCardProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+
+  const router = useRouter();
+
+  const handleTitleClick = () => {
+    if (id) router.push(`/boards/${id}`);
+  };
 
   const toggleDropdown = () => {
     setIsDropDownOpen((prev) => !prev);
@@ -62,7 +70,7 @@ export default function PostCard({
       )}
 
       {/* 내용 */}
-      <div className="flex w-full items-start">
+      <div className="flex w-full cursor-pointer items-start" onClick={handleTitleClick}>
         <div className="relative flex w-full items-start justify-between">
           <p
             className={clsx(

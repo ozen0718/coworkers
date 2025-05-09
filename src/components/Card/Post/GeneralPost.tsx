@@ -27,13 +27,10 @@ export function GeneralPost({ id, title, imgUrl, date }: GeneralPostProps) {
   if (windowWidth <= 375) size = 'small';
   else if (windowWidth <= 744) size = 'medium';
 
-  const handleClick = () => {
-    router.push(`/boards/${id}`);
-  };
-
   return (
-    <div onClick={handleClick} className="w-full cursor-pointer">
+    <div className="w-full">
       <PostCard
+        id={id}
         type="general"
         size={size}
         title={title}

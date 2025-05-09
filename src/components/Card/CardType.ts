@@ -27,6 +27,7 @@ export type BoardCommentProps = {
 
 /* PostCard : 게시글 */
 export type PostCardProps = {
+  id: number;
   type?: 'best' | 'general';
   size?: 'large' | 'medium' | 'small';
   title: string;
@@ -34,6 +35,7 @@ export type PostCardProps = {
   date?: string;
   showKebab?: boolean;
   topshowKebab?: boolean;
+  onTitleClick?: () => void;
 };
 
 /* BestPost : 베스트 글 */
