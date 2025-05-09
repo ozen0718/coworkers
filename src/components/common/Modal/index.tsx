@@ -2,25 +2,24 @@
 
 import { useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import Image from 'next/image';
+import { motion, AnimatePresence } from 'framer-motion';
 import clsx from 'clsx';
 import { ModalProps } from './types';
 import { paddingStyle, radiusStyle } from './style';
 import ModalHeader from './ModalHeader';
 import ModalButtons from './ModalButtons';
-import Image from 'next/image';
-import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Modal({
   padding = 'default',
   borderRadius = '12',
+  
   closeIcon,
-  headerIcon,
-  title,
-  description,
-  cancelButtonLabel,
-  submitButtonLabel,
-  cancelButtonVariant,
-  submitButtonVariant,
+  header,
+
+  cancelButton,
+  submitButton,
+
   isOpen,
   onClose,
   onSubmit,
@@ -65,13 +64,11 @@ export default function Modal({
                 <Image src="/icons/close.svg" alt="" width={24} height={24} className="h-6 w-6" />
               </button>
             )}
-            <ModalHeader headerIcon={headerIcon} title={title} description={description} />
+            {header && <ModalHeader {...header} />}
             {children}
             <ModalButtons
-              cancelButtonLabel={cancelButtonLabel}
-              submitButtonLabel={submitButtonLabel}
-              cancelButtonVariant={cancelButtonVariant}
-              submitButtonVariant={submitButtonVariant}
+              cancelButton={cancelButton}
+              submitButton={submitButton}
               onClose={onClose}
               onSubmit={onSubmit}
               disabled={disabled}

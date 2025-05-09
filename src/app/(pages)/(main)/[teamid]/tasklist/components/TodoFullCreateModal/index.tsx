@@ -47,10 +47,12 @@ export default function TodoFullCreateModal({
   return (
     <Modal
       padding="todo"
-      title="할 일 만들기"
-      description={`할 일은 실제로 행동 가능한 작업 중심으로
-        작성해주시면 좋습니다.`}
-      submitButtonLabel="할일 생성"
+      header={{
+        title: '할 일 만들기',
+        description: `할 일은 실제로 행동 가능한 작업 중심으로
+        작성해주시면 좋습니다.`,
+      }}
+      submitButton={{ label: '할 일 만들기' }}
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleCreate}

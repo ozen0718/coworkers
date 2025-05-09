@@ -23,7 +23,7 @@ export function useModalGroup<T extends string>() {
 // <Modal
 //   isOpen={isOpen('invite')}
 //   onClose={close}
-//   title="멤버 초대"
+//   header={{ title: "멤버 초대" }}
 //   // ...
 // />
 
@@ -31,11 +31,11 @@ export function useModalGroup<T extends string>() {
 // <Modal
 //   isOpen={isOpen('createList')}
 //   onClose={close}
-//   title="할 일 목록 추가"
+//   header={{ title: "할 일 목록 추가" }}
 // />
 
 // <Modal
 //   isOpen={isOpen('profile')}
 //   onClose={close}
-//   title="프로필"
+//   header={{ title: "프로필" }}
 // />

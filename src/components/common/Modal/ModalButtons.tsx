@@ -2,10 +2,12 @@ import Button from '../Button/Button';
 import { ModalButtonsProps } from './types';
 
 export default function ModalButtons({
-  cancelButtonLabel,
-  submitButtonLabel,
-  cancelButtonVariant,
-  submitButtonVariant,
+  // cancelButtonLabel,
+  // submitButtonLabel,
+  // cancelButtonVariant,
+  // submitButtonVariant,
+  cancelButton,
+  submitButton,
   onClose,
   onSubmit,
   disabled,
@@ -25,18 +27,18 @@ export default function ModalButtons({
 
   return (
     <div className="mt-6 flex gap-2">
-      {cancelButtonLabel && (
-        <Button fullWidth variant={cancelButtonVariant} onClick={onClose}>
-          {cancelButtonLabel}
+      {cancelButton?.label && (
+        <Button fullWidth variant={cancelButton?.variant} onClick={onClose}>
+          {cancelButton?.label}
         </Button>
       )}
       <Button
         fullWidth
-        variant={submitButtonVariant}
+        variant={submitButton.variant}
         onClick={handleClickSubmit}
         disabled={disabled}
       >
-        {submitButtonLabel}
+        {submitButton.label}
       </Button>
     </div>
   );

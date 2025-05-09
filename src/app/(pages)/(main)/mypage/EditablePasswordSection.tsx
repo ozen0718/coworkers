@@ -16,10 +16,9 @@ export default function EditablePasswordSection() {
       </div>
 
       <Modal
-        title="비밀번호 변경하기"
-        cancelButtonLabel="닫기"
-        cancelButtonVariant="cancel"
-        submitButtonLabel="변경하기"
+        header={{ title: '비밀번호 변경하기' }}
+        cancelButton={{ label: '닫기', variant: 'cancel' }}
+        submitButton={{ label: '변경하기' }}
         isOpen={isOpen}
         onClose={close}
       >
