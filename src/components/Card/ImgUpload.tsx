@@ -79,9 +79,9 @@ export default function ImgUpload({ onImageUpload }: { onImageUpload: (url: stri
               },
             });
 
-            const uploadedUrl = response.data.url; // 여기는 응답 구조에 따라 변경
-            setImage(uploadedUrl); // 실제 이미지로 교체
-            onImageUpload(uploadedUrl); // 부모에 전달
+            const uploadedUrl = response.data.url;
+            setImage(uploadedUrl);
+            onImageUpload(uploadedUrl); // 부모 전달
           } catch (error) {
             console.error('이미지 업로드 실패:', error);
           }

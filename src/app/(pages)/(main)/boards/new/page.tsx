@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import axiosInstance from '@/app/api/axiosInstance';
 import { AxiosError } from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
 
 export default function CreateBoard() {
   // const token = useAuthStore((state) => state.accessToken);
@@ -18,12 +19,19 @@ export default function CreateBoard() {
   const [content, setContent] = useState<string>('');
   const [image, setImage] = useState<string>('');
 
+  const isFormValid = title.trim() !== '' && content.trim() !== '';
+
   const handleSubmit = async () => {
     try {
       const payload: Record<string, string> = {
         title,
         content,
       };
+
+      if (title.trim() === '' || content.trim() === '') {
+        toast.error('제목과 내용을 모두 입력해주세요.');
+        return;
+      }
 
       if (image) {
         payload.image = image;
@@ -45,6 +53,7 @@ export default function CreateBoard() {
 
   return (
     <div className="my-14 max-h-[841px]">
+      <ToastContainer position="top-center" />
       {/* 타이틀 + 버튼 */}
       <div className="flex items-center justify-between">
         <p className="text-xl-bold flex">게시글 쓰기</p>
