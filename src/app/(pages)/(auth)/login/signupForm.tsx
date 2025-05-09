@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import { signup } from '../../../api/auth';
 import { useRouter } from 'next/navigation';
@@ -33,11 +35,18 @@ export default function SignupForm() {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input name="email" placeholder="이메일" onChange={handleChange} />
-      <input name="nickname" placeholder="닉네임" onChange={handleChange} />
-      <input name="password" type="password" placeholder="비밀번호" onChange={handleChange} />
+      <input name="email" value={form.email} placeholder="이메일" onChange={handleChange} />
+      <input name="nickname" value={form.nickname} placeholder="닉네임" onChange={handleChange} />
+      <input
+        name="password"
+        value={form.password}
+        type="password"
+        placeholder="비밀번호"
+        onChange={handleChange}
+      />
       <input
         name="passwordConfirmation"
+        value={form.passwordConfirmation}
         type="password"
         placeholder="비밀번호 확인"
         onChange={handleChange}
