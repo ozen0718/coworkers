@@ -3,17 +3,16 @@
 import IconPlus from '@/assets/icons/IconPlus';
 import IconDelete from '@/assets/icons/IconDelete';
 import { useState, useRef } from 'react';
+import axiosInstance from '@/app/api/axiosInstance';
 
-export default function ImgUpload() {
+export default function ImgUpload({ onImageUpload }: { onImageUpload: (url: string) => void }) {
   const [image, setImage] = useState<string | null>();
   const fileInput = useRef<HTMLInputElement>(null);
 
-  /* 이미지 삭제 */
   const handleDeleteImage = () => {
     setImage(null);
-    if (fileInput.current) {
-      fileInput.current.value = '';
-    }
+    if (fileInput.current) fileInput.current.value = '';
+    onImageUpload('');
   };
 
   return (
@@ -29,7 +28,7 @@ export default function ImgUpload() {
             height={40}
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform cursor-pointer"
             onClick={(e) => {
-              e.stopPropagation(); // 상위 이벤트 전파 막기
+              e.stopPropagation();
               handleDeleteImage();
             }}
           />
@@ -46,21 +45,32 @@ export default function ImgUpload() {
         accept="image/*"
         ref={fileInput}
         className="hidden"
-        onChange={(e) => {
+        onChange={async (e) => {
           const file = e.target.files?.[0];
           if (!file) return;
 
-          console.log('file', file);
-
-          // 10MB 초과 검사
           if (file.size > 10 * 1024 * 1024) {
             alert('10MB 이하의 이미지만 업로드 가능합니다.');
-            e.target.value = ''; // 파일 선택 초기화
+            e.target.value = '';
             return;
           }
 
-          const imageUrl = URL.createObjectURL(file);
-          setImage(imageUrl);
+          const formData = new FormData();
+          formData.append('file', file);
+
+          try {
+            const response = await axiosInstance.post('/images/upload', formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+            });
+
+            const uploadedUrl = response.data.url;
+            setImage(uploadedUrl);
+            onImageUpload(uploadedUrl);
+          } catch (error) {
+            console.error('이미지 업로드 실패:', error);
+          }
         }}
       />
     </div>
