@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import ArrowDropdown from '@/components/common/ArrowDropdown';
 import Link from 'next/link';
 import Button from '@/components/common/Button/Button';
+import { useRouter } from 'next/navigation';
 
 /* 테스트 데이터 */
 import { testPosts } from '@/components/Card/testPosts';
@@ -15,7 +16,6 @@ export default function BoardPage() {
   const [selectedOption, setSelectedOption] = useState('최신순');
 
   const windowWidth = useWindowSize();
-
   const [bestVisiblePosts, setBestVisiblePosts] = useState(1);
 
   useEffect(() => {
@@ -27,6 +27,12 @@ export default function BoardPage() {
       setBestVisiblePosts(1);
     }
   }, [windowWidth]);
+
+  /* 글 쓰기 이동 */
+  const router = useRouter();
+  const gotoNewBoard = () => {
+    router.push(`/boards/new`);
+  };
 
   /* 검색 데이터 */
   const [searchTerm, setSearchTerm] = useState('');
@@ -111,14 +117,16 @@ export default function BoardPage() {
               ))}
             </div>
 
-            <Button
-              variant="primary"
-              size="plus"
-              icon="plus"
-              className="absolute right-0 bottom-16"
-            >
-              글쓰기
-            </Button>
+            <div onClick={gotoNewBoard}>
+              <Button
+                variant="primary"
+                size="plus"
+                icon="plus"
+                className="absolute right-0 bottom-16"
+              >
+                글쓰기
+              </Button>
+            </div>
           </div>
         </>
       )}
