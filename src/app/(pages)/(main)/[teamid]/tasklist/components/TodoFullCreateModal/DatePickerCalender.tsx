@@ -4,8 +4,8 @@ import IconArrowPolygon from '@/assets/icons/IconArrowPolygon';
 import DatePickerInput from './DatePickerInput';
 
 interface DatePickerCalendarProps {
-  startDate: Date | null;
-  setStartDate: (date: Date | null) => void;
+  dateTime: Date | null;
+  setDate: (date: Date | null) => void;
 }
 
 const customLocale = {
@@ -16,12 +16,12 @@ const customLocale = {
   },
 };
 
-export default function DatePickerCalendar({ startDate, setStartDate }: DatePickerCalendarProps) {
+export default function DatePickerCalendar({ dateTime, setDate }: DatePickerCalendarProps) {
   return (
     <DatePicker
       locale={customLocale}
-      selected={startDate ?? undefined}
-      onChange={(date) => setStartDate(date)}
+      selected={dateTime ?? undefined}
+      onChange={(date) => setDate(date)}
       customInput={<DatePickerInput />}
       dateFormat="yyyy년 M월 d일"
       popperClassName="static-popper calendar-picker"

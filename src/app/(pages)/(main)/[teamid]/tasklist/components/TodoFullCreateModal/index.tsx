@@ -8,6 +8,7 @@ import { TextInput, TextAreaInput } from '@/components/common/Inputs';
 import './style.css';
 import DatePickerCalendar from './DatePickerCalender';
 import DatePickerInput from './DatePickerInput';
+import { useDateTimePicker } from './useDateTimePicker';
 
 export interface TodoFullCreateModalProps {
   isOpen: boolean;
@@ -33,14 +34,15 @@ export default function TodoFullCreateModal({
   disabled = false,
 }: TodoFullCreateModalProps) {
   const [title, setTitle] = useState('');
-  const [startDate, setStartDate] = useState<Date | null>(new Date());
-  const [time] = useState(new Date().toTimeString().slice(0, 5));
+
+  const { dateTime, setDate, setTime, timeString } = useDateTimePicker();
+
   const [repeat, setRepeat] = useState(todoRepeatOptions[0]);
   const [repeatDays, setRepeatDays] = useState<string[]>([]);
   const [memo, setMemo] = useState('');
 
   const handleCreate = () => {
-    onSubmit({ title, date: startDate, time, repeat, repeatDays, memo });
+    onSubmit({ title, date: dateTime, time: timeString, repeat, repeatDays, memo });
   };
 
   return (
@@ -74,14 +76,14 @@ export default function TodoFullCreateModal({
           <h2 className="text-lg-medium">시작 날짜 및 시간</h2>
           <div className="flex gap-2">
             <div className="flex-1">
-              <DatePickerCalendar startDate={startDate} setStartDate={setStartDate} />
+              <DatePickerCalendar dateTime={dateTime} setDate={setDate} />
             </div>
             <div className="flex-1">
               <DatePicker
                 wrapperClassName="time-picker"
-                selected={startDate || undefined}
-                onChange={(d) => setStartDate(d)}
-                customInput={<DatePickerInput value={time} />}
+                selected={dateTime || undefined}
+                onChange={(d) => setTime(d)}
+                customInput={<DatePickerInput value={dateTime?.toTimeString().slice(0, 5) ?? ''} />}
                 showTimeSelect
                 showTimeSelectOnly
                 timeIntervals={15}
