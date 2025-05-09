@@ -1,14 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import DatePicker from 'react-datepicker';
 import Modal from '@/components/common/Modal';
 import ArrowDropdown from '@/components/common/ArrowDropdown';
 import { TextInput, TextAreaInput } from '@/components/common/Inputs';
 import './style.css';
-import DatePickerCalendar from './DatePickerCalender';
-import DatePickerInput from './DatePickerInput';
 import { useDateTimePicker } from './useDateTimePicker';
+import DatePickerCalendar from './DatePickerCalender';
+import DatePickerTime from './DatePickerTime';
 
 export interface TodoFullCreateModalProps {
   isOpen: boolean;
@@ -79,17 +78,7 @@ export default function TodoFullCreateModal({
               <DatePickerCalendar dateTime={dateTime} setDate={setDate} />
             </div>
             <div className="flex-1">
-              <DatePicker
-                wrapperClassName="time-picker"
-                selected={dateTime || undefined}
-                onChange={(d) => setTime(d)}
-                customInput={<DatePickerInput value={dateTime?.toTimeString().slice(0, 5) ?? ''} />}
-                showTimeSelect
-                showTimeSelectOnly
-                timeIntervals={15}
-                dateFormat="aa h:mm"
-                showTimeCaption={false}
-              />
+              <DatePickerTime dateTime={dateTime} setTime={setTime} />
             </div>
           </div>
         </div>
