@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { signup } from './auth';
+import { signup } from '../../../api/auth';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
