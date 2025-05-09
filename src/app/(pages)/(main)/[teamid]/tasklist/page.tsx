@@ -7,11 +7,11 @@ import { ko } from 'date-fns/locale';
 import clsx from 'clsx';
 
 import Modal from '@/components/common/Modal';
-import TodoFullCreateModal, { TodoFullCreateModalProps } from '@/components/TodoFullCreateModal';
 import TodoItem from '@/components/List/todo';
 import { TextInput } from '@/components/common/Inputs';
 import DetailPost from '@/components/Card/Post/Deatil/DetailPost';
 import SlideWrapper from '@/components/Card/SlideWrapper';
+import TodoFullCreateModal, { TodoFullCreateModalProps } from './components/TodoFullCreateModal';
 
 const MAX_LIST_NAME_LENGTH = 15;
 

@@ -3,11 +3,11 @@
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import Modal from '@/components/common/Modal';
-import DatePickerCalendar from '@/components/TodoFullCreateModal/DatePickerCalender';
-import DatePickerInput from '@/components/TodoFullCreateModal/DatePickerInput';
+import ArrowDropdown from '@/components/common/ArrowDropdown';
 import { TextInput, TextAreaInput } from '@/components/common/Inputs';
 import './style.css';
-import ArrowDropdown from '../common/ArrowDropdown';
+import DatePickerCalendar from './DatePickerCalender';
+import DatePickerInput from './DatePickerInput';
 
 export interface TodoFullCreateModalProps {
   isOpen: boolean;
