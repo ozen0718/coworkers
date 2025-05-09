@@ -8,15 +8,15 @@ interface DatePickerCalendarProps {
   setStartDate: (date: Date | null) => void;
 }
 
-export default function DatePickerCalendar({ startDate, setStartDate }: DatePickerCalendarProps) {
-  const customLocale = {
-    ...enUS,
-    localize: {
-      ...enUS.localize,
-      day: (n: number) => ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][n],
-    },
-  };
+const customLocale = {
+  ...enUS,
+  localize: {
+    ...enUS.localize,
+    day: (n: number) => ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][n],
+  },
+};
 
+export default function DatePickerCalendar({ startDate, setStartDate }: DatePickerCalendarProps) {
   return (
     <DatePicker
       locale={customLocale}
