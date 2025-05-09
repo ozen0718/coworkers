@@ -9,9 +9,14 @@ export default function ImgUpload({ onImageUpload }: { onImageUpload: (url: stri
   const [image, setImage] = useState<string | null>();
   const fileInput = useRef<HTMLInputElement>(null);
 
+  const token = process.env.NEXT_PUBLIC_API_TOKEN;
+
+  /* 이미지 삭제 */
   const handleDeleteImage = () => {
     setImage(null);
-    if (fileInput.current) fileInput.current.value = '';
+    if (fileInput.current) {
+      fileInput.current.value = '';
+    }
     onImageUpload('');
   };
 
@@ -28,7 +33,7 @@ export default function ImgUpload({ onImageUpload }: { onImageUpload: (url: stri
             height={40}
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform cursor-pointer"
             onClick={(e) => {
-              e.stopPropagation();
+              e.stopPropagation(); // 상위 이벤트 전파 막기
               handleDeleteImage();
             }}
           />
@@ -49,25 +54,34 @@ export default function ImgUpload({ onImageUpload }: { onImageUpload: (url: stri
           const file = e.target.files?.[0];
           if (!file) return;
 
+          console.log('file', file);
+
+          // 10MB 초과 검사
           if (file.size > 10 * 1024 * 1024) {
             alert('10MB 이하의 이미지만 업로드 가능합니다.');
-            e.target.value = '';
+            e.target.value = ''; // 파일 선택 초기화
             return;
           }
 
+          // 1. 업로드 전, 임시 미리보기 보여주기
+          const tempUrl = URL.createObjectURL(file);
+          setImage(tempUrl);
+
+          // 2. 서버로 업로드
           const formData = new FormData();
-          formData.append('file', file);
+          formData.append('image', file);
 
           try {
-            const response = await axiosInstance.post('/images/upload', formData, {
+            const response = await axiosInstance.post('/13-4/images/upload', formData, {
               headers: {
                 'Content-Type': 'multipart/form-data',
+                Authorization: `Bearer ${token}`,
               },
             });
 
-            const uploadedUrl = response.data.url;
-            setImage(uploadedUrl);
-            onImageUpload(uploadedUrl);
+            const uploadedUrl = response.data.url; // 여기는 응답 구조에 따라 변경
+            setImage(uploadedUrl); // 실제 이미지로 교체
+            onImageUpload(uploadedUrl); // 부모에 전달
           } catch (error) {
             console.error('이미지 업로드 실패:', error);
           }

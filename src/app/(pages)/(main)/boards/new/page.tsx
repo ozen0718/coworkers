@@ -8,7 +8,6 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import axiosInstance from '@/app/api/axiosInstance';
 import { AxiosError } from 'axios';
-import { useEffect } from 'react';
 
 export default function CreateBoard() {
   // const token = useAuthStore((state) => state.accessToken);
