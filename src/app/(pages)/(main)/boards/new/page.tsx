@@ -1,5 +1,4 @@
 'use client';
-import axios from 'axios';
 import { TextAreaInput } from '@/components/common/Inputs';
 import ImgUpload from '@/components/Card/ImgUpload';
 import Button from '@/components/common/Button/Button';
@@ -52,7 +51,12 @@ export default function CreateBoard() {
         <div className="relative max-[620px]:hidden">
           <button
             onClick={handleSubmit}
-            className="text-lg-semibold bg-primary hover:bg-primary-hover active:bg-primary-pressed max-[620px]:text-md-semibold flex h-12 w-[184px] items-center justify-center rounded-xl text-white max-[620px]:h-8 max-[620px]:w-[100px]"
+            disabled={!title || !content}
+            className={`text-lg-semibold max-[620px]:text-md-semibold flex h-12 w-[184px] items-center justify-center rounded-xl text-white max-[620px]:h-8 max-[620px]:w-[100px] ${
+              !title || !content
+                ? 'cursor-not-allowed bg-gray-400 opacity-50'
+                : 'bg-primary hover:bg-primary-hover active:bg-primary-pressed'
+            }`}
           >
             등록
           </button>
@@ -95,7 +99,13 @@ export default function CreateBoard() {
 
         {/* 모바일용 버튼 */}
         <div onClick={handleSubmit} className="mt-10 flex justify-center min-[620px]:hidden">
-          <Button size="large">등록</Button>
+          <Button
+            size="large"
+            disabled={!title || !content}
+            className={!title || !content ? 'cursor-not-allowed bg-gray-400 opacity-50' : ''}
+          >
+            등록
+          </Button>
         </div>
       </div>
     </div>
