@@ -9,11 +9,12 @@ import { ModalProps } from './types';
 import { paddingStyle, radiusStyle } from './style';
 import ModalHeader from './ModalHeader';
 import ModalButtons from './ModalButtons';
+import { isBrowser } from '@/utils/env';
 
 export default function Modal({
   padding = 'default',
   borderRadius = '12',
-  
+
   closeIcon,
   header,
 
@@ -35,7 +36,7 @@ export default function Modal({
     };
   }, [isOpen]);
 
-  if (typeof window === 'undefined') return null;
+  if (!isBrowser) return null;
 
   return createPortal(
     <AnimatePresence mode="wait">
