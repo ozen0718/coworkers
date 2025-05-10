@@ -10,18 +10,15 @@ import { ModalProps } from './types';
 import { paddingStyle, radiusStyle } from './style';
 import ModalHeader from './components/ModalHeader';
 import ModalButtons from './components/ModalButtons';
-import useModalEvents from './useModalEvents';
+import useModalEffects from './useModalEffects';
 
 export default function Modal({
   padding = 'default',
   borderRadius = '12',
-
   closeIcon,
   header,
-
   cancelButton,
   submitButton,
-
   isOpen,
   onClose,
   onSubmit,
@@ -39,7 +36,7 @@ export default function Modal({
 
   const modalRef = useRef<HTMLDivElement>(null);
 
-  useModalEvents(modalRef, onClose, isOpen);
+  useModalEffects(modalRef, onClose, isOpen);
 
   if (!isBrowser) return null;
 
