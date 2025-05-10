@@ -1,5 +1,5 @@
+import { DateInput } from '@/components/common/Inputs';
 import { forwardRef } from 'react';
-import { DateInput } from '../common/Inputs';
 
 interface DatePickerInputProps {
   value?: string;
