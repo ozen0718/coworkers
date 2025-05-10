@@ -14,12 +14,12 @@ export function useModal(defaultOpen = false) {
 /* ========================= */
 
 // const { isOpen, open, close } = useModal();
-//
+
 // <button onClick={open}>멤버 초대</button>
-//
+
 // <Modal
 //   isOpen={isOpen}
 //   onClose={close}
-//   title="멤버 초대"
-//   // ...
+//   header={{ title: "멤버 초대" }}
+//   ...
 // />

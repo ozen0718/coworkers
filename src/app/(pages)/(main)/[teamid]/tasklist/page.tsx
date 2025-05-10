@@ -7,11 +7,11 @@ import { ko } from 'date-fns/locale';
 import clsx from 'clsx';
 
 import Modal from '@/components/common/Modal';
-import TodoFullCreateModal, { TodoFullCreateModalProps } from '@/components/TodoFullCreateModal';
 import TodoItem from '@/components/List/todo';
 import { TextInput } from '@/components/common/Inputs';
 import DetailPost from '@/components/Card/Post/Deatil/DetailPost';
 import SlideWrapper from '@/components/Card/SlideWrapper';
+import TodoFullCreateModal, { TodoFullCreateModalProps } from './components/TodoFullCreateModal';
 
 const MAX_LIST_NAME_LENGTH = 15;
 
@@ -209,11 +209,13 @@ export default function TaskListPage() {
         isOpen={isListModalOpen}
         onClose={() => setListModalOpen(false)}
         onSubmit={handleAddList}
-        submitButtonLabel="만들기"
+        header={{
+          title: '새로운 목록 추가',
+          description: `할 일에 대한 목록을 추가하고 
+        목록별 할 일을 만들 수 있습니다.`,
+        }}
+        submitButton={{ label: '만들기' }}
         disabled={!newListName.trim()}
-        title="새로운 목록 추가"
-        description={`할 일에 대한 목록을 추가하고 
-        목록별 할 일을 만들 수 있습니다.`}
       >
         <div className="mt-4">
           <TextInput
