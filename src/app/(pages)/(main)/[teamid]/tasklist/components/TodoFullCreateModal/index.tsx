@@ -5,9 +5,9 @@ import Modal from '@/components/common/Modal';
 import ArrowDropdown from '@/components/common/ArrowDropdown';
 import { TextInput, TextAreaInput } from '@/components/common/Inputs';
 import './style.css';
-import { useDateTimePicker } from './hooks/useDateTimePicker';
-import DatePickerCalendar from './components/DatePickerCalender';
-import DatePickerTime from './components/DatePickerTime';
+import { useDateTimePicker } from './useDateTimePicker';
+import DatePickerCalendar from './DatePickerCalender';
+import DatePickerTime from './DatePickerTime';
 
 export interface TodoFullCreateModalProps {
   isOpen: boolean;
