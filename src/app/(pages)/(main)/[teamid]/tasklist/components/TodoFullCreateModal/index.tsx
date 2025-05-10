@@ -33,12 +33,11 @@ export default function TodoFullCreateModal({
   disabled = false,
 }: TodoFullCreateModalProps) {
   const [title, setTitle] = useState('');
-
-  const { dateTime, setDate, setTime, timeString } = useDateTimePicker();
-
   const [repeat, setRepeat] = useState(todoRepeatOptions[0]);
   const [repeatDays, setRepeatDays] = useState<string[]>([]);
   const [memo, setMemo] = useState('');
+
+  const { dateTime, setDate, setTime, timeString } = useDateTimePicker();
 
   const handleCreate = () => {
     onSubmit({ title, date: dateTime, time: timeString, repeat, repeatDays, memo });
