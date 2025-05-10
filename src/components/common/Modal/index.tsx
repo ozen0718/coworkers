@@ -8,8 +8,8 @@ import clsx from 'clsx';
 import { isBrowser } from '@/utils/env';
 import { ModalProps } from './types';
 import { paddingStyle, radiusStyle } from './style';
-import ModalHeader from './ModalHeader';
-import ModalButtons from './ModalButtons';
+import ModalHeader from './components/ModalHeader';
+import ModalButtons from './components/ModalButtons';
 import useModalEvents from './useModalEvents';
 
 export default function Modal({

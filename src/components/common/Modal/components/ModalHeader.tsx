@@ -1,4 +1,4 @@
-import { ModalHeaderProps } from './types';
+import { ModalHeaderProps } from '../types';
 
 export default function ModalHeader({ headerIcon, title, description }: ModalHeaderProps) {
   if (!title && !description && !headerIcon) return null;

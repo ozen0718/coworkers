@@ -1,11 +1,7 @@
-import Button from '../Button/Button';
-import { ModalButtonsProps } from './types';
+import Button from '../../Button/Button';
+import { ModalButtonsProps } from '../types';
 
 export default function ModalButtons({
-  // cancelButtonLabel,
-  // submitButtonLabel,
-  // cancelButtonVariant,
-  // submitButtonVariant,
   cancelButton,
   submitButton,
   onClose,
