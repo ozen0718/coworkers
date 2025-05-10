@@ -17,7 +17,7 @@ export type AuthorInfoProps = {
   showComment?: boolean;
 };
 
-/* BoardComment - 댓글 내용 */
+/* BoardComment - 게시글 댓글 내용 */
 export type BoardCommentProps = {
   type?: 'free' | 'list';
   author?: string;
@@ -25,7 +25,7 @@ export type BoardCommentProps = {
   date?: string;
 };
 
-/* PostCard : 게시글 */
+/* PostCard - 게시글 */
 export type PostCardProps = {
   id: number;
   type?: 'best' | 'general';
@@ -38,8 +38,16 @@ export type PostCardProps = {
   onTitleClick?: () => void;
 };
 
-/* BestPost : 베스트 글 */
+/* BestPost - 베스트 글 */
 export type BestPostProps = {
+  id: number;
+  title: string;
+  imgUrl: string;
+  date: string;
+};
+
+/* GeneralPost - 일반 글 */
+export type GeneralPostProps = {
   id: number;
   title: string;
   imgUrl: string;

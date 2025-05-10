@@ -11,13 +11,20 @@ import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [form, setForm] = useState({
+    email: '',
+    password: '',
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleLogin = async () => {
     try {
       const teamId = '13-4';
-      await login({ teamId, email, password });
+      await login({ teamId, email: form.email, password: form.password });
       toast.success('로그인 성공!');
     } catch (error) {
       const err = error as AxiosError<{ message?: string }>;
@@ -36,10 +43,11 @@ export default function LoginPage() {
               이메일
             </label>
             <EmailInput
-              placeholder="이메일을 입력해주세요."
               id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              placeholder="이메일을 입력해주세요."
+              value={form.email}
+              onChange={handleChange}
             />
           </div>
 
@@ -48,10 +56,11 @@ export default function LoginPage() {
               비밀번호
             </label>
             <PasswordInput
-              placeholder="비밀번호를 입력해주세요."
               id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              placeholder="비밀번호를 입력해주세요."
+              value={form.password}
+              onChange={handleChange}
             />
             <div className="flex justify-end">
               <Link

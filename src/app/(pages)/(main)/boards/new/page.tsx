@@ -19,8 +19,6 @@ export default function CreateBoard() {
   const [content, setContent] = useState<string>('');
   const [image, setImage] = useState<string>('');
 
-  const isFormValid = title.trim() !== '' && content.trim() !== '';
-
   const handleSubmit = async () => {
     try {
       const payload: Record<string, string> = {
