@@ -77,10 +77,9 @@ export default function TeamPage() {
           <Modal
             isOpen={isOpen('createList')}
             onClose={close}
-            submitButtonLabel="만들기"
+            header={{ title: '할 일 목록' }}
+            submitButton={{ label: '만들기' }}
             closeIcon
-            title="할 일 목록"
-            submitButtonVariant="primary"
             onSubmit={handleCreateList}
           >
             <div className="mt-6">
@@ -125,11 +124,12 @@ export default function TeamPage() {
             <Modal
               isOpen={isOpen('invite')}
               onClose={close}
-              submitButtonLabel="링크 복사하기"
+              header={{
+                title: '멤버 초대',
+                description: '그룹에 참여할 수 있는 링크를 복사합니다.',
+              }}
+              submitButton={{ label: '링크 복사하기' }}
               closeIcon
-              title="멤버 초대"
-              description="그룹에 참여할 수 있는 링크를 복사합니다."
-              submitButtonVariant="primary"
               onSubmit={handleCopyPageLink}
             />
 
@@ -150,7 +150,7 @@ export default function TeamPage() {
         <Modal
           isOpen={isOpen('memberProfile')}
           onClose={close}
-          submitButtonLabel="이메일 복사하기"
+          submitButton={{ label: '이메일 복사하기' }}
           closeIcon
           onSubmit={handleCopyMemberEmail}
         >

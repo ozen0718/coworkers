@@ -2,6 +2,17 @@ import type { PropsWithChildren, ReactNode } from 'react';
 import { ButtonProps } from '../Button/Button';
 import { PaddingStyleType, RadiusStyleType } from './style';
 
+export type ModalButtonProps = {
+  label: string;
+  variant?: ButtonProps['variant'];
+};
+
+export type ModalHeaderProps = {
+  headerIcon?: ReactNode;
+  title?: string;
+  description?: string;
+};
+
 export type ModalProps = PropsWithChildren<{
   /**
    * padding 스타일 설정값 (Desktop 기준)
@@ -16,15 +27,16 @@ export type ModalProps = PropsWithChildren<{
    * - '24': 24px
    */
   borderRadius?: RadiusStyleType;
-  headerIcon?: ReactNode;
-  closeIcon?: boolean;
-  title?: string;
-  description?: string;
 
-  cancelButtonLabel?: string;
-  submitButtonLabel: string;
-  cancelButtonVariant?: ButtonProps['variant'];
-  submitButtonVariant?: ButtonProps['variant'];
+  closeIcon?: boolean;
+  // headerIcon?: ReactNode;
+  // title?: string;
+  // description?: string;
+
+  header?: ModalHeaderProps;
+
+  cancelButton?: ModalButtonProps;
+  submitButton: ModalButtonProps;
 
   isOpen: boolean;
   onClose: () => void;
@@ -32,20 +44,12 @@ export type ModalProps = PropsWithChildren<{
   disabled?: boolean;
 }>;
 
-export type ModalHeaderProps = Pick<
-  ModalProps,
-  | 'headerIcon'
-  | 'title'
-  | 'description'
->;
+// export type ModalHeaderProps = Pick<
+//   ModalProps,
+//   'headerIcon' | 'title' | 'description' | 'closeIcon'
+// >;
 
 export type ModalButtonsProps = Pick<
   ModalProps,
-  | 'cancelButtonLabel'
-  | 'submitButtonLabel'
-  | 'cancelButtonVariant'
-  | 'submitButtonVariant'
-  | 'onClose'
-  | 'onSubmit'
-  | 'disabled'
+  'cancelButton' | 'submitButton' | 'onClose' | 'onSubmit' | 'disabled'
 >;

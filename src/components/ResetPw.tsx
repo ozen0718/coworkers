@@ -16,12 +16,9 @@ export default function ResetPasswordRequestModal({ isOpen, onClose, onSubmit }:
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="비밀번호 재설정"
-      description="비밀번호 재설정 링크를 보내드립니다."
-      cancelButtonLabel="닫기"
-      submitButtonLabel="링크 보내기"
-      cancelButtonVariant="inverse"
-      submitButtonVariant="primary"
+      header={{ title: '비밀번호 재설정', description: '비밀번호 재설정 링크를 보내드립니다.' }}
+      cancelButton={{ label: '닫기', variant: 'inverse' }}
+      submitButton={{ label: '링크 보내기' }}
       onSubmit={() => onSubmit(email)}
     >
       <div className="mt-4">

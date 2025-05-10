@@ -1,26 +1,24 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
-import clsx from 'clsx';
-import { ModalProps } from './types';
-import { paddingStyle, radiusStyle } from './style';
-import ModalHeader from './ModalHeader';
-import ModalButtons from './ModalButtons';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
+import clsx from 'clsx';
+import { isBrowser } from '@/utils/env';
+import { ModalProps } from './types';
+import { paddingStyle, radiusStyle } from './style';
+import ModalHeader from './components/ModalHeader';
+import ModalButtons from './components/ModalButtons';
+import useModalEffects from './useModalEffects';
 
 export default function Modal({
   padding = 'default',
   borderRadius = '12',
   closeIcon,
-  headerIcon,
-  title,
-  description,
-  cancelButtonLabel,
-  submitButtonLabel,
-  cancelButtonVariant,
-  submitButtonVariant,
+  header,
+  cancelButton,
+  submitButton,
   isOpen,
   onClose,
   onSubmit,
@@ -36,7 +34,11 @@ export default function Modal({
     };
   }, [isOpen]);
 
-  if (typeof window === 'undefined') return null;
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useModalEffects(modalRef, onClose, isOpen);
+
+  if (!isBrowser) return null;
 
   return createPortal(
     <AnimatePresence mode="wait">
@@ -46,7 +48,6 @@ export default function Modal({
           initial={{ opacity: 0.8 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onClick={onClose}
         >
           <motion.div
             className={clsx(
@@ -58,20 +59,18 @@ export default function Modal({
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 10, opacity: 0 }}
             transition={{ type: 'tween', duration: 0.05 }}
-            onClick={(e) => e.stopPropagation()}
+            ref={modalRef}
           >
             {closeIcon && (
               <button type="button" onClick={onClose} className="absolute top-4 right-4">
                 <Image src="/icons/close.svg" alt="" width={24} height={24} className="h-6 w-6" />
               </button>
             )}
-            <ModalHeader headerIcon={headerIcon} title={title} description={description} />
+            {header && <ModalHeader {...header} />}
             {children}
             <ModalButtons
-              cancelButtonLabel={cancelButtonLabel}
-              submitButtonLabel={submitButtonLabel}
-              cancelButtonVariant={cancelButtonVariant}
-              submitButtonVariant={submitButtonVariant}
+              cancelButton={cancelButton}
+              submitButton={submitButton}
               onClose={onClose}
               onSubmit={onSubmit}
               disabled={disabled}

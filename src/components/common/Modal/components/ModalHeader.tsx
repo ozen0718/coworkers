@@ -1,7 +1,7 @@
-import { ModalHeaderProps } from './types';
+import { ModalHeaderProps } from '../types';
 
 export default function ModalHeader({ headerIcon, title, description }: ModalHeaderProps) {
-  if (!headerIcon && !title && !description) return null;
+  if (!title && !description && !headerIcon) return null;
 
   return (
     <div className="flex flex-col items-center gap-4 text-center">
