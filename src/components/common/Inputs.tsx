@@ -58,6 +58,7 @@ export function NameInput({ id, placeholder }: InputProps) {
 
 export function EmailInput({
   id,
+  name,
   placeholder,
   value = '',
   onChange = () => {},
@@ -74,6 +75,7 @@ export function EmailInput({
         className={`${EmailInputStyle} peer ${isInvalid ? 'border-red-500' : ''}`}
         placeholder={placeholder}
         id={id}
+        name={name}
         value={value}
         onChange={onChange}
         required
@@ -89,6 +91,7 @@ export function EmailInput({
 
 export function PasswordInput({
   id,
+  name,
   placeholder,
   value = '',
   onChange = () => {},
@@ -109,6 +112,7 @@ export function PasswordInput({
           className={PasswordInputStyle}
           placeholder={placeholder}
           id={id}
+          name={name}
           value={value}
           onChange={onChange}
           required

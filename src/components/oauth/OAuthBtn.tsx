@@ -1,6 +1,6 @@
 'use client';
 
-import Image from 'next/image';
+import OAuthButton from './OAuthButton';
 
 export default function OAuthButtonGroup() {
   const handleOAuthLogin = (provider: 'google' | 'kakao') => {
@@ -10,19 +10,8 @@ export default function OAuthButtonGroup() {
 
   return (
     <div className="flex gap-3">
-      <button
-        onClick={() => handleOAuthLogin('google')}
-        className="flex h-[42px] w-[42px] items-center justify-center"
-      >
-        <Image src="/icons/google.svg" alt="구글 로그인" width={42} height={42} />
-      </button>
-
-      <button
-        onClick={() => handleOAuthLogin('kakao')}
-        className="flex h-[42px] w-[42px] items-center justify-center"
-      >
-        <Image src="/icons/kakaotalk.svg" alt="카카오 로그인" width={42} height={42} />
-      </button>
+      <OAuthButton provider="google" onClick={handleOAuthLogin} />
+      <OAuthButton provider="kakao" onClick={handleOAuthLogin} />
     </div>
   );
 }
