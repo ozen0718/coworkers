@@ -10,7 +10,7 @@ import { login } from '@/app/api/auth';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@/stores/useAuthStore'; // ✅ 추가
+import { useAuthStore } from '@/stores/useAuthStore';
 
 export default function LoginPage() {
   const router = useRouter();
