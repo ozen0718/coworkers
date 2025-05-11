@@ -9,8 +9,11 @@ import { PageTitleStyle } from '@/styles/pageStyle';
 import { login } from '@/app/api/auth';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/stores/useAuthStore'; // ✅ 추가
 
 export default function LoginPage() {
+  const router = useRouter();
   const [form, setForm] = useState({
     email: '',
     password: '',
@@ -24,8 +27,13 @@ export default function LoginPage() {
   const handleLogin = async () => {
     try {
       const teamId = '13-4';
-      await login({ teamId, email: form.email, password: form.password });
+      const response = await login({ teamId, email: form.email, password: form.password });
+
+      //로그인 성공 시 토큰 저장 (zustand + localStorage)
+      useAuthStore.getState().setAccessToken(response.accessToken);
+
       toast.success('로그인 성공!');
+      router.push('/'); // 로그인시 페이지 이동
     } catch (error) {
       const err = error as AxiosError<{ message?: string }>;
       toast.error(err.response?.data?.message || '로그인 실패');
