@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import axiosInstance from '@/app/api/axiosInstance';
 import { AxiosError } from 'axios';
 import { useParams } from 'next/navigation';
+import { PostDetail } from '@/components/Card/CardType';
 
 export default function ArticleDetail() {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
@@ -19,11 +20,6 @@ export default function ArticleDetail() {
   };
 
   const token = process.env.NEXT_PUBLIC_API_TOKEN;
-
-  type PostDetail = {
-    title: string;
-    content: string;
-  };
 
   const [detailPost, setPostDetail] = useState<PostDetail>({
     title: '',
@@ -106,6 +102,10 @@ export default function ArticleDetail() {
           showDate={true}
           showKebab={false}
           showComment={true}
+          authorName={detailPost.writer?.nickname}
+          date={detailPost.createdAt}
+          commentCount={detailPost.commentCount}
+          likeCount={detailPost.likeCount}
         />
       </div>
 

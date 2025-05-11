@@ -10,16 +10,20 @@ export default function AuthorInfo({
   showDivider = true,
   showLike = true,
   showDate = true,
-  authorName = '우지은',
-  date = '2024.07.25',
+  authorName = '',
+  date = '',
   showKebab = false,
   showComment = false,
+  likeCount,
+  commentCount,
 }: AuthorInfoProps) {
   const [isLiked, setIsLiked] = useState(false);
 
   const toggleLike = () => {
     setIsLiked(!isLiked);
   };
+
+  const dateOnly = date.split('T')[0];
 
   // 상세 카드 일때만
   if (type === 'detail') {
@@ -50,7 +54,7 @@ export default function AuthorInfo({
       {/* 날짜 */}
       {showDate && (
         <span className={`text-gray400 whitespace-nowrap ${showDivider ? 'ml-[10px]' : 'ml-auto'}`}>
-          {date}
+          {dateOnly}
         </span>
       )}
 
@@ -65,7 +69,7 @@ export default function AuthorInfo({
               width={16}
               height={16}
             />
-            <p className="text-gray400">3</p>
+            <p className="text-gray400">{commentCount}</p>
           </div>
         )}
 
@@ -77,7 +81,7 @@ export default function AuthorInfo({
               strokeColor={isLiked ? 'var(--color-danger)' : 'var(--color-gray500)'}
               onClick={toggleLike}
             />
-            <span className="text-gray400">9999+</span>
+            <span className="text-gray400">{likeCount}</span>
           </div>
         )}
 

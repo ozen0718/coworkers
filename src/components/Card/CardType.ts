@@ -15,6 +15,9 @@ export type AuthorInfoProps = {
   date?: string;
   showKebab?: boolean;
   showComment?: boolean;
+  createdAt?: string;
+  likeCount?: number;
+  commentCount?: number;
 };
 
 /* BoardComment - 게시글 댓글 내용 */
@@ -52,4 +55,20 @@ export type GeneralPostProps = {
   title: string;
   imgUrl: string;
   date: string;
+};
+
+export type PostDetail = {
+  id?: number;
+  title: string;
+  content: string;
+  image?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+  commentCount?: number;
+  likeCount?: number;
+  isLiked?: boolean;
+  writer?: {
+    id: number;
+    nickname: string;
+  };
 };
