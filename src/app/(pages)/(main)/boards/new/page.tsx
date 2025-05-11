@@ -4,13 +4,13 @@ import ImgUpload from '@/components/Card/ImgUpload';
 import Button from '@/components/common/Button/Button';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axiosInstance from '@/app/api/axiosInstance';
 import { AxiosError } from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 
 export default function CreateBoard() {
-  // const token = useAuthStore((state) => state.accessToken);
+  //const token = useAuthStore((state) => state.accessToken);
   const token = process.env.NEXT_PUBLIC_API_TOKEN;
 
   const router = useRouter();
@@ -18,6 +18,10 @@ export default function CreateBoard() {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [image, setImage] = useState<string>('');
+
+  useEffect(() => {
+    console.log('token', token);
+  }, [token]);
 
   const handleSubmit = async () => {
     try {
@@ -28,6 +32,11 @@ export default function CreateBoard() {
 
       if (title.trim() === '' || content.trim() === '') {
         toast.error('제목과 내용을 모두 입력해주세요.');
+        return;
+      }
+
+      if (!token) {
+        console.warn('토큰 없음');
         return;
       }
 

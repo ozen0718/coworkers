@@ -12,15 +12,6 @@ import { useEffect } from 'react';
  */
 
 export function BestPost({ id, title, imgUrl, date }: BestPostProps) {
-  const token = useAuthStore((state) => state.accessToken);
-  useEffect(() => {
-    if (token) {
-      console.log('현재 토큰:', token);
-    } else {
-      console.log('토큰 없음');
-    }
-  }, [token]);
-
   return (
     <div className="w-full">
       <PostCard type="best" title={title} imgUrl={imgUrl} date={date} id={id} />

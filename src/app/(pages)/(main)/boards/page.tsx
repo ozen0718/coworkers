@@ -9,6 +9,10 @@ import Link from 'next/link';
 import Button from '@/components/common/Button/Button';
 import { useRouter } from 'next/navigation';
 
+import { GeneralPostProps } from '@/components/Card/CardType';
+import axiosInstance from '@/app/api/axiosInstance';
+import { AxiosError } from 'axios';
+
 /* 테스트 데이터 */
 import { testPosts } from '@/components/Card/testPosts';
 
@@ -17,6 +21,33 @@ export default function BoardPage() {
 
   const windowWidth = useWindowSize();
   const [bestVisiblePosts, setBestVisiblePosts] = useState(1);
+
+  const [generalposts, setGeneralPosts] = useState<GeneralPostProps[]>([]);
+  const token = process.env.NEXT_PUBLIC_API_TOKEN;
+
+  useEffect(() => {
+    const fetchPostData = async () => {
+      try {
+        const response = await axiosInstance.get('/13-4/articles', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setGeneralPosts(response.data.list);
+        console.log('response.data', response.data);
+        console.log('generalposts', generalposts);
+      } catch (err) {
+        const error = err as AxiosError;
+        console.error('글 불러오기 에러:', error.response?.data);
+      }
+    };
+
+    fetchPostData();
+  }, []);
+
+  useEffect(() => {
+    console.log('💡 업데이트된 generalposts:', generalposts);
+  }, [generalposts]);
 
   useEffect(() => {
     if (windowWidth >= 1024) {
@@ -40,6 +71,12 @@ export default function BoardPage() {
   const filteredData = testPosts.filter((item) =>
     item.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  /*
+  const filteredData2 = generalposts.filter((item) =>
+    item.title.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  */
 
   /* 로딩 */
   const [hasMounted, setHasMounted] = useState(false);
@@ -111,8 +148,8 @@ export default function BoardPage() {
               />
             </div>
 
-            <div className="scroll-area mt-10 grid max-h-[600px] grid-cols-1 justify-items-center gap-4 overflow-y-auto lg:grid-cols-2">
-              {filteredData.map((post) => (
+            <div className="scroll-area mt-10 grid h-[600px] grid-cols-1 justify-items-center gap-4 overflow-y-auto lg:grid-cols-2">
+              {generalposts.map((post) => (
                 <GeneralPost key={post.id} {...post} />
               ))}
             </div>
