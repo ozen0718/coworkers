@@ -25,6 +25,7 @@ export default function BoardPage() {
   const [generalposts, setGeneralPosts] = useState<GeneralPostProps[]>([]);
   const token = process.env.NEXT_PUBLIC_API_TOKEN;
 
+  /* 일반 글 */
   useEffect(() => {
     const fetchPostData = async () => {
       try {
@@ -44,10 +45,6 @@ export default function BoardPage() {
 
     fetchPostData();
   }, []);
-
-  useEffect(() => {
-    console.log('💡 업데이트된 generalposts:', generalposts);
-  }, [generalposts]);
 
   useEffect(() => {
     if (windowWidth >= 1024) {

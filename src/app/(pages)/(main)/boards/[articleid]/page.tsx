@@ -6,6 +6,10 @@ import AuthorInfo from '@/components/Card/Comment/AuthorInfo';
 import AddComment from '@/components/Card/Comment/AddComment';
 import BoardComment from '@/components/Card/Comment/BoardComment';
 import { comments } from '@/components/Card/testPosts';
+import { useEffect } from 'react';
+import axiosInstance from '@/app/api/axiosInstance';
+import { AxiosError } from 'axios';
+import { useParams } from 'next/navigation';
 
 export default function ArticleDetail() {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
@@ -13,6 +17,42 @@ export default function ArticleDetail() {
   const toggleDropdown = () => {
     setIsDropDownOpen((prev) => !prev);
   };
+
+  const token = process.env.NEXT_PUBLIC_API_TOKEN;
+
+  type PostDetail = {
+    title: string;
+    content: string;
+  };
+
+  const [detailPost, setPostDetail] = useState<PostDetail>({
+    title: '',
+    content: '',
+  });
+
+  const params = useParams();
+  const id = params?.articleid;
+
+  /* 일반 글 */
+  useEffect(() => {
+    if (!id) return;
+
+    const fetchPostData = async () => {
+      try {
+        const response = await axiosInstance.get(`/13-4/articles/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setPostDetail(response.data);
+      } catch (err) {
+        const error = err as AxiosError;
+        console.error('글 불러오기 에러:', error.response?.data);
+      }
+    };
+
+    fetchPostData();
+  }, [id]);
 
   /* Dropdown 수정 */
   const handleEdit = () => {
@@ -30,7 +70,7 @@ export default function ArticleDetail() {
       <div className="max-h-[128px] flex-col">
         {/* 타이틀 영역 */}
         <div className="flex items-center justify-between">
-          <p className="text-2lg-medium flex font-bold">게시물 제목 영역입니다.</p>
+          <p className="text-2lg-medium flex font-bold">{detailPost.title}</p>
 
           {/* 케밥 아이콘 + 드롭다운 */}
           <div className="relative">
@@ -71,7 +111,7 @@ export default function ArticleDetail() {
 
       {/*본문 */}
       <div className="scroll-area mt-15 h-[72px] w-full overflow-y-auto font-normal sm:h-[104px]">
-        본문이 들어가는 영역입니다.
+        {detailPost.content}
       </div>
 
       {/* 댓글 달기 */}
