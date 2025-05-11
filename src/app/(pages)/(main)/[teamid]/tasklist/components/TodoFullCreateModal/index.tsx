@@ -1,13 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import DatePicker from 'react-datepicker';
 import Modal from '@/components/common/Modal';
-import DatePickerCalendar from '@/components/TodoFullCreateModal/DatePickerCalender';
-import DatePickerInput from '@/components/TodoFullCreateModal/DatePickerInput';
+import ArrowDropdown from '@/components/common/ArrowDropdown';
 import { TextInput, TextAreaInput } from '@/components/common/Inputs';
 import './style.css';
-import ArrowDropdown from '../common/ArrowDropdown';
+import { useDateTimePicker } from './useDateTimePicker';
+import DatePickerCalendar from './DatePickerCalender';
+import DatePickerTime from './DatePickerTime';
 
 export interface TodoFullCreateModalProps {
   isOpen: boolean;
@@ -33,23 +33,25 @@ export default function TodoFullCreateModal({
   disabled = false,
 }: TodoFullCreateModalProps) {
   const [title, setTitle] = useState('');
-  const [startDate, setStartDate] = useState<Date | null>(new Date());
-  const [time] = useState(new Date().toTimeString().slice(0, 5));
   const [repeat, setRepeat] = useState(todoRepeatOptions[0]);
   const [repeatDays, setRepeatDays] = useState<string[]>([]);
   const [memo, setMemo] = useState('');
 
+  const { dateTime, setDate, setTime, timeString } = useDateTimePicker();
+
   const handleCreate = () => {
-    onSubmit({ title, date: startDate, time, repeat, repeatDays, memo });
+    onSubmit({ title, date: dateTime, time: timeString, repeat, repeatDays, memo });
   };
 
   return (
     <Modal
       padding="todo"
-      title="할 일 만들기"
-      description={`할 일은 실제로 행동 가능한 작업 중심으로
-        작성해주시면 좋습니다.`}
-      submitButtonLabel="할일 생성"
+      header={{
+        title: '할 일 만들기',
+        description: `할 일은 실제로 행동 가능한 작업 중심으로
+        작성해주시면 좋습니다.`,
+      }}
+      submitButton={{ label: '할 일 만들기' }}
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleCreate}
@@ -74,20 +76,10 @@ export default function TodoFullCreateModal({
           <h2 className="text-lg-medium">시작 날짜 및 시간</h2>
           <div className="flex gap-2">
             <div className="flex-1">
-              <DatePickerCalendar startDate={startDate} setStartDate={setStartDate} />
+              <DatePickerCalendar dateTime={dateTime} setDate={setDate} />
             </div>
             <div className="flex-1">
-              <DatePicker
-                wrapperClassName="time-picker"
-                selected={startDate || undefined}
-                onChange={(d) => setStartDate(d)}
-                customInput={<DatePickerInput value={time} />}
-                showTimeSelect
-                showTimeSelectOnly
-                timeIntervals={15}
-                dateFormat="aa h:mm"
-                showTimeCaption={false}
-              />
+              <DatePickerTime dateTime={dateTime} setTime={setTime} />
             </div>
           </div>
         </div>
