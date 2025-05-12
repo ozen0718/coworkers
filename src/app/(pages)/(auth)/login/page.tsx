@@ -73,7 +73,7 @@ export default function LoginPage() {
             />
             <div className="flex justify-end">
               <Link
-                href="/resetpassword"
+                href="/reset-password"
                 className="text-primary text-md-medium underline hover:opacity-80"
               >
                 비밀번호를 잊으셨나요?

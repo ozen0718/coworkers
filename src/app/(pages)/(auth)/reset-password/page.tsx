@@ -78,7 +78,7 @@ export default function ResetPasswordPage() {
         onClose={() => setShowModal(false)}
         onSubmit={async (email) => {
           try {
-            const redirectUrl = `${window.location.origin}/resetpassword`;
+            const redirectUrl = `${window.location.origin}`;
             await resetPasswordEmail({
               email,
               redirectUrl,
