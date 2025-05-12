@@ -5,38 +5,31 @@ import clsx from 'clsx';
 
 import Button from '@/components/common/Button/Button';
 import FormField from '@/components/FormField';
-import { useJoinTeamForm } from '@/hooks/useTeamAddJoinForms';
+import { useJoinTeamForm } from '@/hooks/useJoinTeamForm';
 import { AuthPagesLayout, PageTitleStyle } from '@/styles/pageStyle';
 
 export default function JoinTeamPage() {
-  const {
-    link,
-    submitError,
-    isDisabled,
-    isLoading,
-    onChange: onLinkChange,
-    onSubmit,
-  } = useJoinTeamForm();
+  const { link, error, submitError, isDisabled, isLoading, onChange, onSubmit } = useJoinTeamForm();
 
   return (
     <div className={clsx(AuthPagesLayout, 'mt-18')}>
       <h1 className={PageTitleStyle}>팀 참여하기</h1>
 
       <form
+        className="w-full max-w-lg"
         onSubmit={(e) => {
           e.preventDefault();
           onSubmit();
         }}
-        className="w-full max-w-lg"
       >
         <FormField
           id="teamLink"
           label="팀 링크"
           type="text"
           value={link}
-          placeholder="https://..."
-          error={submitError}
-          onValueChange={onLinkChange}
+          placeholder="팀 링크를 입력해주세요."
+          error={error ?? submitError}
+          onValueChange={onChange}
         />
 
         <Button

@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import Button from '@/components/common/Button/Button';
 import ProfileUploader from '@/components/ProfileUploader';
 import FormField from '@/components/FormField';
-import { useAddTeamForm } from '@/hooks/useTeamAddJoinForms';
+import { useAddTeamForm } from '@/hooks/useAddTeamForm';
 import { AuthPagesLayout, PageTitleStyle } from '@/styles/pageStyle';
 
 export default function AddTeamPage() {
@@ -14,14 +14,14 @@ export default function AddTeamPage() {
   const {
     name,
     previewUrl,
-    fileError,
     nameError,
+    fileError,
     submitError,
     isDisabled,
     isLoading,
-    onFileChange,
     onNameChange,
     onNameBlur,
+    onFileChange,
     onCreate,
   } = useAddTeamForm();
 
@@ -30,11 +30,11 @@ export default function AddTeamPage() {
       <h1 className={PageTitleStyle}>팀 생성하기</h1>
 
       <form
+        className="w-full max-w-lg"
         onSubmit={(e) => {
           e.preventDefault();
           onCreate();
         }}
-        className="w-full max-w-lg"
       >
         <span className="text-lg-medium mb-3 block">팀 프로필</span>
         <ProfileUploader
