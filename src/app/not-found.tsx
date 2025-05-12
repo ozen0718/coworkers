@@ -19,7 +19,7 @@ export default function NotFoundPage() {
           className="h-[130px] w-auto object-cover object-left"
         />
       </div>
-      <p className="text-md text-gray500 text-center md:text-lg md:whitespace-nowrap">
+      <p className="text-gray500 text-center text-base md:text-lg md:whitespace-nowrap">
         존재하지 않는 주소를 입력하셨거나,
         <span className="block md:inline"> 요청하신 페이지를 찾을 수 없습니다.</span>
       </p>
