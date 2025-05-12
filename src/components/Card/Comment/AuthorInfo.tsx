@@ -4,18 +4,21 @@ import Image from 'next/image';
 import { useState } from 'react';
 import IconHeart from '@/assets/icons/IconHeart';
 import { AuthorInfoProps } from '../CardType';
+import axiosInstance from '@/app/api/axiosInstance';
+import { AxiosError } from 'axios';
 
 export default function AuthorInfo({
   type,
   showDivider = true,
   showLike = true,
   showDate = true,
-  authorName = '',
-  date = '',
+  authorName = '안혜나',
+  date = '2025-05-10',
   showKebab = false,
   showComment = false,
   likeCount,
   commentCount,
+  articleId,
 }: AuthorInfoProps) {
   const [isLiked, setIsLiked] = useState(false);
 
@@ -24,6 +27,27 @@ export default function AuthorInfo({
   };
 
   const dateOnly = date.split('T')[0];
+
+  const token = process.env.NEXT_PUBLIC_API_TOKEN;
+
+  /* 좋아요 */
+  const handleLike = async () => {
+    try {
+      await axiosInstance.post(
+        `/articles/${articleId}/like`,
+        { articleId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      toggleLike();
+    } catch (err) {
+      const error = err as AxiosError;
+      console.error('좋아요 요청 실패:', error);
+    }
+  };
 
   // 상세 카드 일때만
   if (type === 'detail') {
@@ -76,10 +100,10 @@ export default function AuthorInfo({
         {showLike && (
           <div className="flex items-center">
             <IconHeart
+              onClick={handleLike}
               className="mr-1.5 cursor-pointer"
               fillColor={isLiked ? 'var(--color-danger)' : 'none'}
               strokeColor={isLiked ? 'var(--color-danger)' : 'var(--color-gray500)'}
-              onClick={toggleLike}
             />
             <span className="text-gray400">{likeCount}</span>
           </div>

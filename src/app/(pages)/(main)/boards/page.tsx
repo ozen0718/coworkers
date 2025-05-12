@@ -29,14 +29,12 @@ export default function BoardPage() {
   useEffect(() => {
     const fetchPostData = async () => {
       try {
-        const response = await axiosInstance.get('/13-4/articles', {
+        const response = await axiosInstance.get('articles', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
         setGeneralPosts(response.data.list);
-        console.log('response.data', response.data);
-        console.log('generalposts', generalposts);
       } catch (err) {
         const error = err as AxiosError;
         console.error('글 불러오기 에러:', error.response?.data);

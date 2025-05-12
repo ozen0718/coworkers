@@ -72,7 +72,7 @@ export default function ImgUpload({ onImageUpload }: { onImageUpload: (url: stri
           formData.append('image', file);
 
           try {
-            const response = await axiosInstance.post('/13-4/images/upload', formData, {
+            const response = await axiosInstance.post('/images/upload', formData, {
               headers: {
                 'Content-Type': 'multipart/form-data',
                 Authorization: `Bearer ${token}`,

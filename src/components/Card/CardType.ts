@@ -18,6 +18,8 @@ export type AuthorInfoProps = {
   createdAt?: string;
   likeCount?: number;
   commentCount?: number;
+  articleId?: number;
+  isLiked?: boolean;
 };
 
 /* BoardComment - 게시글 댓글 내용 */

@@ -10,7 +10,7 @@ import { AxiosError } from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 
 export default function CreateBoard() {
-  //const token = useAuthStore((state) => state.accessToken);
+  // const token = useAuthStore((state) => state.accessToken);
   const token = process.env.NEXT_PUBLIC_API_TOKEN;
 
   const router = useRouter();
@@ -44,7 +44,7 @@ export default function CreateBoard() {
         payload.image = image;
       }
 
-      const response = await axiosInstance.post('13-4/articles', payload, {
+      const response = await axiosInstance.post('/articles', payload, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

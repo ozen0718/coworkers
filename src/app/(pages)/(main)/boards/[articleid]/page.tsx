@@ -29,13 +29,13 @@ export default function ArticleDetail() {
   const params = useParams();
   const id = params?.articleid;
 
-  /* 일반 글 */
+  /* 상세 글 */
   useEffect(() => {
     if (!id) return;
 
     const fetchPostData = async () => {
       try {
-        const response = await axiosInstance.get(`/13-4/articles/${id}`, {
+        const response = await axiosInstance.get(`/articles/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -106,6 +106,7 @@ export default function ArticleDetail() {
           date={detailPost.createdAt}
           commentCount={detailPost.commentCount}
           likeCount={detailPost.likeCount}
+          articleId={detailPost.id}
         />
       </div>
 
@@ -116,7 +117,7 @@ export default function ArticleDetail() {
 
       {/* 댓글 달기 */}
       <div className="mt-10 w-full">
-        <AddComment />
+        <AddComment articleId={Number(id)} />
       </div>
 
       <div className="my-4 h-px w-full bg-[#F8FAFC1A]" />
