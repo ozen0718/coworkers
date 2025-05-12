@@ -5,12 +5,12 @@ import PostDropdown from '@/components/Card/Post/PostDropdown';
 import AuthorInfo from '@/components/Card/Comment/AuthorInfo';
 import AddComment from '@/components/Card/Comment/AddComment';
 import BoardComment from '@/components/Card/Comment/BoardComment';
-import { comments } from '@/components/Card/testPosts';
 import { useEffect } from 'react';
 import axiosInstance from '@/app/api/axiosInstance';
 import { AxiosError } from 'axios';
 import { useParams } from 'next/navigation';
 import { PostDetail } from '@/components/Card/CardType';
+import { Comments } from '@/components/Card/CardType';
 
 export default function ArticleDetail() {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
@@ -59,6 +59,27 @@ export default function ArticleDetail() {
   const handleDelete = () => {
     console.log('삭제 눌렀다.');
   };
+
+  const [comments, setComments] = useState<Comments[]>([]);
+
+  const fetchComment = async () => {
+    try {
+      const response = await axiosInstance.get(`/articles/${id}/comments?limit=30`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setComments(response.data.list);
+    } catch (err) {
+      const error = err as AxiosError;
+      console.error('댓글 불러오기 에러:', error.response?.data);
+    }
+  };
+
+  /* 댓글 */
+  useEffect(() => {
+    fetchComment();
+  }, [id]);
 
   return (
     <div className="text-gray300 my-16 flex flex-col md:my-20">
@@ -117,7 +138,7 @@ export default function ArticleDetail() {
 
       {/* 댓글 달기 */}
       <div className="mt-10 w-full">
-        <AddComment articleId={Number(id)} />
+        <AddComment articleId={Number(id)} onSuccess={fetchComment} />
       </div>
 
       <div className="my-4 h-px w-full bg-[#F8FAFC1A]" />

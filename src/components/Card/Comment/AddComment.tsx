@@ -7,9 +7,10 @@ import { useState } from 'react';
 
 interface AddCommentProps {
   articleId: number;
+  onSuccess?: () => void;
 }
 
-export default function AddComment({ articleId }: AddCommentProps) {
+export default function AddComment({ articleId, onSuccess }: AddCommentProps) {
   const [content, setContent] = useState('');
 
   const token = process.env.NEXT_PUBLIC_API_TOKEN;
@@ -26,6 +27,8 @@ export default function AddComment({ articleId }: AddCommentProps) {
       });
 
       console.log('댓글 작성 성공:', response.data);
+      setContent('');
+      onSuccess?.();
     } catch (error) {
       const axiosError = error as AxiosError;
       console.error('댓글 작성 실패', axiosError.message);

@@ -1,7 +1,8 @@
 export type Comments = {
   id: number;
-  author: string;
   content: string;
+  wirterId?: number;
+  author: string;
   date: string;
 };
 
