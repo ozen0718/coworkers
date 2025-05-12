@@ -1,6 +1,11 @@
+'use client';
+
 import Button from '@/components/common/Button/Button';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 export default function NotFound() {
+  const router = useRouter();
   return (
     <div className="flex h-[calc(100dvh-60px)] flex-col items-center justify-center">
       <h2 className="bg-gradient-primary w-[327px] bg-clip-text text-6xl font-bold text-transparent md:w-[398px] md:text-7xl">
@@ -24,10 +29,14 @@ export default function NotFound() {
           fullWidth
           variant="inverse"
           className="hover:text-primary-hover hover:border-primary-hover active:border-primary-pressed active:text-primary-pressed !bg-transparent"
+          onClick={() => router.back()}
         >
           이전 페이지
         </Button>
-        <Button fullWidth>홈으로 이동</Button>
+
+        <Link href="/" className="w-full">
+          <Button fullWidth>홈으로 이동</Button>
+        </Link>
       </div>
     </div>
   );
