@@ -34,7 +34,7 @@ export default function LoginPage() {
       useAuthStore.getState().setAccessToken(response.accessToken);
 
       toast.success('로그인 성공!');
-      router.push('/'); // 로그인 후 이동
+      router.push('/');
     } catch (error) {
       const err = error as AxiosError<{ message?: string }>;
       toast.error(err.response?.data?.message || '로그인 실패');
