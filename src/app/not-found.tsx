@@ -4,7 +4,7 @@ import Button from '@/components/common/Button/Button';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
-export default function NotFound() {
+export default function NotFoundPage() {
   const router = useRouter();
   return (
     <div className="flex h-[calc(100dvh-60px)] flex-col items-center justify-center">
