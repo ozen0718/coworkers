@@ -7,8 +7,7 @@ import TeamHeader from '@/components/teampage/TeamHeader';
 import Report from '@/components/teampage/Report';
 import Member from '@/components/common/Member';
 import Modal from '@/components/common/Modal';
-import Toast from '@/components/common/Toast';
-import useToast from '@/hooks/useToast';
+import { toast } from 'react-toastify';
 import { Profile } from '@/components/common/Profiles';
 import { useModalGroup } from '@/hooks/useModalGroup';
 
@@ -35,24 +34,22 @@ export default function TeamPage() {
 
   const { open, close, isOpen } = useModalGroup<'invite' | 'createList' | 'memberProfile'>();
 
-  const { message, visible, showToast } = useToast(3000);
-
   const handleCreateList = () => {
     if (!newListName.trim()) return;
     close();
-    showToast('새로운 목록이 생성되었습니다.');
+    toast.success('새로운 목록이 생성되었습니다.');
     setNewListName('');
   };
 
   const handleCopyPageLink = async () => {
     await navigator.clipboard.writeText('https://your-invite-link.com');
-    showToast('복사되었습니다.');
+    toast.success('복사되었습니다.');
   };
 
   const handleCopyMemberEmail = async () => {
     if (!selectedMember) return;
     await navigator.clipboard.writeText(selectedMember.email);
-    showToast('복사되었습니다.');
+    toast.success('복사되었습니다.');
   };
 
   const handleOpenProfile = (member: { name: string; email: string }) => {
@@ -90,8 +87,6 @@ export default function TeamPage() {
               />
             </div>
           </Modal>
-
-          <Toast message={message} visible={visible} />
         </header>
 
         <TasksItem completed={1} total={3} tasksTitle="할일목록 1" />
@@ -132,14 +127,12 @@ export default function TeamPage() {
               closeIcon
               onSubmit={handleCopyPageLink}
             />
-
-            <Toast message={message} visible={visible} />
           </div>
         </header>
         <div className="grid-rows-auto grid w-full grid-cols-[1fr_1fr] gap-4 sm:grid-cols-[1fr_1fr_1fr]">
           {mockMembers.map((member) => (
             <Member
-              key={member.email} // API 연동 후 수정
+              key={member.email}
               name={member.name}
               email={member.email}
               onClick={() => handleOpenProfile(member)}
