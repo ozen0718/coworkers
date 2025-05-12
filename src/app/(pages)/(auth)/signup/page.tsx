@@ -14,7 +14,6 @@ import { PageTitleStyle } from '@/styles/pageStyle';
 export default function SignupPage() {
   const router = useRouter();
   const [form, setForm] = useState({
-    teamId: '13-4',
     email: '',
     nickname: '',
     password: '',

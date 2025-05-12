@@ -26,14 +26,15 @@ export default function LoginPage() {
 
   const handleLogin = async () => {
     try {
-      const teamId = '13-4';
-      const response = await login({ teamId, email: form.email, password: form.password });
+      const response = await login({
+        email: form.email,
+        password: form.password,
+      });
 
-      //로그인 성공 시 토큰 저장 (zustand + localStorage)
       useAuthStore.getState().setAccessToken(response.accessToken);
 
       toast.success('로그인 성공!');
-      router.push('/'); // 로그인시 페이지 이동
+      router.push('/'); // 로그인 후 이동
     } catch (error) {
       const err = error as AxiosError<{ message?: string }>;
       toast.error(err.response?.data?.message || '로그인 실패');

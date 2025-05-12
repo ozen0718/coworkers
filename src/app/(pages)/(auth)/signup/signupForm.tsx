@@ -9,7 +9,6 @@ import { AxiosError } from 'axios';
 export default function SignupForm() {
   const router = useRouter();
   const [form, setForm] = useState({
-    teamId: '13-4',
     email: '',
     nickname: '',
     password: '',
@@ -24,13 +23,11 @@ export default function SignupForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // ✅ 필수 항목 체크
     if (!form.email || !form.nickname || !form.password || !form.passwordConfirmation) {
       toast.error('모든 항목을 입력해주세요.');
       return;
     }
 
-    // ✅ 비밀번호 확인
     if (form.password !== form.passwordConfirmation) {
       toast.error('비밀번호가 일치하지 않습니다.');
       return;
