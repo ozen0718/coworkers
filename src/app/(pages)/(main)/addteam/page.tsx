@@ -21,6 +21,7 @@ export default function AddTeamPage() {
     isLoading,
     onFileChange,
     onNameChange,
+    onNameBlur,
     onCreate,
   } = useAddTeamForm();
 
@@ -53,10 +54,13 @@ export default function AddTeamPage() {
         <FormField
           id="teamName"
           label="팀 이름"
+          type="text"
           value={name}
-          error={nameError}
           placeholder="팀 이름을 입력해주세요."
-          onChange={onNameChange}
+          error={nameError}
+          maxLength={15}
+          onValueChange={onNameChange}
+          onBlur={onNameBlur}
         />
 
         {submitError && <p className="text-danger text-sm-medium mb-4">{submitError}</p>}

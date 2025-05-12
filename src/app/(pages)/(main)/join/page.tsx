@@ -9,7 +9,14 @@ import { useJoinTeamForm } from '@/hooks/useTeamAddJoinForms';
 import { AuthPagesLayout, PageTitleStyle } from '@/styles/pageStyle';
 
 export default function JoinTeamPage() {
-  const { link, error, isDisabled, onChange, onSubmit, isLoading, submitError } = useJoinTeamForm();
+  const {
+    link,
+    submitError,
+    isDisabled,
+    isLoading,
+    onChange: onLinkChange,
+    onSubmit,
+  } = useJoinTeamForm();
 
   return (
     <div className={clsx(AuthPagesLayout, 'mt-18')}>
@@ -25,13 +32,12 @@ export default function JoinTeamPage() {
         <FormField
           id="teamLink"
           label="팀 링크"
+          type="text"
           value={link}
-          error={error}
-          placeholder=""
-          onChange={onChange}
+          placeholder="https://..."
+          error={submitError}
+          onValueChange={onLinkChange}
         />
-
-        {submitError && <p className="text-danger text-sm-medium mb-4">{submitError}</p>}
 
         <Button
           type="submit"
