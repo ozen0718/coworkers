@@ -65,6 +65,7 @@ export type BestPostProps = {
   title: string;
   image: string;
   date: string;
+  likeCount?: number;
 };
 
 /* GeneralPost - 일반 글 */

@@ -3,20 +3,37 @@
 import { BestPost } from '@/components/Card/Post/BestPost';
 import { useEffect, useState } from 'react';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { AxiosError } from 'axios';
+import { fetchBest } from '@/app/api/articles';
+import { BestPostProps } from '@/components/Card/CardType';
 
 /* 테스트 데이터 */
 import { testPosts } from '@/components/Card/testPosts';
 
 export default function BoardPage() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [keyword, setKeyword] = useState('');
   const token = useAuthStore((state) => state.accessToken);
+  const [bestposts, setBestPosts] = useState<BestPostProps[]>([]);
 
-  const filteredData = testPosts.filter((item) =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  /* 베스트 글 */
+  useEffect(() => {
+    if (!token) return console.log('토큰 없음');
 
-  useEffect(() => {});
+    const fetchPostData = async () => {
+      try {
+        const response = await fetchBest(token, keyword); // keyword는 상태나 props로 전달
+        const filteredPosts = response.data.list.filter(
+          (post: BestPostProps) => post.likeCount && post.likeCount > 0
+        );
+        setBestPosts(filteredPosts);
+      } catch (err) {
+        const error = err as AxiosError;
+        console.error('글 불러오기 에러:', error.response?.data);
+      }
+    };
 
+    fetchPostData();
+  }, [token, keyword]);
   return (
     <div className="my-10">
       <p className="font-bold sm:text-2xl">베스트 게시글</p>
@@ -31,12 +48,12 @@ export default function BoardPage() {
           type="text"
           placeholder="검색어를 입력해주세요"
           className="bg-bg200 w-full rounded-xl border border-[#F8FAFC1A] p-4 pl-12"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
         />
       </div>
 
-      {searchTerm && filteredData.length === 0 ? (
+      {bestposts.length === 0 ? (
         <div className="text-gray400 flex h-[300px] w-full items-center justify-center text-lg">
           검색하신 게시글이 없습니다.
         </div>
@@ -49,7 +66,7 @@ export default function BoardPage() {
             </div>
 
             <div className="mt-6 grid w-full gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {filteredData.map((post) => (
+              {bestposts.map((post) => (
                 <BestPost key={post.id} {...post} />
               ))}
             </div>

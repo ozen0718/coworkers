@@ -148,7 +148,7 @@ export default function ArticleDetail() {
             sizes="(max-width: 600px) 50vw, 72px"
           />
         ) : (
-          <div />
+          <></>
         )}
       </div>
 

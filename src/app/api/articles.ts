@@ -2,8 +2,24 @@ import axiosInstance from './axiosInstance';
 
 /* 자유게시판 - 일반 글 */
 export const fetchGeneral = (token: string) => {
-  return axiosInstance.get('articles', {
+  return axiosInstance.get('/articles', {
     headers: { Authorization: `Bearer ${token}` },
+  });
+};
+
+/* 자유게시판 - 베스트 글 */
+export const fetchBest = (token: string, keyword?: string) => {
+  const params: Record<string, string> = {
+    orderBy: 'like',
+  };
+
+  if (keyword) {
+    params.keyword = keyword;
+  }
+
+  return axiosInstance.get('/articles', {
+    headers: { Authorization: `Bearer ${token}` },
+    params,
   });
 };
 
