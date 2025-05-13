@@ -11,9 +11,12 @@ import { AxiosError } from 'axios';
 import { useParams } from 'next/navigation';
 import { PostDetail } from '@/components/Card/CardType';
 import { DetailComments } from '@/components/Card/CardType';
+import { deleteArticle, fetchArticle } from '@/app/api/articles';
+import { useRouter } from 'next/navigation';
 
 export default function ArticleDetail() {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
+  const router = useRouter();
 
   const toggleDropdown = () => {
     setIsDropDownOpen((prev) => !prev);
@@ -35,11 +38,7 @@ export default function ArticleDetail() {
 
     const fetchPostData = async () => {
       try {
-        const response = await axiosInstance.get(`/articles/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetchArticle(Number(id), token!);
         setPostDetail(response.data);
       } catch (err) {
         const error = err as AxiosError;
@@ -50,30 +49,26 @@ export default function ArticleDetail() {
     fetchPostData();
   }, [id]);
 
-  /* Dropdown 수정 */
+  /* 글 - Dropdown 수정 */
   const handleEdit = () => {
     console.log('수정 눌렀다.');
   };
 
-  /* Dropdown 삭제 */
-  const handleDelete = async (commentId: number) => {
-    try {
-      await axiosInstance.delete(`/comments/${commentId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+  /* 글 - Dropdown 삭제 */
+  const handleDelete = async () => {
+    if (!id || !token) {
+      console.log('토큰이나 아이디 없음');
+      return;
+    }
 
+    try {
+      await deleteArticle(Number(id), token);
       console.log('댓글 삭제 성공');
-      fetchComment(); // 목록 갱신
+      router.push('/boards');
     } catch (err) {
       const error = err as AxiosError;
       console.error('댓글 삭제 에러:', error.response?.data);
     }
-  };
-
-  const handleDelete2 = () => {
-    console.log('삭제제');
   };
 
   const [comments, setComments] = useState<DetailComments[]>([]);
@@ -122,7 +117,7 @@ export default function ArticleDetail() {
                 textJustify="center"
                 options={[
                   { label: '수정', value: '수정', action: handleEdit },
-                  { label: '삭제', value: '삭제', action: handleDelete2 },
+                  { label: '삭제', value: '삭제', action: handleDelete },
                 ]}
                 isOpen={isDropDownOpen}
                 toggleDropdown={toggleDropdown}
@@ -169,7 +164,7 @@ export default function ArticleDetail() {
               author={comment.writer.nickname}
               content={comment.content}
               date={comment.createdAt}
-              onDelete={() => handleDelete(comment.id)}
+              // onDelete={() => handleDelete(comment.id)}
             />
           ))
         ) : (

@@ -1,20 +1,15 @@
 import axiosInstance from './axiosInstance';
 
-interface CreateArticleParms {
-  title: string;
-  content: string;
-  image?: string;
-  token: string;
-}
-
-export const createArticle = async ({ title, content, image, token }: CreateArticleParms) => {
-  const payload: Record<string, string> = { title, content };
-  if (image) payload.image = image;
-
-  const response = await axiosInstance.post('/articles', payload, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+/* 상세 글 - 게시글 내용 */
+export const fetchArticle = (id: number, token: string) => {
+  return axiosInstance.get(`/articles/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
   });
-  return response.data;
+};
+
+/* 상세 글 - 게시글 삭제 */
+export const deleteArticle = (articleid: number, token: string) => {
+  return axiosInstance.delete(`/articles/${articleid}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 };
