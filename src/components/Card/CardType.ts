@@ -63,7 +63,7 @@ export type PostCardProps = {
 export type BestPostProps = {
   id: number;
   title: string;
-  imgUrl: string;
+  image: string;
   date: string;
 };
 

@@ -11,10 +11,10 @@ import { useEffect } from 'react';
  * date="2024.07.25"
  */
 
-export function BestPost({ id, title, imgUrl, date }: BestPostProps) {
+export function BestPost({ id, title, image, date }: BestPostProps) {
   return (
     <div className="w-full">
-      <PostCard type="best" title={title} imgUrl={imgUrl} date={date} id={id} />
+      <PostCard type="best" title={title} image={image} date={date} id={id} />
     </div>
   );
 }

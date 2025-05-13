@@ -136,8 +136,20 @@ export default function ArticleDetail() {
       </div>
 
       {/*본문 */}
-      <div className="scroll-area mt-15 h-[72px] w-full overflow-y-auto font-normal whitespace-pre-line sm:h-[104px]">
+      <div className="scroll-area mt-10 flex h-[72px] w-full justify-between overflow-y-auto font-normal whitespace-pre-line sm:h-[104px]">
         {detailPost.content}
+        {detailPost.image ? (
+          <Image
+            className="aspect-square min-w-[104px] rounded-lg object-cover"
+            src={detailPost.image}
+            alt="게시글 이미지"
+            width={104}
+            height={104}
+            sizes="(max-width: 600px) 50vw, 72px"
+          />
+        ) : (
+          <div />
+        )}
       </div>
 
       {/* 댓글 달기 */}
