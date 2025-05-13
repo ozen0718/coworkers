@@ -8,7 +8,7 @@ import { TextAreaInput } from '@/components/common/Inputs';
 import clsx from 'clsx';
 import { BoardCommentProps } from '../CardType';
 
-export default function BoardComment({ type, content }: BoardCommentProps) {
+export default function BoardComment({ type, content, author, date }: BoardCommentProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -95,7 +95,13 @@ export default function BoardComment({ type, content }: BoardCommentProps) {
             </Button>
           </div>
         ) : (
-          <AuthorInfo type="detail" showDivider={type !== 'list'} showLike={type !== 'list'} />
+          <AuthorInfo
+            authorName={author}
+            date={date?.split('T')[0]}
+            type="detail"
+            showDivider={type !== 'list'}
+            showLike={type !== 'list'}
+          />
         )}
       </div>
       {type === 'list' && <div className="mt-2 h-[1px] w-full bg-[#F8FAFC1A]"></div>}

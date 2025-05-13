@@ -10,7 +10,7 @@ import axiosInstance from '@/app/api/axiosInstance';
 import { AxiosError } from 'axios';
 import { useParams } from 'next/navigation';
 import { PostDetail } from '@/components/Card/CardType';
-import { Comments } from '@/components/Card/CardType';
+import { DetailComments } from '@/components/Card/CardType';
 
 export default function ArticleDetail() {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
@@ -56,11 +56,27 @@ export default function ArticleDetail() {
   };
 
   /* Dropdown 삭제 */
-  const handleDelete = () => {
-    console.log('삭제 눌렀다.');
+  const handleDelete = async (commentId: number) => {
+    try {
+      await axiosInstance.delete(`/comments/${commentId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log('댓글 삭제 성공');
+      fetchComment(); // 목록 갱신
+    } catch (err) {
+      const error = err as AxiosError;
+      console.error('댓글 삭제 에러:', error.response?.data);
+    }
   };
 
-  const [comments, setComments] = useState<Comments[]>([]);
+  const handleDelete2 = () => {
+    console.log('삭제제');
+  };
+
+  const [comments, setComments] = useState<DetailComments[]>([]);
 
   const fetchComment = async () => {
     try {
@@ -106,7 +122,7 @@ export default function ArticleDetail() {
                 textJustify="center"
                 options={[
                   { label: '수정', value: '수정', action: handleEdit },
-                  { label: '삭제', value: '삭제', action: handleDelete },
+                  { label: '삭제', value: '삭제', action: handleDelete2 },
                 ]}
                 isOpen={isDropDownOpen}
                 toggleDropdown={toggleDropdown}
@@ -150,9 +166,10 @@ export default function ArticleDetail() {
             <BoardComment
               key={comment.id}
               type="free"
-              author={comment.author}
+              author={comment.writer.nickname}
               content={comment.content}
-              date={comment.date}
+              date={comment.createdAt}
+              onDelete={() => handleDelete(comment.id)}
             />
           ))
         ) : (

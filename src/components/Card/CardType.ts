@@ -6,6 +6,18 @@ export type Comments = {
   date: string;
 };
 
+export type DetailComments = {
+  id: number;
+  content: string;
+  createdAt: string;
+  updatedAt?: string;
+  writer: {
+    id: number;
+    nickname: string;
+    image?: string | null;
+  };
+};
+
 /* AuthorInfo - 사용자 정보 */
 export type AuthorInfoProps = {
   type?: 'detail';
@@ -29,6 +41,7 @@ export type BoardCommentProps = {
   author?: string;
   content?: string;
   date?: string;
+  onDelete?: () => void;
 };
 
 /* PostCard - 게시글 */
