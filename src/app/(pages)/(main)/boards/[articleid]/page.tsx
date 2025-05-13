@@ -61,8 +61,9 @@ export default function ArticleDetail() {
 
   /* 게시글 */
   const fetchPostData = async () => {
+    if (!token) return;
     try {
-      const response = await fetchArticle(Number(id), token!);
+      const response = await fetchArticle(Number(id), token);
       setPostDetail(response.data);
     } catch (err) {
       const error = err as AxiosError;
@@ -72,8 +73,9 @@ export default function ArticleDetail() {
 
   /* 댓글 */
   const fetchComments = async () => {
+    if (!token) return;
     try {
-      const response = await fetchComment(Number(id), token!);
+      const response = await fetchComment(Number(id), token);
       setComments(response.data.list);
     } catch (err) {
       const error = err as AxiosError;

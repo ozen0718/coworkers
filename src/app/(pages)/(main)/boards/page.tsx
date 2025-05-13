@@ -10,9 +10,9 @@ import Button from '@/components/common/Button/Button';
 import { useRouter } from 'next/navigation';
 
 import { GeneralPostProps } from '@/components/Card/CardType';
-import axiosInstance from '@/app/api/axiosInstance';
 import { AxiosError } from 'axios';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { fetchGeneral } from '@/app/api/articles';
 
 /* 테스트 데이터 */
 import { testPosts } from '@/components/Card/testPosts';
@@ -28,13 +28,11 @@ export default function BoardPage() {
 
   /* 일반 글 */
   useEffect(() => {
+    if (!token) return;
+
     const fetchPostData = async () => {
       try {
-        const response = await axiosInstance.get('articles', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetchGeneral(token);
         setGeneralPosts(response.data.list);
       } catch (err) {
         const error = err as AxiosError;

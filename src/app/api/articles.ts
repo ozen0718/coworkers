@@ -1,5 +1,12 @@
 import axiosInstance from './axiosInstance';
 
+/* 자유게시판 - 일반 글 */
+export const fetchGeneral = (token: string) => {
+  return axiosInstance.get('articles', {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
+
 /* 상세 글 - 게시글 내용 */
 export const fetchArticle = (id: number, token: string) => {
   return axiosInstance.get(`/articles/${id}`, {
