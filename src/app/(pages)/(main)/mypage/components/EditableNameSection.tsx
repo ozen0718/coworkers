@@ -1,5 +1,5 @@
 import { CurrentName } from '@/components/common/Inputs';
-import { UserProps } from './types';
+import { UserProps } from '../types';
 
 export default function EditableNameSection({ name }: UserProps) {
   return (

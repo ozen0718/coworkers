@@ -1,5 +1,5 @@
 import { CurrentEmail } from '@/components/common/Inputs';
-import { UserProps } from './types';
+import { UserProps } from '../types';
 
 export default function CurrentEmailSection({ email }: UserProps) {
   return (

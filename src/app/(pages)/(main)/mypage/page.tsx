@@ -1,10 +1,10 @@
 'use client';
 
-import EditableNameSection from './EditableNameSection';
-import CurrentEmailSection from './CurrentEmailSection';
-import EditablePasswordSection from './EditablePasswordSection';
-import AccountDeleteButton from './AccountDeleteButton';
-import EditableProfileSection from './EditableProfileSection';
+import EditableNameSection from './components/EditableNameSection';
+import CurrentEmailSection from './components/CurrentEmailSection';
+import EditablePasswordSection from './components/EditablePasswordSection';
+import AccountDeleteButton from './components/AccountDeleteButton';
+import EditableProfileSection from './components/EditableProfileSection';
 import { useUserInfo } from '@/hooks/useUserInfo';
 
 export default function MyPage() {
