@@ -17,7 +17,7 @@ export default function BoardComment({
   content,
   author,
   date,
-  onDelete,
+  onChange,
 }: BoardCommentProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -46,16 +46,11 @@ export default function BoardComment({
     try {
       await deleteComment(commentId, token);
       console.log('댓글 삭제 성공');
-      onDelete?.();
+      onChange?.();
     } catch (err) {
       const error = err as AxiosError;
       console.error('댓글 삭제 에러:', error.response?.data);
     }
-  };
-
-  /* 댓글 수정 취소 */
-  const handleCancel = () => {
-    setIsEditing(false);
   };
 
   /* 댓글 수정*/
@@ -67,11 +62,16 @@ export default function BoardComment({
       await editComment(commentId, token, { content: editedContent });
       console.log('댓글 수정 성공');
       setIsEditing(false);
-      onDelete?.();
+      onChange?.();
     } catch (err) {
       const error = err as AxiosError;
       console.log('댓글 수정 에러', error.response?.data);
     }
+  };
+
+  /* 댓글 수정 취소 */
+  const handleCancel = () => {
+    setIsEditing(false);
   };
 
   return (

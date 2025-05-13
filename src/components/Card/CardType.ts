@@ -42,7 +42,7 @@ export type BoardCommentProps = {
   content?: string;
   date?: string;
   commentId: number;
-  onDelete?: () => void;
+  onChange?: () => void;
 };
 
 /* PostCard - 게시글 */

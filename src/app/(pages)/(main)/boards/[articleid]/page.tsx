@@ -153,7 +153,7 @@ export default function ArticleDetail() {
               author={comment.writer.nickname}
               content={comment.content}
               date={comment.createdAt}
-              onDelete={fetchComments} // 삭제 후 댓글 목록 갱신
+              onChange={fetchComments} // 삭제 후 댓글 목록 갱신
             />
           ))
         ) : (
