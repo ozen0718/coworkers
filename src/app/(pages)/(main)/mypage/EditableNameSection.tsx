@@ -1,12 +1,11 @@
-import { TextInput } from '@/components/common/Inputs';
+import { CurrentName } from '@/components/common/Inputs';
+import { UserProps } from './types';
 
-export default function EditableNameSection() {
+export default function EditableNameSection({ name }: UserProps) {
   return (
     <div className="flex flex-col gap-3">
-      {/* TODO: 이름 변경 방식 - 버튼&모달 */}
-      {/* TODO: name prop 전달달 */}
       <label>이름</label>
-      <TextInput />
+      <CurrentName name={name} />
     </div>
   );
 }
