@@ -148,11 +148,12 @@ export default function ArticleDetail() {
           comments.map((comment) => (
             <BoardComment
               key={comment.id}
+              commentId={comment.id}
               type="free"
               author={comment.writer.nickname}
               content={comment.content}
               date={comment.createdAt}
-              // onDelete={() => handleDelete(comment.id)}
+              onDelete={fetchComments} // 삭제 후 댓글 목록 갱신
             />
           ))
         ) : (

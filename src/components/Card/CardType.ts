@@ -41,6 +41,7 @@ export type BoardCommentProps = {
   author?: string;
   content?: string;
   date?: string;
+  commentId: number;
   onDelete?: () => void;
 };
 

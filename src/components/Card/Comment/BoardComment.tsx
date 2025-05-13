@@ -7,10 +7,23 @@ import Button from '@/components/common/Button/Button';
 import { TextAreaInput } from '@/components/common/Inputs';
 import clsx from 'clsx';
 import { BoardCommentProps } from '../CardType';
+import { deleteComment, fetchComment } from '@/app/api/articles';
+import { AxiosError } from 'axios';
+import { useParams } from 'next/navigation';
 
-export default function BoardComment({ type, content, author, date }: BoardCommentProps) {
+export default function BoardComment({
+  commentId,
+  type,
+  content,
+  author,
+  date,
+  onDelete,
+}: BoardCommentProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const params = useParams();
+  const id = params?.articleid;
+  const token = process.env.NEXT_PUBLIC_API_TOKEN;
 
   const toggleDropdown = () => {
     setIsDropDownOpen((prev) => !prev);
@@ -21,9 +34,21 @@ export default function BoardComment({ type, content, author, date }: BoardComme
     setIsEditing(true);
   };
 
-  /* Dropdown 삭제 */
-  const handleDelete = () => {
-    console.log('삭제 눌렀다.');
+  /* 댓글 삭제 */
+  const handleDelete = async () => {
+    if (!id || !token) {
+      console.log('토큰이나 아이디 없음');
+      return;
+    }
+
+    try {
+      await deleteComment(commentId, token);
+      console.log('댓글 삭제 성공');
+      onDelete?.();
+    } catch (err) {
+      const error = err as AxiosError;
+      console.error('댓글 삭제 에러:', error.response?.data);
+    }
   };
 
   /* 취소 버튼 */
@@ -45,7 +70,7 @@ export default function BoardComment({ type, content, author, date }: BoardComme
     >
       <div className="text-lg-regular flex w-full items-start justify-between">
         {isEditing ? (
-          <div className="relative mt-3 flex h-full w-full items-start">
+          <div className="relative flex h-full w-full items-start">
             <TextAreaInput height="h-[65px]" />
           </div>
         ) : (
