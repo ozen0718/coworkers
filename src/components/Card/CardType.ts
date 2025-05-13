@@ -33,6 +33,7 @@ export type AuthorInfoProps = {
   commentCount?: number;
   articleId?: number;
   isLiked?: boolean;
+  onLikeChanged?: () => void;
 };
 
 /* BoardComment - 게시글 댓글 내용 */

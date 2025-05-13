@@ -25,10 +25,13 @@ export default function BoardPage() {
 
   const [generalposts, setGeneralPosts] = useState<GeneralPostProps[]>([]);
   const token = useAuthStore((state) => state.accessToken);
+  const initializeAuth = useAuthStore((state) => state.initializeAuth);
 
   /* 일반 글 */
   useEffect(() => {
-    if (!token) return;
+    if (!token) return console.log('토큰 없음');
+
+    initializeAuth(); // 테스트용
 
     const fetchPostData = async () => {
       try {

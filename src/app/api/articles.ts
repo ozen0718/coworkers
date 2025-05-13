@@ -28,6 +28,24 @@ export const fetchComment = (id: number, token: string) => {
   });
 };
 
+/* 상세 글 - 좋아요 */
+export const addLike = (articleId: number, token: string) => {
+  return axiosInstance.post(
+    `/articles/${articleId}/like`,
+    {},
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+};
+
+/* 상세글 - 좋아요 취소 */
+export const deleteLike = (articleId: number, token: string) => {
+  return axiosInstance.delete(`/articles/${articleId}/like`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
+
 /* 댓글 - 댓글 작성 */
 export const createComment = (articleid: number, token: string, payload: { content: string }) => {
   return axiosInstance.post(`/articles/${articleid}/comments`, payload, {

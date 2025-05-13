@@ -129,7 +129,9 @@ export default function ArticleDetail() {
           date={detailPost.createdAt}
           commentCount={detailPost.commentCount}
           likeCount={detailPost.likeCount}
+          isLiked={detailPost.isLiked}
           articleId={detailPost.id}
+          onLikeChanged={fetchPostData}
         />
       </div>
 
@@ -140,7 +142,13 @@ export default function ArticleDetail() {
 
       {/* 댓글 달기 */}
       <div className="mt-10 w-full">
-        <AddComment articleId={Number(id)} onSuccess={fetchComments} />
+        <AddComment
+          articleId={Number(id)}
+          onSuccess={() => {
+            fetchComments();
+            fetchPostData();
+          }}
+        />
       </div>
 
       <div className="my-4 h-px w-full bg-[#F8FAFC1A]" />
@@ -156,7 +164,10 @@ export default function ArticleDetail() {
               author={comment.writer.nickname}
               content={comment.content}
               date={comment.createdAt}
-              onChange={fetchComments} // 삭제 후 댓글 목록 갱신
+              onChange={() => {
+                fetchComments();
+                fetchPostData();
+              }}
             />
           ))
         ) : (

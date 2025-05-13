@@ -1,12 +1,11 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
 import IconHeart from '@/assets/icons/IconHeart';
 import { AuthorInfoProps } from '../CardType';
-import axiosInstance from '@/app/api/axiosInstance';
 import { AxiosError } from 'axios';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { addLike, deleteLike } from '@/app/api/articles';
 
 export default function AuthorInfo({
   type,
@@ -20,30 +19,27 @@ export default function AuthorInfo({
   likeCount,
   commentCount,
   articleId,
+  isLiked,
+  onLikeChanged,
 }: AuthorInfoProps) {
-  const [isLiked, setIsLiked] = useState(false);
-
-  const toggleLike = () => {
-    setIsLiked(!isLiked);
-  };
-
   const dateOnly = date.split('T')[0];
 
   const token = useAuthStore((state) => state.accessToken);
 
   /* 좋아요 */
   const handleLike = async () => {
+    if (!token) {
+      console.warn('토큰이 없습니다.');
+      return;
+    }
+
     try {
-      await axiosInstance.post(
-        `/articles/${articleId}/like`,
-        { articleId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      toggleLike();
+      if (isLiked) {
+        await deleteLike(Number(articleId), token);
+      } else {
+        await addLike(Number(articleId), token);
+      }
+      onLikeChanged?.();
     } catch (err) {
       const error = err as AxiosError;
       console.error('좋아요 요청 실패:', error);
