@@ -1,7 +1,7 @@
 import axiosInstance from '@/app/api/axiosInstance';
 
+// 회원가입
 export interface SignupRequest {
-  teamId: string;
   email: string;
   nickname: string;
   password: string;
@@ -9,13 +9,12 @@ export interface SignupRequest {
 }
 
 export const signup = async ({
-  teamId,
   email,
   nickname,
   password,
   passwordConfirmation,
 }: SignupRequest): Promise<void> => {
-  await axiosInstance.post(`/${teamId}/auth/signUp`, {
+  await axiosInstance.post(`/auth/signUp`, {
     email,
     nickname,
     password,
@@ -23,8 +22,8 @@ export const signup = async ({
   });
 };
 
+// 로그인
 export interface LoginRequest {
-  teamId: string;
   email: string;
   password: string;
 }
@@ -36,10 +35,41 @@ export interface LoginResponse {
   userId?: number;
 }
 
-export const login = async ({ teamId, email, password }: LoginRequest): Promise<LoginResponse> => {
-  const response = await axiosInstance.post(`/${teamId}/auth/signIn`, {
+export const login = async ({ email, password }: LoginRequest): Promise<LoginResponse> => {
+  const response = await axiosInstance.post(`/auth/signIn`, {
     email,
     password,
   });
   return response.data;
+};
+
+// 비밀번호 재설정
+export const resetPassword = async ({
+  password,
+  passwordConfirmation,
+  token,
+}: {
+  password: string;
+  passwordConfirmation: string;
+  token: string;
+}) => {
+  return await axiosInstance.patch(`/user/reset-password`, {
+    password,
+    passwordConfirmation,
+    token,
+  });
+};
+
+// 비밀번호 재설정 이메일 요청
+export const resetPasswordEmail = async ({
+  email,
+  redirectUrl,
+}: {
+  email: string;
+  redirectUrl: string;
+}): Promise<void> => {
+  await axiosInstance.post(`/user/send-reset-password-email`, {
+    email,
+    redirectUrl,
+  });
 };
