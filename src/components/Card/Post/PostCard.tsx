@@ -29,6 +29,8 @@ export default function PostCard({
   id,
   showKebab = false,
   topshowKebab = true,
+  likeCount,
+  writer,
 }: PostCardProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -144,6 +146,8 @@ export default function PostCard({
           showKebab={showKebab && size === 'small'}
           showDate={type === 'general' && size !== 'small' ? true : false}
           showDivider={type === 'general' && size !== 'small' ? true : false}
+          likeCount={likeCount}
+          authorName={writer?.nickname}
         />
       </div>
     </div>

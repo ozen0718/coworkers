@@ -7,9 +7,6 @@ import { AxiosError } from 'axios';
 import { fetchBest } from '@/app/api/articles';
 import { BestPostProps } from '@/components/Card/CardType';
 
-/* 테스트 데이터 */
-import { testPosts } from '@/components/Card/testPosts';
-
 export default function BoardPage() {
   const [keyword, setKeyword] = useState('');
   const token = useAuthStore((state) => state.accessToken);

@@ -57,6 +57,11 @@ export type PostCardProps = {
   showKebab?: boolean;
   topshowKebab?: boolean;
   onTitleClick?: () => void;
+  likeCount?: number;
+  writer?: {
+    id: number;
+    nickname: string;
+  };
 };
 
 /* BestPost - 베스트 글 */
@@ -64,8 +69,12 @@ export type BestPostProps = {
   id: number;
   title: string;
   image: string;
-  date: string;
+  createdAt?: string;
   likeCount?: number;
+  writer?: {
+    id: number;
+    nickname: string;
+  };
 };
 
 /* GeneralPost - 일반 글 */
