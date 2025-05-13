@@ -52,7 +52,7 @@ export type PostCardProps = {
   type?: 'best' | 'general';
   size?: 'large' | 'medium' | 'small';
   title: string;
-  imgUrl?: string;
+  image?: string;
   date?: string;
   showKebab?: boolean;
   topshowKebab?: boolean;
@@ -71,7 +71,7 @@ export type BestPostProps = {
 export type GeneralPostProps = {
   id: number;
   title: string;
-  imgUrl: string;
+  image: string;
   date: string;
 };
 

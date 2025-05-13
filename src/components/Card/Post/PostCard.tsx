@@ -24,7 +24,7 @@ export default function PostCard({
   type = 'general',
   size = 'large',
   title,
-  imgUrl,
+  image,
   date,
   id,
   showKebab = false,
@@ -70,8 +70,11 @@ export default function PostCard({
       )}
 
       {/* 내용 */}
-      <div className="flex w-full cursor-pointer items-start" onClick={handleTitleClick}>
-        <div className="relative flex w-full items-start justify-between">
+      <div className="flex w-full cursor-pointer items-start">
+        <div
+          className="relative flex w-full items-start justify-between"
+          onClick={handleTitleClick}
+        >
           <p
             className={clsx(
               'mr-2 line-clamp-2 pr-6',
@@ -86,11 +89,12 @@ export default function PostCard({
               'relative',
               type === 'best' ? 'min-w-[72px]' : size === 'small' ? 'min-w-[72px]' : 'min-w-[112px]'
             )}
+            onClick={(e) => e.stopPropagation()} // 부모 이벤트 막기
           >
-            {imgUrl ? (
+            {image ? (
               <Image
                 className="aspect-square min-w-[72px] rounded-lg object-cover"
-                src={imgUrl}
+                src={image}
                 alt="게시글 이미지"
                 width={72}
                 height={72}

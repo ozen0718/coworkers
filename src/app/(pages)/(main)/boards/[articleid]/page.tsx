@@ -136,7 +136,7 @@ export default function ArticleDetail() {
       </div>
 
       {/*본문 */}
-      <div className="scroll-area mt-15 h-[72px] w-full overflow-y-auto font-normal sm:h-[104px]">
+      <div className="scroll-area mt-15 h-[72px] w-full overflow-y-auto font-normal whitespace-pre-line sm:h-[104px]">
         {detailPost.content}
       </div>
 
