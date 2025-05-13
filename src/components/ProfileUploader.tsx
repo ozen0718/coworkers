@@ -68,7 +68,6 @@ export default function ProfileUploader({ onUploadSuccess, className }: ProfileU
     setPreviewUrl(URL.createObjectURL(file));
   };
 
-  // Drag & Drop
   const handleDragOver = (e: DragEvent) => {
     e.preventDefault();
     setDragOver(true);
@@ -164,28 +163,6 @@ export default function ProfileUploader({ onUploadSuccess, className }: ProfileU
       ) : (
         <div className="bg-bg200 flex h-32 w-32 items-center justify-center">
           <span>프로필 업로드</span>
-        </div>
-      )}
-
-      {previewUrl && (
-        <div className="absolute bottom-2 left-1/2 flex -translate-x-1/2 transform space-x-2">
-          <button
-            type="button"
-            className="bg-primary rounded px-2 py-1 text-white"
-            onClick={handleSave}
-            disabled={isBusy}
-          >
-            저장
-          </button>
-          {downloadUrl && (
-            <a
-              href={downloadUrl}
-              download="cropped.png"
-              className="bg-secondary rounded px-2 py-1 text-white"
-            >
-              다운로드
-            </a>
-          )}
         </div>
       )}
 
