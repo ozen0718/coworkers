@@ -7,7 +7,7 @@ import Button from '@/components/common/Button/Button';
 import { TextAreaInput } from '@/components/common/Inputs';
 import clsx from 'clsx';
 import { BoardCommentProps } from '../CardType';
-import { deleteComment, fetchComment } from '@/app/api/articles';
+import { deleteComment, editComment, fetchComment } from '@/app/api/articles';
 import { AxiosError } from 'axios';
 import { useParams } from 'next/navigation';
 
@@ -24,6 +24,7 @@ export default function BoardComment({
   const params = useParams();
   const id = params?.articleid;
   const token = process.env.NEXT_PUBLIC_API_TOKEN;
+  const [editedContent, setEditedContent] = useState(content);
 
   const toggleDropdown = () => {
     setIsDropDownOpen((prev) => !prev);
@@ -32,6 +33,7 @@ export default function BoardComment({
   /* Dropdown 수정 */
   const handleEdit = () => {
     setIsEditing(true);
+    setEditedContent(content);
   };
 
   /* 댓글 삭제 */
@@ -51,14 +53,25 @@ export default function BoardComment({
     }
   };
 
-  /* 취소 버튼 */
+  /* 댓글 수정 취소 */
   const handleCancel = () => {
     setIsEditing(false);
   };
 
-  /* 수정 버튼(api 연결 후 변경) */
-  const handleEditComment = () => {
-    setIsEditing(false);
+  /* 댓글 수정*/
+  const handleEditComment = async () => {
+    if (!id || !token || !editedContent) {
+      return;
+    }
+    try {
+      await editComment(commentId, token, { content: editedContent });
+      console.log('댓글 수정 성공');
+      setIsEditing(false);
+      onDelete?.();
+    } catch (err) {
+      const error = err as AxiosError;
+      console.log('댓글 수정 에러', error.response?.data);
+    }
   };
 
   return (
@@ -71,7 +84,11 @@ export default function BoardComment({
       <div className="text-lg-regular flex w-full items-start justify-between">
         {isEditing ? (
           <div className="relative flex h-full w-full items-start">
-            <TextAreaInput height="h-[65px]" />
+            <TextAreaInput
+              value={editedContent}
+              onChange={(e) => setEditedContent(e.target.value)}
+              height="h-[65px]"
+            />
           </div>
         ) : (
           <div

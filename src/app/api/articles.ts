@@ -30,9 +30,14 @@ export const createComment = (articleid: number, token: string, payload: { conte
 
 /* 댓글 - 댓글 삭제 */
 export const deleteComment = (commentid: number, token: string) => {
-  return axiosInstance.delete(`comments/${commentid}`, {
+  return axiosInstance.delete(`/comments/${commentid}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 };
 
 /* 댓글 - 댓글 수정 */
+export const editComment = (commentid: number, token: string, payload: { content: string }) => {
+  return axiosInstance.patch(`/comments/${commentid}`, payload, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
