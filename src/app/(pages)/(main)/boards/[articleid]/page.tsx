@@ -6,55 +6,42 @@ import AuthorInfo from '@/components/Card/Comment/AuthorInfo';
 import AddComment from '@/components/Card/Comment/AddComment';
 import BoardComment from '@/components/Card/Comment/BoardComment';
 import { useEffect } from 'react';
-import axiosInstance from '@/app/api/axiosInstance';
 import { AxiosError } from 'axios';
 import { useParams } from 'next/navigation';
 import { PostDetail } from '@/components/Card/CardType';
 import { DetailComments } from '@/components/Card/CardType';
-import { deleteArticle, fetchArticle } from '@/app/api/articles';
+import { deleteArticle, fetchArticle, fetchComment } from '@/app/api/articles';
 import { useRouter } from 'next/navigation';
 
 export default function ArticleDetail() {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const router = useRouter();
+  const params = useParams();
+  const id = params?.articleid;
+  const token = process.env.NEXT_PUBLIC_API_TOKEN;
+  const [detailPost, setPostDetail] = useState<PostDetail>({
+    title: '',
+    content: '',
+  });
+  const [comments, setComments] = useState<DetailComments[]>([]);
 
   const toggleDropdown = () => {
     setIsDropDownOpen((prev) => !prev);
   };
 
-  const token = process.env.NEXT_PUBLIC_API_TOKEN;
-
-  const [detailPost, setPostDetail] = useState<PostDetail>({
-    title: '',
-    content: '',
-  });
-
-  const params = useParams();
-  const id = params?.articleid;
-
-  /* 상세 글 */
   useEffect(() => {
     if (!id) return;
 
-    const fetchPostData = async () => {
-      try {
-        const response = await fetchArticle(Number(id), token!);
-        setPostDetail(response.data);
-      } catch (err) {
-        const error = err as AxiosError;
-        console.error('글 불러오기 에러:', error.response?.data);
-      }
-    };
-
     fetchPostData();
+    fetchComments();
   }, [id]);
 
-  /* 글 - Dropdown 수정 */
+  /* 게시글 수정 */
   const handleEdit = () => {
-    console.log('수정 눌렀다.');
+    router.push(`/boards/${id}/edit`);
   };
 
-  /* 글 - Dropdown 삭제 */
+  /* 게시글 삭제 */
   const handleDelete = async () => {
     if (!id || !token) {
       console.log('토큰이나 아이디 없음');
@@ -71,26 +58,27 @@ export default function ArticleDetail() {
     }
   };
 
-  const [comments, setComments] = useState<DetailComments[]>([]);
-
-  const fetchComment = async () => {
+  /* 게시글 */
+  const fetchPostData = async () => {
     try {
-      const response = await axiosInstance.get(`/articles/${id}/comments?limit=30`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetchArticle(Number(id), token!);
+      setPostDetail(response.data);
+    } catch (err) {
+      const error = err as AxiosError;
+      console.error('글 불러오기 에러:', error.response?.data);
+    }
+  };
+
+  /* 댓글 */
+  const fetchComments = async () => {
+    try {
+      const response = await fetchComment(Number(id), token!);
       setComments(response.data.list);
     } catch (err) {
       const error = err as AxiosError;
       console.error('댓글 불러오기 에러:', error.response?.data);
     }
   };
-
-  /* 댓글 */
-  useEffect(() => {
-    fetchComment();
-  }, [id]);
 
   return (
     <div className="text-gray300 my-16 flex flex-col md:my-20">
@@ -149,13 +137,13 @@ export default function ArticleDetail() {
 
       {/* 댓글 달기 */}
       <div className="mt-10 w-full">
-        <AddComment articleId={Number(id)} onSuccess={fetchComment} />
+        <AddComment articleId={Number(id)} onSuccess={fetchComments} />
       </div>
 
       <div className="my-4 h-px w-full bg-[#F8FAFC1A]" />
 
       {/* 댓글 */}
-      <div className="scroll-area mt-10 flex h-[350px] flex-col gap-4 overflow-y-auto">
+      <div className="scroll-area mt-10 flex h-[350px] flex-col gap-4 overflow-y-auto whitespace-pre-line">
         {comments?.length > 0 ? (
           comments.map((comment) => (
             <BoardComment

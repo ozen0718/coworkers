@@ -1,9 +1,9 @@
 'use client';
 
 import { TextAreaInput } from '@/components/common/Inputs';
-import axiosInstance from '@/app/api/axiosInstance';
 import { AxiosError } from 'axios';
 import { useState } from 'react';
+import { createComment } from '@/app/api/articles';
 
 interface AddCommentProps {
   articleId: number;
@@ -16,16 +16,14 @@ export default function AddComment({ articleId, onSuccess }: AddCommentProps) {
   const token = process.env.NEXT_PUBLIC_API_TOKEN;
 
   /* 댓글 작성 */
-
   const handleSubmit = async () => {
-    try {
-      const payload = { content };
-      const response = await axiosInstance.post(`/articles/${articleId}/comments`, payload, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    if (!articleId || !token) {
+      console.log('토큰이나 아이디 없음');
+      return;
+    }
 
+    try {
+      const response = await createComment(articleId, token, { content });
       console.log('댓글 작성 성공:', response.data);
       setContent('');
       onSuccess?.();

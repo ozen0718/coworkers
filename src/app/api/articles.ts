@@ -13,3 +13,17 @@ export const deleteArticle = (articleid: number, token: string) => {
     headers: { Authorization: `Bearer ${token}` },
   });
 };
+
+/* 상세 글 - 댓글 내용 */
+export const fetchComment = (id: number, token: string) => {
+  return axiosInstance.get(`/articles/${id}/comments?limit=30`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
+
+/* 댓글 - 댓글 작성 */
+export const createComment = (articleid: number, token: string, payload: { content: string }) => {
+  return axiosInstance.post(`/articles/${articleid}/comments`, payload, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
