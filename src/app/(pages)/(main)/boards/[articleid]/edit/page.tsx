@@ -2,8 +2,11 @@
 import { TextAreaInput } from '@/components/common/Inputs';
 import ImgUpload from '@/components/Card/ImgUpload';
 import Button from '@/components/common/Button/Button';
+import { useState } from 'react';
 
 export default function EditBoard() {
+  const [image, setImage] = useState<string>('');
+
   return (
     <div className="mt-10 max-h-[841px] md:my-14">
       {/* 타이틀 + 버튼 */}
@@ -40,7 +43,7 @@ export default function EditBoard() {
 
         <div className="mt-10 flex flex-col gap-4">
           <p>이미지</p>
-          <ImgUpload />
+          <ImgUpload onImageUpload={(url) => setImage(url)} />
         </div>
 
         {/* 모바일용 버튼 */}

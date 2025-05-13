@@ -4,6 +4,7 @@ import { TextAreaInput } from '@/components/common/Inputs';
 import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { createComment } from '@/app/api/articles';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 interface AddCommentProps {
   articleId: number;
@@ -13,7 +14,7 @@ interface AddCommentProps {
 export default function AddComment({ articleId, onSuccess }: AddCommentProps) {
   const [content, setContent] = useState('');
 
-  const token = process.env.NEXT_PUBLIC_API_TOKEN;
+  const token = useAuthStore((state) => state.accessToken);
 
   /* 댓글 작성 */
   const handleSubmit = async () => {

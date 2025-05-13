@@ -10,6 +10,7 @@ import { BoardCommentProps } from '../CardType';
 import { deleteComment, editComment, fetchComment } from '@/app/api/articles';
 import { AxiosError } from 'axios';
 import { useParams } from 'next/navigation';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 export default function BoardComment({
   commentId,
@@ -23,7 +24,7 @@ export default function BoardComment({
   const [isEditing, setIsEditing] = useState(false);
   const params = useParams();
   const id = params?.articleid;
-  const token = process.env.NEXT_PUBLIC_API_TOKEN;
+  const token = useAuthStore((state) => state.accessToken);
   const [editedContent, setEditedContent] = useState(content);
 
   const toggleDropdown = () => {

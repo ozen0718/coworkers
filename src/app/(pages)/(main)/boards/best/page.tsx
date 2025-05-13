@@ -2,13 +2,14 @@
 
 import { BestPost } from '@/components/Card/Post/BestPost';
 import { useEffect, useState } from 'react';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 /* 테스트 데이터 */
 import { testPosts } from '@/components/Card/testPosts';
 
 export default function BoardPage() {
   const [searchTerm, setSearchTerm] = useState('');
-  const token = process.env.NEXT_PUBLIC_API_TOKEN;
+  const token = useAuthStore((state) => state.accessToken);
 
   const filteredData = testPosts.filter((item) =>
     item.title.toLowerCase().includes(searchTerm.toLowerCase())

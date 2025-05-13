@@ -4,12 +4,13 @@ import IconPlus from '@/assets/icons/IconPlus';
 import IconDelete from '@/assets/icons/IconDelete';
 import { useState, useRef } from 'react';
 import axiosInstance from '@/app/api/axiosInstance';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 export default function ImgUpload({ onImageUpload }: { onImageUpload: (url: string) => void }) {
   const [image, setImage] = useState<string | null>();
   const fileInput = useRef<HTMLInputElement>(null);
 
-  const token = process.env.NEXT_PUBLIC_API_TOKEN;
+  const token = useAuthStore((state) => state.accessToken);
 
   /* 이미지 삭제 */
   const handleDeleteImage = () => {

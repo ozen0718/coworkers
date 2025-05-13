@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import { GeneralPostProps } from '@/components/Card/CardType';
 import axiosInstance from '@/app/api/axiosInstance';
 import { AxiosError } from 'axios';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 /* 테스트 데이터 */
 import { testPosts } from '@/components/Card/testPosts';
@@ -23,7 +24,7 @@ export default function BoardPage() {
   const [bestVisiblePosts, setBestVisiblePosts] = useState(1);
 
   const [generalposts, setGeneralPosts] = useState<GeneralPostProps[]>([]);
-  const token = process.env.NEXT_PUBLIC_API_TOKEN;
+  const token = useAuthStore((state) => state.accessToken);
 
   /* 일반 글 */
   useEffect(() => {

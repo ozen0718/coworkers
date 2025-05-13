@@ -10,9 +10,7 @@ import { AxiosError } from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 
 export default function CreateBoard() {
-  // const token = useAuthStore((state) => state.accessToken);
-  const token = process.env.NEXT_PUBLIC_API_TOKEN;
-
+  const token = useAuthStore((state) => state.accessToken);
   const router = useRouter();
 
   const [title, setTitle] = useState<string>('');

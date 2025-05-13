@@ -6,6 +6,7 @@ import IconHeart from '@/assets/icons/IconHeart';
 import { AuthorInfoProps } from '../CardType';
 import axiosInstance from '@/app/api/axiosInstance';
 import { AxiosError } from 'axios';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 export default function AuthorInfo({
   type,
@@ -28,7 +29,7 @@ export default function AuthorInfo({
 
   const dateOnly = date.split('T')[0];
 
-  const token = process.env.NEXT_PUBLIC_API_TOKEN;
+  const token = useAuthStore((state) => state.accessToken);
 
   /* 좋아요 */
   const handleLike = async () => {

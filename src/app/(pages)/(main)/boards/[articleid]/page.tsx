@@ -12,13 +12,14 @@ import { PostDetail } from '@/components/Card/CardType';
 import { DetailComments } from '@/components/Card/CardType';
 import { deleteArticle, fetchArticle, fetchComment } from '@/app/api/articles';
 import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 export default function ArticleDetail() {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const router = useRouter();
   const params = useParams();
   const id = params?.articleid;
-  const token = process.env.NEXT_PUBLIC_API_TOKEN;
+  const token = useAuthStore((state) => state.accessToken);
   const [detailPost, setPostDetail] = useState<PostDetail>({
     title: '',
     content: '',
