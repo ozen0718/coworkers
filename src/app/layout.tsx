@@ -5,6 +5,7 @@ import { HeaderProvider } from '@/components/layout/Gnb/HeaderContext';
 import ClientHeaderLayout from '@/components/layout/ClientHeaderLayout';
 import GlobalToast from '@/components/GlobalToast';
 import InitializeAuth from '@/components/InitializeAuth';
+import QueryProvider from './QueryProvider';
 
 export const metadata: Metadata = {
   title: 'Coworkers',
@@ -15,12 +16,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko">
       <body className="flex min-h-screen w-full flex-col">
-        <InitializeAuth />
-        <HeaderProvider>
-          <ClientHeaderLayout />
-          <main className="flex-grow">{children}</main>
-        </HeaderProvider>
-        <GlobalToast />
+        <QueryProvider>
+          <InitializeAuth />
+          <HeaderProvider>
+            <ClientHeaderLayout />
+            <main className="flex-grow">{children}</main>
+          </HeaderProvider>
+          <GlobalToast />
+        </QueryProvider>
       </body>
     </html>
   );
