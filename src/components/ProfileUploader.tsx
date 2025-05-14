@@ -10,7 +10,6 @@ import { uploadImage } from '@/api/TeamCreate';
 interface ProfileUploaderProps {
   fileUrl?: string | null;
   error?: string | null;
-  onClick?: () => void;
   onChange?: (file: File | null, error: string | null) => void;
   className?: string;
 }
@@ -25,19 +24,19 @@ interface CroppedAreaPixels {
 export default function ProfileUploader({
   fileUrl,
   error: externalError,
-  onClick,
   onChange,
   className,
 }: ProfileUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const handleClick = () => {
+    fileInputRef.current?.click();
+  };
+
   const [dragOver, setDragOver] = useState(false);
   const [rawFile, setRawFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(fileUrl || null);
-  const [crop, setCrop] = useState<{ x: number; y: number }>({
-    x: 0,
-    y: 0,
-  });
+  const [crop, setCrop] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<CroppedAreaPixels | null>(null);
   const [error, setError] = useState<string | null>(externalError || null);
@@ -46,9 +45,7 @@ export default function ProfileUploader({
   const uploadMutation = useMutation({
     mutationFn: async (blob: Blob) => {
       if (!rawFile) throw new Error('No file to upload');
-      const file = new File([blob], rawFile.name, {
-        type: rawFile.type,
-      });
+      const file = new File([blob], rawFile.name, { type: rawFile.type });
       return uploadImage(file);
     },
     onSuccess: (uploadedUrl: string) => {
@@ -110,10 +107,10 @@ export default function ProfileUploader({
   const getCroppedImage = useCallback(async (): Promise<Blob | null> => {
     if (!previewUrl || !croppedAreaPixels) return null;
     const img = await new Promise<HTMLImageElement>((res, rej) => {
-      const img = document.createElement('img');
-      img.src = previewUrl;
-      img.onload = () => res(img);
-      img.onerror = rej;
+      const image = document.createElement('img');
+      image.src = previewUrl;
+      image.onload = () => res(image);
+      image.onerror = rej;
     });
     const canvas = document.createElement('canvas');
     canvas.width = croppedAreaPixels.width;
@@ -152,25 +149,22 @@ export default function ProfileUploader({
     <div className="relative inline-block">
       <div
         className={clsx(
-          'absolute -top-2 -right-2 bottom-3 -left-2 z-10 rounded-lg transition-all duration-200',
-          dragOver && 'border-primary bg-primary/5 border-2 border-dashed',
-          'cursor-pointer'
+          'absolute -top-2 -right-2 bottom-3 -left-2 z-10 cursor-pointer rounded-lg transition-all duration-200',
+          dragOver && 'border-primary bg-primary/5 border-2 border-dashed'
         )}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        onClick={onClick || (() => fileInputRef.current?.click())}
+        onClick={handleClick}
         role="button"
         tabIndex={0}
       />
+
       <div
         className={clsx(
           'bg-bg200 relative mb-4 inline-block h-16 w-16 overflow-hidden rounded-full border-2 border-gray-700',
           className
         )}
-        role="button"
-        tabIndex={0}
-        onClick={onClick || (() => fileInputRef.current?.click())}
       >
         {previewUrl && croppedAreaPixels ? (
           <Cropper
@@ -189,7 +183,7 @@ export default function ProfileUploader({
             src="/icons/initialteamprofile.svg"
             alt="팀 아이콘"
             fill
-            className="cursor-pointer object-contain p-2"
+            className="object-contain p-2"
           />
         )}
 
@@ -198,6 +192,7 @@ export default function ProfileUploader({
             <div className="loader" />
           </div>
         )}
+
         {error && (
           <div className="bg-opacity-75 absolute inset-0 flex flex-col items-center justify-center bg-white">
             <p className="text-danger mb-2">{error}</p>
