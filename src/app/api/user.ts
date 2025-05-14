@@ -16,8 +16,6 @@ export const getUserInfo = async (): Promise<ParsedUser> => {
   const response = await axiosInstance.get('/user');
   const data = response.data;
 
-  console.log('📦 API raw data:', data);
-
   return {
     nickname: data.nickname,
     profileImage: data.profileImage ?? null,

@@ -24,7 +24,6 @@ export default function Layout({ children }: { children: ReactNode }) {
       if (token) {
         try {
           const user = await getUserInfo();
-          console.log('✅ getUserInfo 결과:', user);
           setUserInfo({
             nickname: user.nickname,
             profileImage: user.profileImage,
