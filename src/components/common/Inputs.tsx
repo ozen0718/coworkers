@@ -17,12 +17,12 @@ import Image from 'next/image';
 import clsx from 'clsx';
 
 const BaseInputStyle =
-  'w-full sm:h-12 h-11 bg-bg200 border border-gray100/10 rounded-xl px-4 focus:border-primary hover:border-primary-hover';
+  'w-full sm:h-12 h-11 bg-bg200 border border-gray100/10 rounded-xl px-4 focus:border-primary hover:border-primary-hover caret-white';
 
-const EmailInputStyle = `${BaseInputStyle} focus:outline-none placeholder:text-gray500 sm:text-4 sm:text-lg-regular text-md-regular text-3.5`;
+const EmailInputStyle = `${BaseInputStyle} focus:outline-none placeholder:text-gray500 sm:text-4 sm:text-lg-regular text-md-regular text-3.5 text-gray100`;
 
 const PasswordInputStyle =
-  'w-full focus:outline-none sm:text-4 sm:text-lg-regular text-md-regular text-3.5 placeholder:text-gray500';
+  'w-full h-full focus:outline-none sm:text-4 sm:text-lg-regular text-md-regular text-3.5 placeholder:text-gray500';
 
 const InputStyle =
   'w-full sm:h-12 h-11 bg-bg200 border border-gray100/10 rounded-xl px-4 focus:outline-none focus:border-primary hover:border-primary-hover sm:text-4 sm:text-lg-regular text-md-regular text-3.5 placeholder:text-gray500';
@@ -104,12 +104,10 @@ export function PasswordInput({
 
   return (
     <div>
-      <div
-        className={`${BaseInputStyle} flex items-center justify-between gap-3 ${isInvalid ? 'border-red-500' : ''}`}
-      >
+      <div className="relative flex w-full items-center">
         <input
           type={showPassword ? 'text' : 'password'}
-          className={PasswordInputStyle}
+          className={`${BaseInputStyle} ${PasswordInputStyle} ${isInvalid ? 'border-red-500' : ''} pr-13`}
           placeholder={placeholder}
           id={id}
           name={name}
@@ -122,7 +120,7 @@ export function PasswordInput({
           alt="비밀번호 보기"
           width={24}
           height={24}
-          className="cursor-pointer"
+          className="absolute right-4 cursor-pointer"
           onClick={() => setShowPassword(!showPassword)}
         />
       </div>

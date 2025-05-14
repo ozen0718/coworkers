@@ -16,6 +16,11 @@
   display: none;
 }
 
+input:-webkit-autofill {
+  box-shadow: 0 0 0 1000px #1e293b inset;
+  -webkit-text-fill-color: #f8fafc;
+}
+
 @theme {
   --color-primary: #10b981;
   --color-secondary: #34d399;
