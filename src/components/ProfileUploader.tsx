@@ -10,7 +10,8 @@ import { uploadImage } from '@/api/TeamCreate';
 interface ProfileUploaderProps {
   fileUrl?: string | null;
   error?: string | null;
-  onChange?: (file: File | null, error: string | null) => void;
+  onClick?: () => void;
+  onChange?: (file: File | null, error: string | null) => void | Promise<void>;
   className?: string;
 }
 
