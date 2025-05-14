@@ -38,7 +38,7 @@ export default function BoardPage() {
 
     const fetchPostData = async () => {
       try {
-        const response = await fetchGeneral(token);
+        const response = await fetchGeneral();
         setGeneralPosts(response.data.list);
       } catch (err) {
         const error = err as AxiosError;

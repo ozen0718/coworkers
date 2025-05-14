@@ -50,7 +50,7 @@ export default function ArticleDetail() {
     }
 
     try {
-      await deleteArticle(Number(id), token);
+      await deleteArticle(Number(id));
       console.log('댓글 삭제 성공');
       router.push('/boards');
     } catch (err) {
@@ -63,7 +63,7 @@ export default function ArticleDetail() {
   const fetchPostData = async () => {
     if (!token) return;
     try {
-      const response = await fetchArticle(Number(id), token);
+      const response = await fetchArticle(Number(id));
       setPostDetail(response.data);
     } catch (err) {
       const error = err as AxiosError;
@@ -75,7 +75,7 @@ export default function ArticleDetail() {
   const fetchComments = async () => {
     if (!token) return;
     try {
-      const response = await fetchComment(Number(id), token);
+      const response = await fetchComment(Number(id));
       setComments(response.data.list);
     } catch (err) {
       const error = err as AxiosError;
