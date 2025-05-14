@@ -18,7 +18,7 @@ export function useAddTeamForm() {
 
   const MIN_NAME = 2;
   const MAX_NAME = 15;
-  const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+  const MAX_SIZE = 10 * 1024 * 1024; // 10MB
 
   const validateName = (v: string): string | null => {
     if (!v.trim()) return null;
@@ -56,7 +56,7 @@ export function useAddTeamForm() {
       return;
     }
     if (file.size > MAX_SIZE) {
-      setFileError('5MB 이하만 가능합니다.');
+      setFileError('10MB 이하만 가능합니다.');
       return;
     }
 
