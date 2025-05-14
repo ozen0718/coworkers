@@ -126,7 +126,7 @@ export function PasswordInput({
       </div>
       {isInvalid && (
         <p className={InvalidMessageStyle}>
-          비밀번호는 영문과 숫자를 포함한 4~12자로 입력해주세요.
+          비밀번호는 영문과 숫자를 포함한 8~12자로 입력해주세요.
         </p>
       )}
     </div>
