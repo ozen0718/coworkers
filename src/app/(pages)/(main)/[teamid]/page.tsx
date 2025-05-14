@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TextInput } from '@/components/common/Inputs';
 import { TasksItem } from '@/components/teampage/TaskElements';
 import TeamHeader from '@/components/teampage/TeamHeader';
@@ -10,6 +10,7 @@ import Modal from '@/components/common/Modal';
 import { toast } from 'react-toastify';
 import { Profile } from '@/components/common/Profiles';
 import { useModalGroup } from '@/hooks/useModalGroup';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
 
 const mockMembers = [
   { name: '우지은', email: 'coworkers@code.com' },
@@ -31,6 +32,9 @@ export default function TeamPage() {
   const [selectedMember, setSelectedMember] = useState<{ name: string; email: string } | null>(
     null
   );
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => setIsClient(true), []);
 
   const { open, close, isOpen } = useModalGroup<'invite' | 'createList' | 'memberProfile'>();
 
@@ -57,9 +61,12 @@ export default function TeamPage() {
     open('memberProfile');
   };
 
+  const { data: userData } = useCurrentUser();
+  const isAdmin = userData?.memberships?.[0]?.role === 'ADMIN';
+
   return (
     <div className="py-6">
-      <TeamHeader title="팀이름" />
+      <TeamHeader title="팀이름" showGear={isClient && isAdmin} />
 
       <section className={sectionStyle}>
         <header className={sectionHeaderStyle}>
@@ -67,9 +74,11 @@ export default function TeamPage() {
             <h2 className={sectionHeaderH2Style}>할 일 목록</h2>
             <p className={sectionHeaderPSTyle}>(4개)</p>
           </div>
-          <button className={sectionHeaderButtonStyle} onClick={() => open('createList')}>
-            + 새로운 목록 추가하기
-          </button>
+          {isClient && isAdmin && (
+            <button className={sectionHeaderButtonStyle} onClick={() => open('createList')}>
+              + 새로운 목록 추가하기
+            </button>
+          )}
 
           <Modal
             isOpen={isOpen('createList')}
@@ -112,9 +121,11 @@ export default function TeamPage() {
             <p className={sectionHeaderPSTyle}>(8명)</p>
           </div>
           <div>
-            <button className={sectionHeaderButtonStyle} onClick={() => open('invite')}>
-              + 새로운 멤버 추가하기
-            </button>
+            {isClient && isAdmin && (
+              <button className={sectionHeaderButtonStyle} onClick={() => open('invite')}>
+                + 새로운 멤버 추가하기
+              </button>
+            )}
 
             <Modal
               isOpen={isOpen('invite')}
