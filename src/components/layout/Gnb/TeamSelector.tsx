@@ -8,10 +8,10 @@ import DropDownGroupsItem from '@/components/dropdown/Groups';
 export default function TeamSelector() {
   const { teams, isInitialized } = useUserStore();
 
-  // ✅ 초기화되지 않은 경우 렌더링하지 않음 (팀 없음 깜빡임 방지)
+  // 초기화되지 않은 경우 렌더링하지 않음 (팀 없음 깜빡임 방지)
   if (!isInitialized) return null;
 
-  // ✅ 첫 번째 팀 이름이 존재할 때만 버튼 텍스트로 사용
+  // 첫 번째 팀 이름이 존재할 때만 버튼 텍스트로 사용
   const defaultTeamName = teams.length > 0 && teams[0].name ? teams[0].name : '팀 없음';
 
   const options = teams.map((team) => (
