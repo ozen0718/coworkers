@@ -13,16 +13,13 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { fetchBest, fetchGeneral } from '@/app/api/articles';
 import { useQuery } from '@tanstack/react-query';
 
-/* 테스트 데이터 */
-import { testPosts } from '@/components/Card/testPosts';
-
 export default function BoardPage() {
   const [selectedOption, setSelectedOption] = useState('최신순');
 
   const windowWidth = useWindowSize();
   const [bestVisiblePosts, setBestVisiblePosts] = useState(1);
 
-  const [generalposts, setGeneralPosts] = useState<GeneralPostProps[]>([]);
+  const [keyword, setKeyword] = useState('');
 
   useEffect(() => {
     if (windowWidth >= 1024) {
@@ -35,26 +32,24 @@ export default function BoardPage() {
   }, [windowWidth]);
 
   /* 일반 글 */
-
   const { data: generalPosts } = useQuery<
     AxiosResponse<{ list: GeneralPostProps[] }>,
     AxiosError,
     GeneralPostProps[]
   >({
-    queryKey: ['generalPosts'],
-    queryFn: fetchGeneral,
+    queryKey: ['generalPosts', keyword],
+    queryFn: () => fetchGeneral(keyword),
     select: (response) => response.data.list,
   });
 
   /* 베스트 글 */
-
   const { data: bestPosts } = useQuery<
     AxiosResponse<{ list: BestPostProps[] }>,
     AxiosError,
     BestPostProps[]
   >({
-    queryKey: ['bestPosts'],
-    queryFn: () => fetchBest(),
+    queryKey: ['bestPosts', keyword],
+    queryFn: () => fetchBest(keyword),
     select: (response) => response.data.list,
   });
 
@@ -63,13 +58,6 @@ export default function BoardPage() {
   const gotoNewBoard = () => {
     router.push(`/boards/new`);
   };
-
-  /* 검색 데이터 */
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const filteredData = testPosts.filter((item) =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   /* 로딩 */
   const [hasMounted, setHasMounted] = useState(false);
@@ -100,12 +88,12 @@ export default function BoardPage() {
           type="text"
           placeholder="검색어를 입력해주세요"
           className="bg-bg200 w-full rounded-xl border border-[#F8FAFC1A] p-4 pl-12"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
         />
       </div>
 
-      {searchTerm && filteredData.length === 0 ? (
+      {bestPosts?.length === 0 && generalPosts?.length === 0 ? (
         <div className="text-gray400 flex h-[300px] w-full items-center justify-center text-lg">
           검색하신 게시글이 없습니다.
         </div>

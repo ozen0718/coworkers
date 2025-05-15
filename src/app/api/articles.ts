@@ -1,8 +1,16 @@
 import axiosInstance from './axiosInstance';
 
 /* 자유게시판 - 일반 글 */
-export const fetchGeneral = () => {
-  return axiosInstance.get('/articles');
+export const fetchGeneral = (keyword?: string) => {
+  if (!keyword) {
+    return axiosInstance.get('/articles');
+  }
+
+  const params: Record<string, string> = {
+    keyword,
+  };
+
+  return axiosInstance.get('/articles', { params });
 };
 
 /* 자유게시판 - 베스트 글 */
