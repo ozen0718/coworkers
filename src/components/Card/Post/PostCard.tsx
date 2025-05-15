@@ -82,42 +82,6 @@ export default function PostCard({
   const [isLikedState, setIsLikedState] = useState<boolean>(postData?.data.isLiked ?? false);
   const [likeCountState, setLikeCountState] = useState<number>(likeCount ?? 0);
 
-  const handleLikeChanged = () => {
-    const nextIsLiked = !isLikedState;
-    const nextLikeCount = nextIsLiked ? likeCountState + 1 : likeCountState - 1;
-
-    setIsLikedState(nextIsLiked);
-    setLikeCountState(nextLikeCount);
-
-    // 1. 해당 게시글 상세 캐시 업데이트
-    queryClient.setQueryData(['article', id], (old: any) => {
-      if (!old) return old;
-      return {
-        ...old,
-        data: {
-          ...old.data,
-          isLiked: nextIsLiked,
-          likeCount: nextLikeCount,
-        },
-      };
-    });
-
-    // 2. 일반 게시글 목록 캐시 업데이트
-    queryClient.setQueriesData({ queryKey: ['generalPosts'] }, (old: any) => {
-      if (!old || !Array.isArray(old)) return old;
-      return old.map((post: any) =>
-        post.id === id ? { ...post, isLiked: nextIsLiked, likeCount: nextLikeCount } : post
-      );
-    });
-
-    queryClient.setQueriesData({ queryKey: ['bestPosts'] }, (old: any) => {
-      if (!old || !Array.isArray(old)) return old;
-      return old.map((post: any) =>
-        post.id === id ? { ...post, isLiked: nextIsLiked, likeCount: nextLikeCount } : post
-      );
-    });
-  };
-
   useEffect(() => {
     if (postData) {
       setIsLikedState(postData.data.isLiked);
@@ -224,7 +188,7 @@ export default function PostCard({
           date={date}
           articleId={id}
           isLiked={isLikedState}
-          onLikeChanged={handleLikeChanged}
+          //onLikeChanged={handleLikeChanged}
         />
       </div>
     </div>
