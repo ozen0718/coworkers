@@ -1,4 +1,4 @@
-import axiosInstance from '../app/api/axiosInstance';
+import axiosInstance from './axiosInstance';
 
 /* 자유게시판 - 일반 글 */
 export const fetchGeneral = (keyword?: string) => {
