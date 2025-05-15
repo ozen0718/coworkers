@@ -3,20 +3,24 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-
-interface Team {
-  id: number;
-  name: string;
-}
+import { useUserStore } from '@/stores/useUserStore';
+import { useRouter } from 'next/navigation';
 
 interface SideMenuProps {
-  teams: Team[];
   isOpen: boolean;
   onClose: () => void;
 }
 
-export default function SideMenu({ teams, isOpen, onClose }: SideMenuProps) {
+export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
+  const { teams } = useUserStore();
+  const router = useRouter();
+
   if (!isOpen) return null;
+
+  const handleTeamClick = (teamId: string) => {
+    router.push(`/team/${teamId}/boards`);
+    onClose();
+  };
 
   return (
     <>
@@ -31,6 +35,7 @@ export default function SideMenu({ teams, isOpen, onClose }: SideMenuProps) {
             <div
               key={team.id}
               className="text-md-medium hover:bg-bg300 cursor-pointer rounded px-2 py-1"
+              onClick={() => handleTeamClick(team.id)}
             >
               {team.name}
             </div>

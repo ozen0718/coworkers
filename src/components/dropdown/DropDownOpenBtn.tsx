@@ -35,8 +35,8 @@ export default function DropDownOpenBtn({ size, currentSelected }: Props) {
         size === 'xl' && 'text-lg-rg h-fit w-[97px]'
       )}
     >
-      <div className="flex w-full justify-between">
-        <p className="w-full truncate">{currentSelected}</p>
+      <div className="flex w-full justify-end">
+        <p className="w-full truncate text-center">{currentSelected}</p>
         <Image src={iconSrc} width={16} height={16} alt="드롭다운 아이콘" />
       </div>
     </div>

@@ -1,7 +1,11 @@
-export default function Layout({ children }: { children: React.ReactNode }) {
+'use client';
+
+import { ReactNode } from 'react';
+
+export default function Layout({ children }: { children: ReactNode }) {
   return (
-    <div className="px-4 md:px-6">
+    <main className="px-4 md:px-6">
       <div className="mx-auto max-w-[1200px]">{children}</div>
-    </div>
+    </main>
   );
 }

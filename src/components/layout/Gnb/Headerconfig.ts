@@ -4,48 +4,63 @@ export interface HeaderVisibilityConfig {
   showProfile: boolean;
 }
 
+// 로그인한 사용자에게만 보이는 페이지별 헤더 설정
 const STATIC_HEADER_CONFIG: Record<string, HeaderVisibilityConfig> = {
   '/noteam': {
-    // 소속된 팀이 없는 경우
     showTeamSelector: true,
     showFreeBoardLink: true,
     showProfile: true,
   },
   '/boards': {
-    // 자유 게시판
     showTeamSelector: true,
     showFreeBoardLink: true,
     showProfile: true,
   },
   '/boards/create': {
-    // 자유 게시판 - 게시글 쓰기
     showTeamSelector: true,
     showFreeBoardLink: true,
     showProfile: true,
   },
   '/mypage': {
-    // 계정 설정
+    showTeamSelector: true,
+    showFreeBoardLink: true,
+    showProfile: true,
+  },
+  '/': {
     showTeamSelector: true,
     showFreeBoardLink: true,
     showProfile: true,
   },
 };
 
+// 로그인하지 않은 경우: 모든 요소 숨김
 const DEFAULT_CONFIG: HeaderVisibilityConfig = {
   showTeamSelector: false,
   showFreeBoardLink: false,
   showProfile: false,
 };
 
-export function getHeaderConfig(pathname: string): HeaderVisibilityConfig {
-  // 팀페이지 - 수정하기
+// 현재 경로와 로그인 여부에 따라 헤더 표시 여부 결정
+export function getHeaderConfig(pathname: string, isLoggedIn: boolean): HeaderVisibilityConfig {
+  // 동적 경로 예외 처리 (예: /13-4/edit)
   if (/^\/\d+\/edit$/.test(pathname)) {
-    return {
-      showTeamSelector: true,
-      showFreeBoardLink: true,
-      showProfile: true,
-    };
+    return isLoggedIn
+      ? {
+          showTeamSelector: true,
+          showFreeBoardLink: true,
+          showProfile: true,
+        }
+      : DEFAULT_CONFIG;
   }
 
-  return STATIC_HEADER_CONFIG[pathname] ?? DEFAULT_CONFIG;
+  // 정적 경로 설정 가져오기
+  const staticConfig = STATIC_HEADER_CONFIG[pathname] ?? DEFAULT_CONFIG;
+
+  // 로그인 안 한 경우 모든 헤더 요소 숨김
+  if (!isLoggedIn) {
+    return DEFAULT_CONFIG;
+  }
+
+  // 로그인한 경우에만 해당 경로 설정 반영
+  return staticConfig;
 }

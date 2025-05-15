@@ -17,13 +17,13 @@ interface DropDownGroupsItemProps {
 }
 
 export default function DropDownGroupsItem({ group }: DropDownGroupsItemProps) {
-  const { name, image, id } = group;
+  const { name, id } = group;
 
   return (
     <div className="hover:bg-bg100 flex w-[186px] cursor-pointer items-center justify-between rounded-lg px-2 py-[7px]">
-      <Link href={`/${id}`} className="text-lg-md text-white flex items-center gap-3">
+      <Link href={`/${id}`} className="text-lg-md flex items-center gap-3 text-white">
         <Image
-          src={image || '/default-team.png'}
+          src="/team.png"
           width={32}
           height={32}
           alt={`${name} 이미지`}
