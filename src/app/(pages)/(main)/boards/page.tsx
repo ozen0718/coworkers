@@ -41,6 +41,7 @@ export default function BoardPage() {
     queryKey: QUERY_KEYS.generalPosts(keyword),
     queryFn: () => fetchGeneral(keyword),
     select: (response) => response.data.list,
+    refetchOnMount: 'always',
   });
 
   /* 베스트 글 */
@@ -52,6 +53,7 @@ export default function BoardPage() {
     queryKey: QUERY_KEYS.bestPosts(keyword),
     queryFn: () => fetchBest(keyword),
     select: (response) => response.data.list,
+    refetchOnMount: 'always',
   });
 
   /* 글 쓰기 이동 */

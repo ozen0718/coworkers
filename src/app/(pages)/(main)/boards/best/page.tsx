@@ -16,6 +16,7 @@ export default function BoardPage() {
     queryFn: () => fetchBest(keyword),
     select: (response) =>
       response.data.list.filter((post: BestPostProps) => post.likeCount && post.likeCount > 0),
+    refetchOnMount: 'always',
   });
 
   return (

@@ -7,9 +7,11 @@ import { useState } from 'react';
 import { AxiosError } from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import { createArticle } from '@/api/articles';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function CreateBoard() {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
@@ -32,6 +34,7 @@ export default function CreateBoard() {
 
       console.log('글 작성 성공:', response.data);
       router.push('/boards');
+      queryClient.invalidateQueries({ queryKey: ['generalPosts'] });
     } catch (error) {
       const axiosError = error as AxiosError;
       console.error('게시 실패:', axiosError.message);
