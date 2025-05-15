@@ -11,7 +11,6 @@ import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import { deleteArticle } from '@/api/articles';
 import { useQueryClient } from '@tanstack/react-query';
-import { QUERY_KEYS } from '@/constants/queryKeys';
 
 const sizeClass = {
   large: 'min-h-[176px] w-full',
@@ -38,7 +37,6 @@ export default function PostCard({
   writer,
 }: PostCardProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
 
   const router = useRouter();
   const queryClient = useQueryClient();

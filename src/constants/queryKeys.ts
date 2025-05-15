@@ -34,6 +34,10 @@ export const QUERY_KEYS = {
   articles: ['articles'],
   article: (articleId: string) => ['article', articleId],
   articleComments: (articleId: string) => ['article', articleId, 'comments'],
-  generalPosts: (keyword?: string) => ['generalPosts', keyword],
+  generalPosts: (keyword?: string, orderBy?: string) => [
+    'generalPosts',
+    keyword ?? '',
+    orderBy ?? 'recent',
+  ],
   bestPosts: (keyword?: string) => ['bestPosts', keyword],
 };

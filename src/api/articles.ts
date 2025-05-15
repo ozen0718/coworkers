@@ -1,14 +1,11 @@
 import axiosInstance from './axiosInstance';
 
 /* 자유게시판 - 일반 글 */
-export const fetchGeneral = (keyword?: string) => {
-  if (!keyword) {
-    return axiosInstance.get('/articles');
-  }
+export const fetchGeneral = (keyword?: string, orderBy?: string) => {
+  const params: Record<string, string> = {};
 
-  const params: Record<string, string> = {
-    keyword,
-  };
+  if (keyword) params.keyword = keyword;
+  if (orderBy) params.orderBy = orderBy;
 
   return axiosInstance.get('/articles', { params });
 };

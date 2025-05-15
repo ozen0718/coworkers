@@ -13,9 +13,21 @@ import { AxiosError, AxiosResponse } from 'axios';
 import { fetchBest, fetchGeneral } from '@/api/articles';
 import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/constants/queryKeys';
+import { useMemo } from 'react';
 
 export default function BoardPage() {
   const [selectedOption, setSelectedOption] = useState('최신순');
+  const getOrderByParam = (option: string) => {
+    switch (option) {
+      case '최신순':
+        return 'recent';
+      case '좋아요 많은 순':
+        return 'like';
+      default:
+        return 'recent';
+    }
+  };
+  const orderBy = useMemo(() => getOrderByParam(selectedOption), [selectedOption]);
 
   const windowWidth = useWindowSize();
   const [bestVisiblePosts, setBestVisiblePosts] = useState(1);
@@ -38,8 +50,8 @@ export default function BoardPage() {
     AxiosError,
     GeneralPostProps[]
   >({
-    queryKey: QUERY_KEYS.generalPosts(keyword),
-    queryFn: () => fetchGeneral(keyword),
+    queryKey: QUERY_KEYS.generalPosts(keyword, orderBy),
+    queryFn: () => fetchGeneral(keyword, orderBy),
     select: (response) => response.data.list,
     refetchOnMount: 'always',
   });
