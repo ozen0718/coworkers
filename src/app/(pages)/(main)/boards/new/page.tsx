@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { AxiosError } from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
-import { createArticle } from '@/app/api/articles';
+import { createArticle } from '@/api/articles';
 
 export default function CreateBoard() {
   const router = useRouter();

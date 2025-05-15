@@ -10,7 +10,7 @@ import Button from '@/components/common/Button/Button';
 import { useRouter } from 'next/navigation';
 import { BestPostProps, GeneralPostProps } from '@/components/Card/CardType';
 import { AxiosError, AxiosResponse } from 'axios';
-import { fetchBest, fetchGeneral } from '@/app/api/articles';
+import { fetchBest, fetchGeneral } from '@/api/articles';
 import { useQuery } from '@tanstack/react-query';
 
 export default function BoardPage() {

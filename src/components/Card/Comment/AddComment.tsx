@@ -3,7 +3,7 @@
 import { TextAreaInput } from '@/components/common/Inputs';
 import { AxiosError } from 'axios';
 import { useState } from 'react';
-import { createComment } from '@/app/api/articles';
+import { createComment } from '@/api/articles';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';

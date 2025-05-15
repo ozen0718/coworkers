@@ -2,7 +2,7 @@
 
 import { BestPost } from '@/components/Card/Post/BestPost';
 import { useState } from 'react';
-import { fetchBest } from '@/app/api/articles';
+import { fetchBest } from '@/api/articles';
 import { BestPostProps } from '@/components/Card/CardType';
 import { useQuery } from '@tanstack/react-query';
 

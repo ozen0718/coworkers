@@ -7,7 +7,7 @@ import Button from '@/components/common/Button/Button';
 import { TextAreaInput } from '@/components/common/Inputs';
 import clsx from 'clsx';
 import { BoardCommentProps } from '../CardType';
-import { deleteComment, editComment } from '@/app/api/articles';
+import { deleteComment, editComment } from '@/api/articles';
 import { AxiosError } from 'axios';
 import { useParams } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';

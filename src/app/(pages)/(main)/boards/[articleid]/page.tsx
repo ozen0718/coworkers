@@ -8,7 +8,7 @@ import BoardComment from '@/components/Card/Comment/BoardComment';
 import { AxiosError } from 'axios';
 import { useParams } from 'next/navigation';
 import { DetailComments } from '@/components/Card/CardType';
-import { deleteArticle, fetchArticle, fetchComment } from '@/app/api/articles';
+import { deleteArticle, fetchArticle, fetchComment } from '@/api/articles';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';

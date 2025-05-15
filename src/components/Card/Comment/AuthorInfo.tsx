@@ -5,7 +5,7 @@ import IconHeart from '@/assets/icons/IconHeart';
 import { AuthorInfoProps } from '../CardType';
 import { AxiosError } from 'axios';
 import { useAuthStore } from '@/stores/useAuthStore';
-import { addLike, deleteLike } from '@/app/api/articles';
+import { addLike, deleteLike } from '@/api/articles';
 import { useQuery } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 
