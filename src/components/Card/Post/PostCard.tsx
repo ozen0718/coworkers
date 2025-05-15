@@ -61,13 +61,6 @@ export default function PostCard({
     deleteMutate();
   };
 
-  /* 좋아요 여부 */
-  const { data: postData } = useQuery({
-    queryKey: ['article', id],
-    queryFn: () => fetchArticle(Number(id)),
-    enabled: !!id,
-  });
-
   const { mutate: deleteMutate } = useMutation({
     mutationFn: () => deleteArticle(Number(id)),
     onSuccess: () => {
@@ -79,6 +72,13 @@ export default function PostCard({
     },
   });
 
+  /* 좋아요 여부 */
+  const { data: postData } = useQuery({
+    queryKey: ['article', id],
+    queryFn: () => fetchArticle(Number(id)),
+    enabled: !!id,
+  });
+
   const [isLikedState, setIsLikedState] = useState<boolean>(postData?.data.isLiked ?? false);
   const [likeCountState, setLikeCountState] = useState<number>(likeCount ?? 0);
 
@@ -88,6 +88,34 @@ export default function PostCard({
 
     setIsLikedState(nextIsLiked);
     setLikeCountState(nextLikeCount);
+
+    // 1. 해당 게시글 상세 캐시 업데이트
+    queryClient.setQueryData(['article', id], (old: any) => {
+      if (!old) return old;
+      return {
+        ...old,
+        data: {
+          ...old.data,
+          isLiked: nextIsLiked,
+          likeCount: nextLikeCount,
+        },
+      };
+    });
+
+    // 2. 일반 게시글 목록 캐시 업데이트
+    queryClient.setQueriesData({ queryKey: ['generalPosts'] }, (old: any) => {
+      if (!old || !Array.isArray(old)) return old;
+      return old.map((post: any) =>
+        post.id === id ? { ...post, isLiked: nextIsLiked, likeCount: nextLikeCount } : post
+      );
+    });
+
+    queryClient.setQueriesData({ queryKey: ['bestPosts'] }, (old: any) => {
+      if (!old || !Array.isArray(old)) return old;
+      return old.map((post: any) =>
+        post.id === id ? { ...post, isLiked: nextIsLiked, likeCount: nextLikeCount } : post
+      );
+    });
   };
 
   useEffect(() => {
@@ -95,7 +123,7 @@ export default function PostCard({
       setIsLikedState(postData.data.isLiked);
       setLikeCountState(postData.data.likeCount);
     }
-  }, [postData]);
+  }, [postData?.data?.isLiked, postData?.data?.likeCount]);
 
   return (
     <div
