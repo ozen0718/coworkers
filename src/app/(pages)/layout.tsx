@@ -1,11 +1,23 @@
-'use client';
+import { fetchUser } from '@/api/user';
+import { QUERY_KEYS } from '@/constants/queryKeys';
+import { getQueryClient } from '@/lib/queryClient';
+import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 
-import { ReactNode } from 'react';
+export default async function Layout({ children }: { children: React.ReactNode }) {
+  const queryClient = getQueryClient();
 
-export default function Layout({ children }: { children: ReactNode }) {
+  await queryClient.prefetchQuery({
+    queryKey: QUERY_KEYS.user.me,
+    queryFn: fetchUser,
+  });
+
+  const dehydratedState = dehydrate(queryClient);
+
   return (
-    <main className="px-4 md:px-6">
-      <div className="mx-auto max-w-[1200px]">{children}</div>
-    </main>
+    <HydrationBoundary state={dehydratedState}>
+      <div className="px-4 md:px-6">
+        <div className="mx-auto max-w-[1200px]">{children}</div>
+      </div>
+    </HydrationBoundary>
   );
 }
