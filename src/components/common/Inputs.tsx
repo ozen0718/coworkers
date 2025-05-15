@@ -135,11 +135,13 @@ export function PasswordInput({
   );
 }
 
-export function CurrentName({ name }: CurrentNameProp) {
+export function CurrentName({ name, onClick }: CurrentNameProp) {
   return (
     <div className={`${CurrentValueStyle} flex items-center justify-between`}>
       <div>{name}</div>
-      <Button size="small">변경하기</Button>
+      <Button size="small" onClick={onClick}>
+        변경하기
+      </Button>
     </div>
   );
 }
