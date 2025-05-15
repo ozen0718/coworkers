@@ -14,17 +14,15 @@ interface AddCommentProps {
 export default function AddComment({ articleId, onSuccess }: AddCommentProps) {
   const [content, setContent] = useState('');
 
-  const token = useAuthStore((state) => state.accessToken);
-
   /* 댓글 작성 */
   const handleSubmit = async () => {
-    if (!articleId || !token) {
-      console.log('토큰이나 아이디 없음');
+    if (!articleId) {
+      console.log('아이디 없음');
       return;
     }
 
     try {
-      const response = await createComment(articleId, token, { content });
+      const response = await createComment(articleId, { content });
       console.log('댓글 작성 성공:', response.data);
       setContent('');
       onSuccess?.();

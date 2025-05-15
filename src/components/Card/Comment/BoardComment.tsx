@@ -45,7 +45,7 @@ export default function BoardComment({
     }
 
     try {
-      await deleteComment(commentId, token);
+      await deleteComment(commentId);
       console.log('댓글 삭제 성공');
       onChange?.();
     } catch (err) {
@@ -56,11 +56,11 @@ export default function BoardComment({
 
   /* 댓글 수정*/
   const handleEditComment = async () => {
-    if (!id || !token || !editedContent) {
+    if (!id || !editedContent) {
       return;
     }
     try {
-      await editComment(commentId, token, { content: editedContent });
+      await editComment(commentId, { content: editedContent });
       console.log('댓글 수정 성공');
       setIsEditing(false);
       onChange?.();

@@ -2,30 +2,25 @@
 import { TextAreaInput } from '@/components/common/Inputs';
 import ImgUpload from '@/components/Card/ImgUpload';
 import Button from '@/components/common/Button/Button';
-import { useAuthStore } from '@/stores/useAuthStore';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import axiosInstance from '@/app/api/axiosInstance';
+import { useState } from 'react';
 import { AxiosError } from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
+import { createArticle } from '@/app/api/articles';
 
 export default function CreateBoard() {
-  const token = useAuthStore((state) => state.accessToken);
   const router = useRouter();
 
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [image, setImage] = useState<string>('');
 
-  useEffect(() => {
-    console.log('token', token);
-  }, [token]);
-
   const handleSubmit = async () => {
     try {
-      const payload: Record<string, string> = {
+      const payload = {
         title,
         content,
+        ...(image && { image }),
       };
 
       if (title.trim() === '' || content.trim() === '') {
@@ -33,20 +28,7 @@ export default function CreateBoard() {
         return;
       }
 
-      if (!token) {
-        console.warn('토큰 없음');
-        return;
-      }
-
-      if (image) {
-        payload.image = image;
-      }
-
-      const response = await axiosInstance.post('/articles', payload, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await createArticle(payload);
 
       console.log('글 작성 성공:', response.data);
       router.push('/boards');

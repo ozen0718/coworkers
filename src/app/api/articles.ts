@@ -6,7 +6,7 @@ export const fetchGeneral = () => {
 };
 
 /* 자유게시판 - 베스트 글 */
-export const fetchBest = (token: string, keyword?: string) => {
+export const fetchBest = (keyword?: string) => {
   const params: Record<string, string> = {
     orderBy: 'like',
   };
@@ -16,9 +16,13 @@ export const fetchBest = (token: string, keyword?: string) => {
   }
 
   return axiosInstance.get('/articles', {
-    headers: { Authorization: `Bearer ${token}` },
     params,
   });
+};
+
+/* 자유게시판 - 게시글 작성 */
+export const createArticle = (payload: { title: string; content: string; image?: string }) => {
+  return axiosInstance.post('/articles', payload);
 };
 
 /* 상세 글 - 게시글 내용 */
@@ -37,14 +41,8 @@ export const fetchComment = (id: number) => {
 };
 
 /* 상세 글 - 좋아요 */
-export const addLike = (articleId: number, token: string) => {
-  return axiosInstance.post(
-    `/articles/${articleId}/like`,
-    {},
-    {
-      headers: { Authorization: `Bearer ${token}` },
-    }
-  );
+export const addLike = (articleId: number) => {
+  return axiosInstance.post(`/articles/${articleId}/like`, {});
 };
 
 /* 상세글 - 좋아요 취소 */
@@ -53,10 +51,8 @@ export const deleteLike = (articleId: number) => {
 };
 
 /* 댓글 - 댓글 작성 */
-export const createComment = (articleid: number, token: string, payload: { content: string }) => {
-  return axiosInstance.post(`/articles/${articleid}/comments`, payload, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const createComment = (articleid: number, payload: { content: string }) => {
+  return axiosInstance.post(`/articles/${articleid}/comments`, payload);
 };
 
 /* 댓글 - 댓글 삭제 */
@@ -65,8 +61,6 @@ export const deleteComment = (commentid: number) => {
 };
 
 /* 댓글 - 댓글 수정 */
-export const editComment = (commentid: number, token: string, payload: { content: string }) => {
-  return axiosInstance.patch(`/comments/${commentid}`, payload, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+export const editComment = (commentid: number, payload: { content: string }) => {
+  return axiosInstance.patch(`/comments/${commentid}`, payload);
 };

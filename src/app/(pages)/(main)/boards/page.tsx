@@ -8,10 +8,8 @@ import ArrowDropdown from '@/components/common/ArrowDropdown';
 import Link from 'next/link';
 import Button from '@/components/common/Button/Button';
 import { useRouter } from 'next/navigation';
-
 import { GeneralPostProps } from '@/components/Card/CardType';
 import { AxiosError } from 'axios';
-import { useAuthStore } from '@/stores/useAuthStore';
 import { fetchGeneral } from '@/app/api/articles';
 
 /* 테스트 데이터 */
@@ -24,18 +22,9 @@ export default function BoardPage() {
   const [bestVisiblePosts, setBestVisiblePosts] = useState(1);
 
   const [generalposts, setGeneralPosts] = useState<GeneralPostProps[]>([]);
-  const token = useAuthStore((state) => state.accessToken);
-  const initializeAuth = useAuthStore((state) => state.initializeAuth);
-
-  /* 테스트용*/
-  useEffect(() => {
-    initializeAuth();
-  });
 
   /* 일반 글 */
   useEffect(() => {
-    if (!token) return console.log('토큰 없음');
-
     const fetchPostData = async () => {
       try {
         const response = await fetchGeneral();
@@ -71,12 +60,6 @@ export default function BoardPage() {
   const filteredData = testPosts.filter((item) =>
     item.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  /*
-  const filteredData2 = generalposts.filter((item) =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  */
 
   /* 로딩 */
   const [hasMounted, setHasMounted] = useState(false);

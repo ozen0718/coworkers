@@ -18,7 +18,7 @@ export default function BoardPage() {
 
     const fetchPostData = async () => {
       try {
-        const response = await fetchBest(token, keyword);
+        const response = await fetchBest(keyword);
         const filteredPosts = response.data.list.filter(
           (post: BestPostProps) => post.likeCount && post.likeCount > 0
         );
