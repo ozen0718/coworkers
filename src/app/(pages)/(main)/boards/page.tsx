@@ -144,7 +144,7 @@ export default function BoardPage() {
               />
             </div>
 
-            <div className="scroll-area mt-10 grid h-[600px] grid-cols-1 justify-items-center gap-4 overflow-y-auto lg:grid-cols-2">
+            <div className="scroll-area mt-10 grid max-h-[600px] grid-cols-1 justify-items-center gap-4 overflow-y-auto lg:grid-cols-2">
               {generalPosts?.map((post) => <GeneralPost key={post.id} {...post} />)}
             </div>
 

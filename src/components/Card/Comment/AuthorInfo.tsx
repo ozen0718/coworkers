@@ -43,6 +43,8 @@ export default function AuthorInfo({
         await addLike(Number(articleId));
       }
       onLikeChanged?.();
+      queryClient.invalidateQueries({ queryKey: ['bestPosts'] });
+      queryClient.invalidateQueries({ queryKey: ['generalPosts'] });
     } catch (err) {
       const error = err as AxiosError;
       console.error('좋아요 요청 실패:', error);

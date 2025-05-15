@@ -9,8 +9,10 @@ import { PostCardProps } from '../CardType';
 import { useRouter } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import { deleteArticle } from '@/api/articles';
+import { deleteArticle, fetchArticle } from '@/api/articles';
 import { useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 const sizeClass = {
   large: 'min-h-[176px] w-full',
@@ -59,6 +61,13 @@ export default function PostCard({
     deleteMutate();
   };
 
+  /* 좋아요 여부 */
+  const { data: postData } = useQuery({
+    queryKey: ['article', id],
+    queryFn: () => fetchArticle(Number(id)),
+    enabled: !!id,
+  });
+
   const { mutate: deleteMutate } = useMutation({
     mutationFn: () => deleteArticle(Number(id)),
     onSuccess: () => {
@@ -69,6 +78,24 @@ export default function PostCard({
       console.error('게시글 삭제 에러:', err.response?.data);
     },
   });
+
+  const [isLikedState, setIsLikedState] = useState<boolean>(postData?.data.isLiked ?? false);
+  const [likeCountState, setLikeCountState] = useState<number>(likeCount ?? 0);
+
+  const handleLikeChanged = () => {
+    const nextIsLiked = !isLikedState;
+    const nextLikeCount = nextIsLiked ? likeCountState + 1 : likeCountState - 1;
+
+    setIsLikedState(nextIsLiked);
+    setLikeCountState(nextLikeCount);
+  };
+
+  useEffect(() => {
+    if (postData) {
+      setIsLikedState(postData.data.isLiked);
+      setLikeCountState(postData.data.likeCount);
+    }
+  }, [postData]);
 
   return (
     <div
@@ -164,8 +191,12 @@ export default function PostCard({
           showKebab={showKebab && size === 'small'}
           showDate={type === 'general' && size !== 'small' ? true : false}
           showDivider={type === 'general' && size !== 'small' ? true : false}
-          likeCount={likeCount}
+          likeCount={likeCountState}
           authorName={writer?.nickname}
+          date={date}
+          articleId={id}
+          isLiked={isLikedState}
+          onLikeChanged={handleLikeChanged}
         />
       </div>
     </div>

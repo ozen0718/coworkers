@@ -4,7 +4,7 @@ import PostCard from './PostCard';
 import { useWindowSize } from '@/hooks/useWindowSize';
 import { GeneralPostProps } from '../CardType';
 
-export function GeneralPost({ id, title, image, date }: GeneralPostProps) {
+export function GeneralPost({ id, title, image, createdAt, likeCount, writer }: GeneralPostProps) {
   const windowWidth = useWindowSize();
 
   let size: 'large' | 'medium' | 'small' = 'large';
@@ -19,9 +19,11 @@ export function GeneralPost({ id, title, image, date }: GeneralPostProps) {
         id={id}
         title={title}
         image={image}
-        date={date}
+        date={createdAt}
         showKebab={size === 'small'}
         topshowKebab={size !== 'small'}
+        writer={writer}
+        likeCount={likeCount}
       />
     </div>
   );

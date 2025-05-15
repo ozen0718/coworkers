@@ -71,6 +71,7 @@ export type BestPostProps = {
   image: string;
   createdAt?: string;
   likeCount?: number;
+  isLiked: boolean;
   writer?: {
     id: number;
     nickname: string;
@@ -82,7 +83,12 @@ export type GeneralPostProps = {
   id: number;
   title: string;
   image: string;
-  date: string;
+  createdAt?: string;
+  likeCount?: number;
+  writer?: {
+    id: number;
+    nickname: string;
+  };
 };
 
 export type PostDetail = {
