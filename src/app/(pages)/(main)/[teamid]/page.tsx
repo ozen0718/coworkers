@@ -62,7 +62,7 @@ export default function TeamPage() {
   };
 
   const { data: userData } = useCurrentUser();
-  const isAdmin = userData?.memberships?.[0]?.role === 'ADMIN';
+  const isAdmin = userData?.role === 'ADMIN';
 
   return (
     <div className="py-6">
