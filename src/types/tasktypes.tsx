@@ -5,6 +5,7 @@ export interface TaskListTapProps {
 
 export type TeamHeaderProp = {
   title: string;
+  showGear?: boolean;
 };
 
 export interface ProgressBadgeProps {

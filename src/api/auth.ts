@@ -1,4 +1,4 @@
-import axiosInstance from '@/app/api/axiosInstance';
+import axiosInstance from '@/api/axiosInstance';
 
 // 회원가입
 export interface SignupRequest {

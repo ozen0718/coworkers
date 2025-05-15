@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useUserStore } from '@/stores/useUserStore';
-import { getUserInfo } from '@/app/api/user';
+import { getUserInfo } from '@/api/user';
 
 export default function InitializeAuth() {
   const initializeAuth = useAuthStore((state) => state.initializeAuth);

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
-import { resetPassword, resetPasswordEmail } from '@/app/api/auth';
+import { resetPassword, resetPasswordEmail } from '@/api/auth';
 import { PasswordInput } from '@/components/common/Inputs';
 import Button from '@/components/common/Button/Button';
 import ResetPasswordRequestModal from '@/components/ResetPw';

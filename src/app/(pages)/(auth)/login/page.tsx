@@ -6,7 +6,7 @@ import OAuth from '@/components/oauth/index';
 import Button from '@/components/common/Button/Button';
 import Link from 'next/link';
 import { PageTitleStyle } from '@/styles/pageStyle';
-import { login } from '@/app/api/auth';
+import { login } from '@/api/auth';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/navigation';

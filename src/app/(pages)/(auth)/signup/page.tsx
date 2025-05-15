@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 
-import { signup } from '@/app/api/auth';
+import { signup } from '@/api/auth';
 import { EmailInput, PasswordInput, TextInput } from '@/components/common/Inputs';
 import OAuth from '@/components/oauth/index';
 import Button from '@/components/common/Button/Button';
