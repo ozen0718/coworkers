@@ -43,6 +43,14 @@ export const deleteArticle = (articleid: number) => {
   return axiosInstance.delete(`/articles/${articleid}`);
 };
 
+/* 상세 글 - 게시글 수정 */
+export const editArticle = (
+  articleid: number,
+  payload: { title: string; content: string; image: string | null }
+) => {
+  return axiosInstance.patch(`/articles/${articleid}`, payload);
+};
+
 /* 상세 글 - 댓글 내용 */
 export const fetchComment = (id: number) => {
   return axiosInstance.get(`/articles/${id}/comments?limit=30`);
@@ -56,6 +64,15 @@ export const addLike = (articleId: number) => {
 /* 상세글 - 좋아요 취소 */
 export const deleteLike = (articleId: number) => {
   return axiosInstance.delete(`/articles/${articleId}/like`);
+};
+
+/* 게시글 - 이미지 */
+export const uploadImage = (formData: FormData) => {
+  return axiosInstance.post('/images/upload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 };
 
 /* 댓글 - 댓글 작성 */

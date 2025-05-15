@@ -7,6 +7,10 @@ import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { fetchArticle } from '@/api/articles';
 import { useEffect } from 'react';
+import { editArticle } from '@/api/articles';
+import { useRouter } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function EditBoard() {
   const [title, setTitle] = useState('');
@@ -14,7 +18,25 @@ export default function EditBoard() {
   const [image, setImage] = useState<string>('');
   const params = useParams();
   const id = params?.articleid;
+  const queryClient = useQueryClient();
 
+  const router = useRouter();
+
+  /* 게시글 수정 */
+  const mutation = useMutation({
+    mutationFn: () =>
+      editArticle(Number(id), {
+        title,
+        content,
+        image: image.trim() === '' ? null : image,
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['article', id] });
+      router.push(`/boards/${id}`);
+    },
+  });
+
+  /* 게시글 */
   const { data: postData } = useQuery({
     queryKey: ['article', id],
     queryFn: () => fetchArticle(Number(id)),
@@ -35,7 +57,10 @@ export default function EditBoard() {
       <div className="flex items-center justify-between">
         <p className="text-xl-bold flex">게시글 수정</p>
         <div className="relative max-[620px]:hidden">
-          <button className="text-lg-semibold bg-primary hover:bg-primary-hover active:bg-primary-pressed max-[620px]:text-md-semibold flex h-12 w-[184px] items-center justify-center rounded-xl text-white max-[620px]:h-8 max-[620px]:w-[100px]">
+          <button
+            onClick={() => mutation.mutate()}
+            className="text-lg-semibold bg-primary hover:bg-primary-hover active:bg-primary-pressed max-[620px]:text-md-semibold flex h-12 w-[184px] items-center justify-center rounded-xl text-white max-[620px]:h-8 max-[620px]:w-[100px]"
+          >
             수정하기
           </button>
         </div>
@@ -77,7 +102,7 @@ export default function EditBoard() {
 
         {/* 모바일용 버튼 */}
         <div className="mt-10 flex justify-center min-[620px]:hidden">
-          <Button size="large" className="mb-10">
+          <Button size="large" className="mb-10" onClick={() => mutation.mutate()}>
             수정하기
           </Button>
         </div>

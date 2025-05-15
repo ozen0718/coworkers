@@ -3,8 +3,8 @@
 import IconPlus from '@/assets/icons/IconPlus';
 import IconDelete from '@/assets/icons/IconDelete';
 import { useState, useRef } from 'react';
-import axiosInstance from '@/api/axiosInstance';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { toast } from 'react-toastify';
+import { uploadImage } from '@/api/articles';
 
 interface ImgUploadProps {
   onImageUpload: (url: string) => void;
@@ -14,8 +14,6 @@ interface ImgUploadProps {
 export default function ImgUpload({ onImageUpload, previewUrl }: ImgUploadProps) {
   const [image, setImage] = useState<string | null>();
   const fileInput = useRef<HTMLInputElement>(null);
-
-  const token = useAuthStore((state) => state.accessToken);
 
   /* 이미지 삭제 */
   const handleDeleteImage = () => {
@@ -70,27 +68,20 @@ export default function ImgUpload({ onImageUpload, previewUrl }: ImgUploadProps)
 
           // 10MB 초과 검사
           if (file.size > 10 * 1024 * 1024) {
-            alert('10MB 이하의 이미지만 업로드 가능합니다.');
+            toast.error('10MB 이하의 이미지만 업로드 가능합니다.');
             e.target.value = ''; // 파일 선택 초기화
             return;
           }
 
-          // 1. 업로드 전, 임시 미리보기 보여주기
+          // 업로드 전, 임시 미리보기 보여주기
           const tempUrl = URL.createObjectURL(file);
           setImage(tempUrl);
 
-          // 2. 서버로 업로드
           const formData = new FormData();
           formData.append('image', file);
 
           try {
-            const response = await axiosInstance.post('/images/upload', formData, {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-                Authorization: `Bearer ${token}`,
-              },
-            });
-
+            const response = await uploadImage(formData);
             const uploadedUrl = response.data.url;
             setImage(uploadedUrl);
             onImageUpload(uploadedUrl); // 부모 전달
