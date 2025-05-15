@@ -5,37 +5,34 @@ import PostDropdown from '@/components/Card/Post/PostDropdown';
 import AuthorInfo from '@/components/Card/Comment/AuthorInfo';
 import AddComment from '@/components/Card/Comment/AddComment';
 import BoardComment from '@/components/Card/Comment/BoardComment';
-import { useEffect } from 'react';
 import { AxiosError } from 'axios';
 import { useParams } from 'next/navigation';
-import { PostDetail } from '@/components/Card/CardType';
 import { DetailComments } from '@/components/Card/CardType';
 import { deleteArticle, fetchArticle, fetchComment } from '@/app/api/articles';
 import { useRouter } from 'next/navigation';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { useQuery } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 export default function ArticleDetail() {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const router = useRouter();
   const params = useParams();
   const id = params?.articleid;
-  const token = useAuthStore((state) => state.accessToken);
-  const [detailPost, setPostDetail] = useState<PostDetail>({
-    title: '',
-    content: '',
-  });
-  const [comments, setComments] = useState<DetailComments[]>([]);
+
+  const queryClient = useQueryClient();
+
+  const handleArticleChanged = () => {
+    queryClient.invalidateQueries({ queryKey: ['article', id] });
+  };
+
+  const handleCommentChanged = () => {
+    queryClient.invalidateQueries({ queryKey: ['comments', id] });
+  };
 
   const toggleDropdown = () => {
     setIsDropDownOpen((prev) => !prev);
   };
-
-  useEffect(() => {
-    if (!id) return;
-
-    fetchPostData();
-    fetchComments();
-  }, [id]);
 
   /* 게시글 수정 */
   const handleEdit = () => {
@@ -44,44 +41,33 @@ export default function ArticleDetail() {
 
   /* 게시글 삭제 */
   const handleDelete = async () => {
-    if (!id || !token) {
-      console.log('토큰이나 아이디 없음');
-      return;
-    }
-
-    try {
-      await deleteArticle(Number(id));
-      console.log('댓글 삭제 성공');
-      router.push('/boards');
-    } catch (err) {
-      const error = err as AxiosError;
-      console.error('댓글 삭제 에러:', error.response?.data);
-    }
+    deleteMutate();
   };
+
+  const { mutate: deleteMutate } = useMutation({
+    mutationFn: () => deleteArticle(Number(id)),
+    onSuccess: () => {
+      console.log('게시글 삭제 성공');
+      router.push('/boards');
+    },
+    onError: (err: AxiosError) => {
+      console.error('게시글 삭제 에러:', err.response?.data);
+    },
+  });
 
   /* 게시글 */
-  const fetchPostData = async () => {
-    if (!token) return;
-    try {
-      const response = await fetchArticle(Number(id));
-      setPostDetail(response.data);
-    } catch (err) {
-      const error = err as AxiosError;
-      console.error('글 불러오기 에러:', error.response?.data);
-    }
-  };
+  const { data: postData } = useQuery({
+    queryKey: ['article', id],
+    queryFn: () => fetchArticle(Number(id)),
+    enabled: !!id,
+  });
 
   /* 댓글 */
-  const fetchComments = async () => {
-    if (!token) return;
-    try {
-      const response = await fetchComment(Number(id));
-      setComments(response.data.list);
-    } catch (err) {
-      const error = err as AxiosError;
-      console.error('댓글 불러오기 에러:', error.response?.data);
-    }
-  };
+  const { data: commentData } = useQuery({
+    queryKey: ['comments', id],
+    queryFn: () => fetchComment(Number(id)),
+    enabled: !!id,
+  });
 
   return (
     <div className="text-gray300 my-16 flex flex-col md:my-20">
@@ -89,7 +75,7 @@ export default function ArticleDetail() {
       <div className="max-h-[128px] flex-col">
         {/* 타이틀 영역 */}
         <div className="flex items-center justify-between">
-          <p className="text-2lg-medium flex font-bold">{detailPost.title}</p>
+          <p className="text-2lg-medium flex font-bold">{postData?.data.title}</p>
 
           {/* 케밥 아이콘 + 드롭다운 */}
           <div className="relative">
@@ -125,23 +111,23 @@ export default function ArticleDetail() {
           showDate={true}
           showKebab={false}
           showComment={true}
-          authorName={detailPost.writer?.nickname}
-          date={detailPost.createdAt}
-          commentCount={detailPost.commentCount}
-          likeCount={detailPost.likeCount}
-          isLiked={detailPost.isLiked}
-          articleId={detailPost.id}
-          onLikeChanged={fetchPostData}
+          authorName={postData?.data.writer?.nickname}
+          date={postData?.data.createdAt}
+          commentCount={postData?.data.commentCount}
+          likeCount={postData?.data.likeCount}
+          isLiked={postData?.data.isLiked}
+          articleId={postData?.data.id}
+          onLikeChanged={handleArticleChanged}
         />
       </div>
 
       {/*본문 */}
       <div className="scroll-area mt-10 flex h-[72px] w-full justify-between overflow-y-auto font-normal whitespace-pre-line sm:h-[104px]">
-        {detailPost.content}
-        {detailPost.image ? (
+        {postData?.data.content}
+        {postData?.data.image ? (
           <Image
             className="aspect-square min-w-[104px] rounded-lg object-cover"
-            src={detailPost.image}
+            src={postData?.data.image}
             alt="게시글 이미지"
             width={104}
             height={104}
@@ -157,8 +143,8 @@ export default function ArticleDetail() {
         <AddComment
           articleId={Number(id)}
           onSuccess={() => {
-            fetchComments();
-            fetchPostData();
+            handleCommentChanged();
+            handleArticleChanged();
           }}
         />
       </div>
@@ -167,8 +153,8 @@ export default function ArticleDetail() {
 
       {/* 댓글 */}
       <div className="scroll-area mt-10 flex h-[350px] flex-col gap-4 overflow-y-auto whitespace-pre-line">
-        {comments?.length > 0 ? (
-          comments.map((comment) => (
+        {commentData?.data.list?.length > 0 ? (
+          commentData?.data.list.map((comment: DetailComments) => (
             <BoardComment
               key={comment.id}
               commentId={comment.id}
@@ -177,8 +163,8 @@ export default function ArticleDetail() {
               content={comment.content}
               date={comment.createdAt}
               onChange={() => {
-                fetchComments();
-                fetchPostData();
+                handleCommentChanged();
+                handleArticleChanged();
               }}
             />
           ))
