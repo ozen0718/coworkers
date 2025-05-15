@@ -12,6 +12,7 @@ import { BestPostProps, GeneralPostProps } from '@/components/Card/CardType';
 import { AxiosError, AxiosResponse } from 'axios';
 import { fetchBest, fetchGeneral } from '@/api/articles';
 import { useQuery } from '@tanstack/react-query';
+import { QUERY_KEYS } from '@/constants/queryKeys';
 
 export default function BoardPage() {
   const [selectedOption, setSelectedOption] = useState('최신순');
@@ -37,7 +38,7 @@ export default function BoardPage() {
     AxiosError,
     GeneralPostProps[]
   >({
-    queryKey: ['generalPosts', keyword],
+    queryKey: QUERY_KEYS.generalPosts(keyword),
     queryFn: () => fetchGeneral(keyword),
     select: (response) => response.data.list,
   });
@@ -48,7 +49,7 @@ export default function BoardPage() {
     AxiosError,
     BestPostProps[]
   >({
-    queryKey: ['bestPosts', keyword],
+    queryKey: QUERY_KEYS.bestPosts(keyword),
     queryFn: () => fetchBest(keyword),
     select: (response) => response.data.list,
   });

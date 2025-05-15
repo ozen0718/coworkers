@@ -3,9 +3,31 @@ import { TextAreaInput } from '@/components/common/Inputs';
 import ImgUpload from '@/components/Card/ImgUpload';
 import Button from '@/components/common/Button/Button';
 import { useState } from 'react';
+import { useParams } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import { fetchArticle } from '@/api/articles';
+import { useEffect } from 'react';
 
 export default function EditBoard() {
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
   const [image, setImage] = useState<string>('');
+  const params = useParams();
+  const id = params?.articleid;
+
+  const { data: postData } = useQuery({
+    queryKey: ['article', id],
+    queryFn: () => fetchArticle(Number(id)),
+    enabled: !!id,
+  });
+
+  useEffect(() => {
+    if (postData) {
+      setTitle(postData.data.title);
+      setContent(postData.data.content);
+      setImage(postData.data.image || '');
+    }
+  }, [postData]);
 
   return (
     <div className="mt-10 max-h-[841px] md:my-14">
@@ -30,6 +52,8 @@ export default function EditBoard() {
           <input
             type="text"
             placeholder="제목을 입력해주세요."
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
             className="bg-bg200 border-gray100/10 focus:border-primary hover:border-primary-hover text-4 text-lg-regular placeholder:text-gray500 h-[48px] w-full resize-none rounded-xl border px-4 py-3 focus:outline-none"
           />
         </div>
@@ -38,12 +62,17 @@ export default function EditBoard() {
           <p>
             <span className="text-tertiary mr-2">*</span>내용{' '}
           </p>
-          <TextAreaInput placeholder="내용을 입력해주세요" height="h-[204px]" />
+          <TextAreaInput
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            placeholder="내용을 입력해주세요"
+            height="h-[204px]"
+          />
         </div>
 
         <div className="mt-10 flex flex-col gap-4">
           <p>이미지</p>
-          <ImgUpload onImageUpload={(url) => setImage(url)} />
+          <ImgUpload onImageUpload={(url) => setImage(url)} previewUrl={image} />
         </div>
 
         {/* 모바일용 버튼 */}

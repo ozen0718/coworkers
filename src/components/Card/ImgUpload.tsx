@@ -3,10 +3,15 @@
 import IconPlus from '@/assets/icons/IconPlus';
 import IconDelete from '@/assets/icons/IconDelete';
 import { useState, useRef } from 'react';
-import axiosInstance from '@/app/api/axiosInstance';
+import axiosInstance from '@/api/axiosInstance';
 import { useAuthStore } from '@/stores/useAuthStore';
 
-export default function ImgUpload({ onImageUpload }: { onImageUpload: (url: string) => void }) {
+interface ImgUploadProps {
+  onImageUpload: (url: string) => void;
+  previewUrl?: string;
+}
+
+export default function ImgUpload({ onImageUpload, previewUrl }: ImgUploadProps) {
   const [image, setImage] = useState<string | null>();
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -21,14 +26,20 @@ export default function ImgUpload({ onImageUpload }: { onImageUpload: (url: stri
     onImageUpload('');
   };
 
+  const displayedImage = image || previewUrl || undefined;
+
   return (
     <div
       className="bg-bg200 relative flex aspect-square max-h-[282px] w-full max-w-[282px] cursor-pointer items-center justify-center overflow-hidden rounded-xl border border-[#F8FAFC1A]"
       onClick={() => fileInput.current?.click()}
     >
-      {image ? (
+      {displayedImage ? (
         <div className="aspect-square w-full">
-          <img src={image} alt="업로드 이미지" className="h-full w-full object-cover opacity-50" />
+          <img
+            src={displayedImage}
+            alt="업로드 이미지"
+            className="h-full w-full object-cover opacity-50"
+          />
           <IconDelete
             width={40}
             height={40}

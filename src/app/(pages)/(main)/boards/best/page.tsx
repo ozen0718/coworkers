@@ -5,13 +5,14 @@ import { useState } from 'react';
 import { fetchBest } from '@/api/articles';
 import { BestPostProps } from '@/components/Card/CardType';
 import { useQuery } from '@tanstack/react-query';
+import { QUERY_KEYS } from '@/constants/queryKeys';
 
 export default function BoardPage() {
   const [keyword, setKeyword] = useState('');
 
   /* 베스트 글 */
   const { data: bestPosts } = useQuery({
-    queryKey: ['bestPosts', keyword],
+    queryKey: QUERY_KEYS.bestPosts(keyword),
     queryFn: () => fetchBest(keyword),
     select: (response) =>
       response.data.list.filter((post: BestPostProps) => post.likeCount && post.likeCount > 0),
