@@ -5,7 +5,7 @@ import { TeamHeaderProp } from '@/types/tasktypes';
 import ActionMenu from '@/components/common/ActionMenu';
 import { useParams, useRouter } from 'next/navigation';
 
-export default function TeamHeader({ title }: TeamHeaderProp) {
+export default function TeamHeader({ title, showGear }: TeamHeaderProp) {
   const router = useRouter();
   const params = useParams();
   const teamid = params.teamId as string;
@@ -17,11 +17,13 @@ export default function TeamHeader({ title }: TeamHeaderProp) {
     >
       <h2 className="text-xl-bold">{title}</h2>
 
-      <ActionMenu
-        trigger={<Image src="/icons/gear.svg" width={24} height={24} alt="팀 설정" />}
-        onEdit={() => router.push(`/${teamid}/edit`)}
-        onDelete={() => console.log('삭제하기')}
-      />
+      {showGear && (
+        <ActionMenu
+          trigger={<Image src="/icons/gear.svg" width={24} height={24} alt="팀 설정" />}
+          onEdit={() => router.push(`/${teamid}/edit`)}
+          onDelete={() => console.log('삭제하기')}
+        />
+      )}
     </div>
   );
 }
