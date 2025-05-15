@@ -1,4 +1,4 @@
-export interface Membership {
+export interface UserInfo {
   role: 'ADMIN' | 'MEMBER';
   group: {
     teamId: string;
@@ -6,5 +6,5 @@ export interface Membership {
 }
 
 export interface UserResponse {
-  memberships: Membership[];
+  memberships: UserInfo[];
 }
