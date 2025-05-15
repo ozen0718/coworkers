@@ -7,31 +7,7 @@ import SideMenu from './SideMenu';
 import TeamSelector from './TeamSelector';
 import ProfileDropdown from './ProfileSelector';
 import { useHeader } from './HeaderContext';
-
-const USER_DATA = {
-  name: '안혜나',
-  teams: [
-    {
-      id: 1,
-      name: '경영관리팀',
-      image: '/img_team.png',
-      teamId: 'team-1',
-      updatedAt: '',
-      createdAt: '',
-    },
-    {
-      id: 2,
-      name: '프로젝트팀',
-      image: '/img_team.png',
-      teamId: 'team-2',
-      updatedAt: '',
-      createdAt: '',
-    },
-  ],
-};
-
-const userName = USER_DATA.name;
-const selectedTeam = USER_DATA.teams[0]?.name || '';
+import { useUserStore } from '@/stores/useUserStore';
 
 interface HeaderProps {
   onOpenSideMenu: () => void;
@@ -39,6 +15,8 @@ interface HeaderProps {
 
 export default function Header({ onOpenSideMenu }: HeaderProps) {
   const { showTeamSelector, showFreeBoardLink, showProfile } = useHeader();
+  const { teams, nickname } = useUserStore();
+  const selectedTeam = teams[0]?.name ?? '팀 없음';
 
   return (
     <header className="bg-bg200 border-border sticky top-0 z-50 flex h-15 w-full justify-center border-b-1 py-[14px]">
@@ -54,7 +32,7 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
           <div className="text-lg-md hidden items-center gap-8 md:flex lg:gap-10">
             {showTeamSelector && (
               <div className="relative">
-                <TeamSelector teams={USER_DATA.teams} defaultTeamName={selectedTeam} />
+                <TeamSelector />
               </div>
             )}
 
@@ -66,12 +44,10 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
           </div>
         </div>
 
-        <div className="relative ml-auto">
-          {showProfile && <ProfileDropdown userName={userName} />}
-        </div>
+        <div className="relative ml-auto">{showProfile && <ProfileDropdown />}</div>
       </div>
 
-      <SideMenu teams={USER_DATA.teams} isOpen={false} onClose={() => {}} />
+      <SideMenu isOpen={false} onClose={() => {}} />
     </header>
   );
 }
