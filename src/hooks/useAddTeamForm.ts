@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { uploadImage, createTeam } from '@/api/TeamCreate';
+import { createTeam } from '@/api/TeamCreate';
 
 export function useAddTeamForm() {
   const router = useRouter();
@@ -41,36 +41,28 @@ export function useAddTeamForm() {
   };
 
   const onFileChange = async (file: File | null, err: string | null) => {
-    setFileError(null);
+    setFileError(err);
+
     if (err) {
-      setFileError(err);
+      setPreviewUrl(null);
+      setUploadedUrl(null);
+      setIsLoading(false);
       return;
     }
+
+    if (!file && uploadedUrl) {
+      return;
+    }
+
     if (!file) {
       setPreviewUrl(null);
       setUploadedUrl(null);
-      return;
-    }
-    if (!['image/jpeg', 'image/png'].includes(file.type)) {
-      setFileError('JPG/PNG만 업로드 가능합니다.');
-      return;
-    }
-    if (file.size > MAX_SIZE) {
-      setFileError('10MB 이하만 가능합니다.');
+      setIsLoading(false);
       return;
     }
 
     setPreviewUrl(URL.createObjectURL(file));
-    setIsLoading(true);
-    try {
-      const url = await uploadImage(file);
-      setUploadedUrl(url);
-    } catch {
-      setFileError('업로드 중 오류가 발생했습니다.');
-      setUploadedUrl(null);
-    } finally {
-      setIsLoading(false);
-    }
+    setIsLoading(false);
   };
 
   const onCreate = async () => {
@@ -84,7 +76,7 @@ export function useAddTeamForm() {
     setIsLoading(true);
     try {
       const { id } = await createTeam(name, uploadedUrl ?? undefined);
-      router.push(`/main/${id}`);
+      router.push(`${id}`);
     } catch (err: unknown) {
       if (err instanceof Error) {
         if (err.message === 'DUPLICATE_NAME') {
