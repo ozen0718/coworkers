@@ -6,6 +6,8 @@ import { AuthorInfoProps } from '../CardType';
 import { AxiosError } from 'axios';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { addLike, deleteLike } from '@/app/api/articles';
+import { useQuery } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function AuthorInfo({
   type,
@@ -25,6 +27,7 @@ export default function AuthorInfo({
   const dateOnly = date.split('T')[0];
 
   const token = useAuthStore((state) => state.accessToken);
+  const queryClient = useQueryClient();
 
   /* 좋아요 */
   const handleLike = async () => {
@@ -35,9 +38,9 @@ export default function AuthorInfo({
 
     try {
       if (isLiked) {
-        await deleteLike(Number(articleId), token);
+        await deleteLike(Number(articleId));
       } else {
-        await addLike(Number(articleId), token);
+        await addLike(Number(articleId));
       }
       onLikeChanged?.();
     } catch (err) {

@@ -7,10 +7,11 @@ import Button from '@/components/common/Button/Button';
 import { TextAreaInput } from '@/components/common/Inputs';
 import clsx from 'clsx';
 import { BoardCommentProps } from '../CardType';
-import { deleteComment, editComment, fetchComment } from '@/app/api/articles';
+import { deleteComment, editComment } from '@/app/api/articles';
 import { AxiosError } from 'axios';
 import { useParams } from 'next/navigation';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { useMutation } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function BoardComment({
   commentId,
@@ -24,8 +25,9 @@ export default function BoardComment({
   const [isEditing, setIsEditing] = useState(false);
   const params = useParams();
   const id = params?.articleid;
-  const token = useAuthStore((state) => state.accessToken);
   const [editedContent, setEditedContent] = useState(content);
+
+  const queryClient = useQueryClient();
 
   const toggleDropdown = () => {
     setIsDropDownOpen((prev) => !prev);
@@ -39,20 +41,24 @@ export default function BoardComment({
 
   /* 댓글 삭제 */
   const handleDelete = async () => {
-    if (!id || !token) {
-      console.log('토큰이나 아이디 없음');
+    if (!id) {
+      console.log('아이디 없음');
       return;
     }
+    deleteMutation.mutate();
+  };
 
-    try {
-      await deleteComment(commentId);
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteComment(commentId),
+    onSuccess: () => {
       console.log('댓글 삭제 성공');
       onChange?.();
-    } catch (err) {
-      const error = err as AxiosError;
-      console.error('댓글 삭제 에러:', error.response?.data);
-    }
-  };
+      queryClient.invalidateQueries({ queryKey: ['comments', id] });
+    },
+    onError: (err: AxiosError) => {
+      console.error('댓글 삭제 실패:', err.response?.data);
+    },
+  });
 
   /* 댓글 수정*/
   const handleEditComment = async () => {

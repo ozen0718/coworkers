@@ -1,36 +1,22 @@
 'use client';
 
 import { BestPost } from '@/components/Card/Post/BestPost';
-import { useEffect, useState } from 'react';
-import { useAuthStore } from '@/stores/useAuthStore';
-import { AxiosError } from 'axios';
+import { useState } from 'react';
 import { fetchBest } from '@/app/api/articles';
 import { BestPostProps } from '@/components/Card/CardType';
+import { useQuery } from '@tanstack/react-query';
 
 export default function BoardPage() {
   const [keyword, setKeyword] = useState('');
-  const token = useAuthStore((state) => state.accessToken);
-  const [bestposts, setBestPosts] = useState<BestPostProps[]>([]);
 
   /* 베스트 글 */
-  useEffect(() => {
-    if (!token) return console.log('토큰 없음');
+  const { data: bestPosts } = useQuery({
+    queryKey: ['bestPosts', keyword],
+    queryFn: () => fetchBest(keyword),
+    select: (response) =>
+      response.data.list.filter((post: BestPostProps) => post.likeCount && post.likeCount > 0),
+  });
 
-    const fetchPostData = async () => {
-      try {
-        const response = await fetchBest(keyword);
-        const filteredPosts = response.data.list.filter(
-          (post: BestPostProps) => post.likeCount && post.likeCount > 0
-        );
-        setBestPosts(filteredPosts);
-      } catch (err) {
-        const error = err as AxiosError;
-        console.error('글 불러오기 에러:', error.response?.data);
-      }
-    };
-
-    fetchPostData();
-  }, [token, keyword]);
   return (
     <div className="my-10">
       <p className="font-bold sm:text-2xl">베스트 게시글</p>
@@ -50,7 +36,7 @@ export default function BoardPage() {
         />
       </div>
 
-      {bestposts.length === 0 ? (
+      {bestPosts && bestPosts.length === 0 ? (
         <div className="text-gray400 flex h-[300px] w-full items-center justify-center text-lg">
           검색하신 게시글이 없습니다.
         </div>
@@ -63,9 +49,7 @@ export default function BoardPage() {
             </div>
 
             <div className="mt-6 grid w-full gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {bestposts.map((post) => (
-                <BestPost key={post.id} {...post} />
-              ))}
+              {bestPosts?.map((post: BestPostProps) => <BestPost key={post.id} {...post} />)}
             </div>
           </div>
         </>

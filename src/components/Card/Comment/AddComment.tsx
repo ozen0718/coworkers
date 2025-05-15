@@ -4,7 +4,9 @@ import { TextAreaInput } from '@/components/common/Inputs';
 import { AxiosError } from 'axios';
 import { useState } from 'react';
 import { createComment } from '@/app/api/articles';
-import { useAuthStore } from '@/stores/useAuthStore';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
 interface AddCommentProps {
   articleId: number;
@@ -20,20 +22,29 @@ export default function AddComment({ articleId, onSuccess }: AddCommentProps) {
       console.log('아이디 없음');
       return;
     }
+    if (!content.trim()) {
+      console.log('내용 없음');
+      toast.error('댓글 내용이 없습니다');
+      return;
+    }
+    mutation.mutate(content);
+  };
 
-    try {
-      const response = await createComment(articleId, { content });
-      console.log('댓글 작성 성공:', response.data);
+  const mutation = useMutation({
+    mutationFn: (content: string) => createComment(articleId, { content }),
+    onSuccess: () => {
+      console.log('댓글 작성 성공');
       setContent('');
       onSuccess?.();
-    } catch (error) {
-      const axiosError = error as AxiosError;
-      console.error('댓글 작성 실패', axiosError.message);
-    }
-  };
+    },
+    onError: (error: AxiosError) => {
+      console.error('댓글 작성 실패', error.message);
+    },
+  });
 
   return (
     <div className="flex min-h-[113px] w-full max-w-[1200px] flex-col bg-transparent lg:h-[216px]">
+      <ToastContainer />
       <div className="mr-0.5 flex w-full items-start justify-between text-base font-bold sm:text-xl sm:font-medium">
         댓글달기
       </div>
