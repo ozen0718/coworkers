@@ -1,12 +1,25 @@
+'use client';
+
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import DropDown from '@/components/dropdown/BaseDropdown';
 import DropDownProfileItemList from '@/components/dropdown/ProfileItemList';
+import { useUserStore } from '@/stores/useUserStore';
+import { useAuthStore } from '@/stores/useAuthStore';
 
-interface Props {
-  userName: string;
-}
+export default function ProfileDropdown() {
+  const { nickname } = useUserStore();
+  const { logout } = useAuthStore();
+  const router = useRouter();
 
-export default function ProfileDropdown({ userName }: Props) {
+  const handleSelect = (e: React.MouseEvent<HTMLDivElement>) => {
+    const selected = e.currentTarget.textContent?.trim();
+    if (selected === '로그아웃') {
+      logout();
+      router.push('/');
+    }
+  };
+
   return (
     <DropDown
       size="lg"
@@ -14,11 +27,13 @@ export default function ProfileDropdown({ userName }: Props) {
       dropDownOpenBtn={
         <button className="flex items-center gap-2">
           <Image src="/icons/profile.svg" alt="유저 아이콘" width={24} height={24} />
-          <span className="text-md-md hidden lg:inline">{userName}</span>
+          <span className="text-md-md hidden lg:inline">
+            {nickname ?? '...'} {/* fallback 처리 */}
+          </span>
         </button>
       }
       options={DropDownProfileItemList}
-      onSelect={() => {}}
+      onSelect={handleSelect}
     />
   );
 }

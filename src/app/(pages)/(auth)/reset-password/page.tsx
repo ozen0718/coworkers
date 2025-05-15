@@ -19,7 +19,6 @@ export default function ResetPasswordPage() {
   const router = useRouter();
 
   useEffect(() => {
-    console.log('현재 토큰:', token);
     setShowModal(!token);
   }, [token]);
 
