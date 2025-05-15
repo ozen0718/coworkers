@@ -8,9 +8,10 @@ import ArrowDropdown from '@/components/common/ArrowDropdown';
 import Link from 'next/link';
 import Button from '@/components/common/Button/Button';
 import { useRouter } from 'next/navigation';
-import { GeneralPostProps } from '@/components/Card/CardType';
-import { AxiosError } from 'axios';
-import { fetchGeneral } from '@/app/api/articles';
+import { BestPostProps, GeneralPostProps } from '@/components/Card/CardType';
+import { AxiosError, AxiosResponse } from 'axios';
+import { fetchBest, fetchGeneral } from '@/app/api/articles';
+import { useQuery } from '@tanstack/react-query';
 
 /* 테스트 데이터 */
 import { testPosts } from '@/components/Card/testPosts';
@@ -23,21 +24,6 @@ export default function BoardPage() {
 
   const [generalposts, setGeneralPosts] = useState<GeneralPostProps[]>([]);
 
-  /* 일반 글 */
-  useEffect(() => {
-    const fetchPostData = async () => {
-      try {
-        const response = await fetchGeneral();
-        setGeneralPosts(response.data.list);
-      } catch (err) {
-        const error = err as AxiosError;
-        console.error('글 불러오기 에러:', error.response?.data);
-      }
-    };
-
-    fetchPostData();
-  }, []);
-
   useEffect(() => {
     if (windowWidth >= 1024) {
       setBestVisiblePosts(3);
@@ -47,6 +33,30 @@ export default function BoardPage() {
       setBestVisiblePosts(1);
     }
   }, [windowWidth]);
+
+  /* 일반 글 */
+
+  const { data: generalPosts } = useQuery<
+    AxiosResponse<{ list: GeneralPostProps[] }>,
+    AxiosError,
+    GeneralPostProps[]
+  >({
+    queryKey: ['generalPosts'],
+    queryFn: fetchGeneral,
+    select: (response) => response.data.list,
+  });
+
+  /* 베스트 글 */
+
+  const { data: bestPosts } = useQuery<
+    AxiosResponse<{ list: BestPostProps[] }>,
+    AxiosError,
+    BestPostProps[]
+  >({
+    queryKey: ['bestPosts'],
+    queryFn: () => fetchBest(),
+    select: (response) => response.data.list,
+  });
 
   /* 글 쓰기 이동 */
   const router = useRouter();
@@ -112,9 +122,9 @@ export default function BoardPage() {
               </Link>
             </div>
             <div className="mt-15 flex w-full justify-center gap-4">
-              {filteredData.slice(0, bestVisiblePosts).map((post) => (
-                <BestPost key={post.id} {...post} />
-              ))}
+              {bestPosts
+                ?.slice(0, bestVisiblePosts)
+                .map((post) => <BestPost key={post.id} {...post} />)}
             </div>
           </div>
 
@@ -132,9 +142,7 @@ export default function BoardPage() {
             </div>
 
             <div className="scroll-area mt-10 grid h-[600px] grid-cols-1 justify-items-center gap-4 overflow-y-auto lg:grid-cols-2">
-              {generalposts.map((post) => (
-                <GeneralPost key={post.id} {...post} />
-              ))}
+              {generalPosts?.map((post) => <GeneralPost key={post.id} {...post} />)}
             </div>
 
             <div onClick={gotoNewBoard}>
