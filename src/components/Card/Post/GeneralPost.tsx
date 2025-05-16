@@ -2,45 +2,28 @@
 
 import PostCard from './PostCard';
 import { useWindowSize } from '@/hooks/useWindowSize';
-import { useRouter } from 'next/navigation';
+import { GeneralPostProps } from '../CardType';
 
-/**
- * title="자유게시판에 질문을 올릴 수 있어요. 질문을 올려볼까요? 말줄임표 테스트 되는지 볼까요?"
- *  imgUrl="https://sprint-fe-project.s3.ap-northeast-2.amazonaws.com/Coworkers/user/1855/testimage.jpg"
- * date="2024.07.25"
- *  showKebab={size == 'small'}
- * topshowKebab={size !== 'small'}
- */
-
-type GeneralPostProps = {
-  id: number;
-  title: string;
-  imgUrl: string;
-  date: string;
-};
-
-export function GeneralPost({ id, title, imgUrl, date }: GeneralPostProps) {
+export function GeneralPost({ id, title, image, createdAt, likeCount, writer }: GeneralPostProps) {
   const windowWidth = useWindowSize();
-  const router = useRouter();
 
   let size: 'large' | 'medium' | 'small' = 'large';
   if (windowWidth <= 375) size = 'small';
   else if (windowWidth <= 744) size = 'medium';
 
-  const handleClick = () => {
-    router.push(`/boards/${id}`);
-  };
-
   return (
-    <div onClick={handleClick} className="w-full cursor-pointer">
+    <div className="w-full">
       <PostCard
         type="general"
         size={size}
+        id={id}
         title={title}
-        imgUrl={imgUrl}
-        date={date}
+        image={image}
+        date={createdAt}
         showKebab={size === 'small'}
         topshowKebab={size !== 'small'}
+        writer={writer}
+        likeCount={likeCount}
       />
     </div>
   );

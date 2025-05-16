@@ -37,7 +37,7 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
             )}
 
             {showFreeBoardLink && (
-              <Link href="/articles" className="mt-0 cursor-pointer">
+              <Link href="/boards" className="mt-0 cursor-pointer">
                 자유게시판
               </Link>
             )}

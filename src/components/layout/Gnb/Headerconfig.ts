@@ -16,6 +16,11 @@ const STATIC_HEADER_CONFIG: Record<string, HeaderVisibilityConfig> = {
     showFreeBoardLink: true,
     showProfile: true,
   },
+  '/boards/best': {
+    showTeamSelector: true,
+    showFreeBoardLink: true,
+    showProfile: true,
+  },
   '/boards/create': {
     showTeamSelector: true,
     showFreeBoardLink: true,
@@ -43,7 +48,11 @@ const DEFAULT_CONFIG: HeaderVisibilityConfig = {
 // 현재 경로와 로그인 여부에 따라 헤더 표시 여부 결정
 export function getHeaderConfig(pathname: string, isLoggedIn: boolean): HeaderVisibilityConfig {
   // 동적 경로 예외 처리 (예: /13-4/edit)
-  if (/^\/\d+\/edit$/.test(pathname)) {
+  const isEditPage = /^\/\d+\/edit$/.test(pathname);
+  const isBoardDetailPage = /^\/boards\/\d+$/.test(pathname);
+  const isBoardsEditPage = /^\/boards\/\d+\/edit$/.test(pathname);
+
+  if (isEditPage || isBoardDetailPage || isBoardsEditPage) {
     return isLoggedIn
       ? {
           showTeamSelector: true,

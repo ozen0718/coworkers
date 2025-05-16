@@ -30,8 +30,21 @@ export default function ProfileUploader({
 }: ProfileUploaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const resetAll = () => {
+    setRawFile(null);
+    setPreviewUrl(null);
+    setDownloadUrl(null);
+    setCroppedAreaPixels(null);
+    setError(null);
+    onChange?.(null, null);
+  };
+
   const handleClick = () => {
-    fileInputRef.current?.click();
+    if (previewUrl) {
+      resetAll();
+    } else {
+      fileInputRef.current?.click();
+    }
   };
 
   const [dragOver, setDragOver] = useState(false);
@@ -51,9 +64,12 @@ export default function ProfileUploader({
     },
     onSuccess: (uploadedUrl: string) => {
       setDownloadUrl(uploadedUrl);
-      onChange?.(null, null);
+      onChange?.(rawFile, null);
     },
-    onError: () => setError('업로드 중 오류가 발생했습니다.'),
+    onError: () => {
+      setError('업로드 중 오류가 발생했습니다.');
+      onChange?.(null, '업로드 중 오류가 발생했습니다.');
+    },
   });
 
   useEffect(() => {
@@ -86,7 +102,6 @@ export default function ProfileUploader({
     setRawFile(file);
     const url = URL.createObjectURL(file);
     setPreviewUrl(url);
-    onChange?.(file, null);
   };
 
   const handleDragOver = (e: DragEvent) => {
@@ -193,7 +208,6 @@ export default function ProfileUploader({
             <div className="loader" />
           </div>
         )}
-
         {error && (
           <div className="bg-opacity-75 absolute inset-0 flex flex-col items-center justify-center bg-white">
             <p className="text-danger mb-2">{error}</p>
@@ -211,6 +225,17 @@ export default function ProfileUploader({
           onChange={handleFileChange}
         />
       </div>
+
+      {/* 컨테이너 밖 × 버튼 */}
+      {previewUrl && (
+        <button
+          type="button"
+          onClick={resetAll}
+          className="bg-opacity-75 hover:bg-opacity-100 absolute top-0 right-0 mt-[-8px] mr-[-8px] flex h-4 w-4 items-center justify-center rounded-full bg-white text-gray-700"
+        >
+          ×
+        </button>
+      )}
     </div>
   );
 }

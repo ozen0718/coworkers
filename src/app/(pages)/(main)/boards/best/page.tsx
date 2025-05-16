@@ -2,16 +2,22 @@
 
 import { BestPost } from '@/components/Card/Post/BestPost';
 import { useState } from 'react';
-
-/* 테스트 데이터 */
-import { testPosts } from '@/components/Card/testPosts';
+import { fetchBest } from '@/api/articles';
+import { BestPostProps } from '@/components/Card/CardType';
+import { useQuery } from '@tanstack/react-query';
+import { QUERY_KEYS } from '@/constants/queryKeys';
 
 export default function BoardPage() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [keyword, setKeyword] = useState('');
 
-  const filteredData = testPosts.filter((item) =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  /* 베스트 글 */
+  const { data: bestPosts } = useQuery({
+    queryKey: QUERY_KEYS.bestPosts(keyword),
+    queryFn: () => fetchBest(keyword),
+    select: (response) =>
+      response.data.list.filter((post: BestPostProps) => post.likeCount && post.likeCount > 0),
+    refetchOnMount: 'always',
+  });
 
   return (
     <div className="my-10">
@@ -27,12 +33,12 @@ export default function BoardPage() {
           type="text"
           placeholder="검색어를 입력해주세요"
           className="bg-bg200 w-full rounded-xl border border-[#F8FAFC1A] p-4 pl-12"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
         />
       </div>
 
-      {searchTerm && filteredData.length === 0 ? (
+      {bestPosts && bestPosts.length === 0 ? (
         <div className="text-gray400 flex h-[300px] w-full items-center justify-center text-lg">
           검색하신 게시글이 없습니다.
         </div>
@@ -45,9 +51,7 @@ export default function BoardPage() {
             </div>
 
             <div className="mt-6 grid w-full gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {filteredData.map((post) => (
-                <BestPost key={post.id} {...post} />
-              ))}
+              {bestPosts?.map((post: BestPostProps) => <BestPost key={post.id} {...post} />)}
             </div>
           </div>
         </>

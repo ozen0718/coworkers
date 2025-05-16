@@ -7,10 +7,27 @@ import Button from '@/components/common/Button/Button';
 import { TextAreaInput } from '@/components/common/Inputs';
 import clsx from 'clsx';
 import { BoardCommentProps } from '../CardType';
+import { deleteComment, editComment } from '@/api/articles';
+import { AxiosError } from 'axios';
+import { useParams } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 
-export default function BoardComment({ type, content }: BoardCommentProps) {
+export default function BoardComment({
+  commentId,
+  type,
+  content,
+  author,
+  date,
+  onChange,
+}: BoardCommentProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const params = useParams();
+  const id = params?.articleid;
+  const [editedContent, setEditedContent] = useState(content);
+
+  const queryClient = useQueryClient();
 
   const toggleDropdown = () => {
     setIsDropDownOpen((prev) => !prev);
@@ -19,20 +36,48 @@ export default function BoardComment({ type, content }: BoardCommentProps) {
   /* Dropdown 수정 */
   const handleEdit = () => {
     setIsEditing(true);
+    setEditedContent(content);
   };
 
-  /* Dropdown 삭제 */
-  const handleDelete = () => {
-    console.log('삭제 눌렀다.');
+  /* 댓글 삭제 */
+  const handleDelete = async () => {
+    if (!id) {
+      console.log('아이디 없음');
+      return;
+    }
+    deleteMutation.mutate();
   };
 
-  /* 취소 버튼 */
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteComment(commentId),
+    onSuccess: () => {
+      console.log('댓글 삭제 성공');
+      onChange?.();
+      queryClient.invalidateQueries({ queryKey: ['comments', id] });
+    },
+    onError: (err: AxiosError) => {
+      console.error('댓글 삭제 실패:', err.response?.data);
+    },
+  });
+
+  /* 댓글 수정*/
+  const handleEditComment = async () => {
+    if (!id || !editedContent) {
+      return;
+    }
+    try {
+      await editComment(commentId, { content: editedContent });
+      console.log('댓글 수정 성공');
+      setIsEditing(false);
+      onChange?.();
+    } catch (err) {
+      const error = err as AxiosError;
+      console.log('댓글 수정 에러', error.response?.data);
+    }
+  };
+
+  /* 댓글 수정 취소 */
   const handleCancel = () => {
-    setIsEditing(false);
-  };
-
-  /* 수정 버튼(api 연결 후 변경) */
-  const handleEditComment = () => {
     setIsEditing(false);
   };
 
@@ -45,8 +90,12 @@ export default function BoardComment({ type, content }: BoardCommentProps) {
     >
       <div className="text-lg-regular flex w-full items-start justify-between">
         {isEditing ? (
-          <div className="relative mt-3 flex h-full w-full items-start">
-            <TextAreaInput height="h-[65px]" />
+          <div className="relative flex h-full w-full items-start">
+            <TextAreaInput
+              value={editedContent}
+              onChange={(e) => setEditedContent(e.target.value)}
+              height="h-[65px]"
+            />
           </div>
         ) : (
           <div
@@ -95,7 +144,13 @@ export default function BoardComment({ type, content }: BoardCommentProps) {
             </Button>
           </div>
         ) : (
-          <AuthorInfo type="detail" showDivider={type !== 'list'} showLike={type !== 'list'} />
+          <AuthorInfo
+            authorName={author}
+            date={date?.split('T')[0]}
+            type="detail"
+            showDivider={type !== 'list'}
+            showLike={type !== 'list'}
+          />
         )}
       </div>
       {type === 'list' && <div className="mt-2 h-[1px] w-full bg-[#F8FAFC1A]"></div>}

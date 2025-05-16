@@ -6,6 +6,13 @@ import AuthorInfo from '../Comment/AuthorInfo';
 import PostDropdown from '../Post/PostDropdown';
 import { useState } from 'react';
 import { PostCardProps } from '../CardType';
+import { useRouter } from 'next/navigation';
+import { useMutation } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
+import { deleteArticle, fetchArticle } from '@/api/articles';
+import { useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 const sizeClass = {
   large: 'min-h-[176px] w-full',
@@ -23,28 +30,64 @@ export default function PostCard({
   type = 'general',
   size = 'large',
   title,
-  imgUrl,
+  image,
   date,
+  id,
   showKebab = false,
   topshowKebab = true,
+  likeCount,
+  writer,
 }: PostCardProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
+
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
+  const handleTitleClick = () => {
+    if (id) router.push(`/boards/${id}`);
+  };
 
   const toggleDropdown = () => {
     setIsDropDownOpen((prev) => !prev);
   };
 
-  /* Dropdown 수정 */
+  /* Dropdown 게시글 수정 */
   const handleEdit = () => {
-    console.log(isEditing);
-    setIsEditing(true);
+    router.push(`/boards/${id}/edit`);
   };
 
-  /* Dropdown 삭제 */
-  const handleDelete = () => {
-    console.log('삭제 눌렀다.');
+  /* Dropdown 게시글 삭제 */
+  const handleDelete = async () => {
+    deleteMutate();
   };
+
+  const { mutate: deleteMutate } = useMutation({
+    mutationFn: () => deleteArticle(Number(id)),
+    onSuccess: () => {
+      console.log('게시글 삭제 성공');
+      queryClient.invalidateQueries({ queryKey: ['generalPosts'] });
+    },
+    onError: (err: AxiosError) => {
+      console.error('게시글 삭제 에러:', err.response?.data);
+    },
+  });
+
+  /* 좋아요 여부 */
+  const { data: postData } = useQuery({
+    queryKey: ['article', id],
+    queryFn: () => fetchArticle(Number(id)),
+    enabled: !!id,
+  });
+
+  const [isLikedState, setIsLikedState] = useState<boolean>(postData?.data.isLiked ?? false);
+  const [likeCountState, setLikeCountState] = useState<number>(likeCount ?? 0);
+
+  useEffect(() => {
+    if (postData) {
+      setIsLikedState(postData.data.isLiked);
+      setLikeCountState(postData.data.likeCount);
+    }
+  }, [postData?.data?.isLiked, postData?.data?.likeCount]);
 
   return (
     <div
@@ -62,8 +105,11 @@ export default function PostCard({
       )}
 
       {/* 내용 */}
-      <div className="flex w-full items-start">
-        <div className="relative flex w-full items-start justify-between">
+      <div className="flex w-full cursor-pointer items-start">
+        <div
+          className="relative flex w-full items-start justify-between"
+          onClick={handleTitleClick}
+        >
           <p
             className={clsx(
               'mr-2 line-clamp-2 pr-6',
@@ -78,11 +124,12 @@ export default function PostCard({
               'relative',
               type === 'best' ? 'min-w-[72px]' : size === 'small' ? 'min-w-[72px]' : 'min-w-[112px]'
             )}
+            onClick={(e) => e.stopPropagation()} // 부모 이벤트 막기
           >
-            {imgUrl ? (
+            {image ? (
               <Image
                 className="aspect-square min-w-[72px] rounded-lg object-cover"
-                src={imgUrl}
+                src={image}
                 alt="게시글 이미지"
                 width={72}
                 height={72}
@@ -99,7 +146,10 @@ export default function PostCard({
                 alt="옵션"
                 width={24}
                 height={24}
-                onClick={toggleDropdown}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleDropdown();
+                }}
               />
             )}
           </div>
@@ -107,6 +157,7 @@ export default function PostCard({
             <PostDropdown
               type="kebab"
               textJustify="center"
+              onClick={(e) => e.stopPropagation()}
               options={[
                 { label: '수정하기', value: '수정', action: handleEdit },
                 { label: '삭제하기', value: '삭제', action: handleDelete },
@@ -132,6 +183,12 @@ export default function PostCard({
           showKebab={showKebab && size === 'small'}
           showDate={type === 'general' && size !== 'small' ? true : false}
           showDivider={type === 'general' && size !== 'small' ? true : false}
+          likeCount={likeCountState}
+          authorName={writer?.nickname}
+          date={date}
+          articleId={id}
+          isLiked={isLikedState}
+          //onLikeChanged={handleLikeChanged}
         />
       </div>
     </div>
