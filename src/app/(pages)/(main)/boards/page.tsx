@@ -6,16 +6,33 @@ import { useWindowSize } from '@/hooks/useWindowSize';
 import { useState, useEffect } from 'react';
 import ArrowDropdown from '@/components/common/ArrowDropdown';
 import Link from 'next/link';
-
-/* 테스트 데이터 */
-import { testPosts } from '@/components/Card/testPosts';
+import Button from '@/components/common/Button/Button';
+import { useRouter } from 'next/navigation';
+import { BestPostProps, GeneralPostProps } from '@/components/Card/CardType';
+import { AxiosError, AxiosResponse } from 'axios';
+import { fetchBest, fetchGeneral } from '@/api/articles';
+import { useQuery } from '@tanstack/react-query';
+import { QUERY_KEYS } from '@/constants/queryKeys';
+import { useMemo } from 'react';
 
 export default function BoardPage() {
   const [selectedOption, setSelectedOption] = useState('최신순');
+  const getOrderByParam = (option: string) => {
+    switch (option) {
+      case '최신순':
+        return 'recent';
+      case '좋아요 많은 순':
+        return 'like';
+      default:
+        return 'recent';
+    }
+  };
+  const orderBy = useMemo(() => getOrderByParam(selectedOption), [selectedOption]);
 
   const windowWidth = useWindowSize();
-
   const [bestVisiblePosts, setBestVisiblePosts] = useState(1);
+
+  const [keyword, setKeyword] = useState('');
 
   useEffect(() => {
     if (windowWidth >= 1024) {
@@ -27,12 +44,35 @@ export default function BoardPage() {
     }
   }, [windowWidth]);
 
-  /* 검색 데이터 */
-  const [searchTerm, setSearchTerm] = useState('');
+  /* 일반 글 */
+  const { data: generalPosts } = useQuery<
+    AxiosResponse<{ list: GeneralPostProps[] }>,
+    AxiosError,
+    GeneralPostProps[]
+  >({
+    queryKey: QUERY_KEYS.generalPosts(keyword, orderBy),
+    queryFn: () => fetchGeneral(keyword, orderBy),
+    select: (response) => response.data.list,
+    refetchOnMount: 'always',
+  });
 
-  const filteredData = testPosts.filter((item) =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  /* 베스트 글 */
+  const { data: bestPosts } = useQuery<
+    AxiosResponse<{ list: BestPostProps[] }>,
+    AxiosError,
+    BestPostProps[]
+  >({
+    queryKey: QUERY_KEYS.bestPosts(keyword),
+    queryFn: () => fetchBest(keyword),
+    select: (response) => response.data.list,
+    refetchOnMount: 'always',
+  });
+
+  /* 글 쓰기 이동 */
+  const router = useRouter();
+  const gotoNewBoard = () => {
+    router.push(`/boards/new`);
+  };
 
   /* 로딩 */
   const [hasMounted, setHasMounted] = useState(false);
@@ -63,12 +103,12 @@ export default function BoardPage() {
           type="text"
           placeholder="검색어를 입력해주세요"
           className="bg-bg200 w-full rounded-xl border border-[#F8FAFC1A] p-4 pl-12"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
         />
       </div>
 
-      {searchTerm && filteredData.length === 0 ? (
+      {bestPosts?.length === 0 && generalPosts?.length === 0 ? (
         <div className="text-gray400 flex h-[300px] w-full items-center justify-center text-lg">
           검색하신 게시글이 없습니다.
         </div>
@@ -85,14 +125,14 @@ export default function BoardPage() {
               </Link>
             </div>
             <div className="mt-15 flex w-full justify-center gap-4">
-              {filteredData.slice(0, bestVisiblePosts).map((post) => (
-                <BestPost key={post.id} {...post} />
-              ))}
+              {bestPosts
+                ?.slice(0, bestVisiblePosts)
+                .map((post) => <BestPost key={post.id} {...post} />)}
             </div>
           </div>
 
           {/* 일반 게시글 */}
-          <div className="mt-10">
+          <div className="relative mt-10">
             <div className="flex w-full items-center justify-between">
               <h2 className="w-full font-bold sm:text-xl">게시글</h2>
 
@@ -105,9 +145,18 @@ export default function BoardPage() {
             </div>
 
             <div className="scroll-area mt-10 grid max-h-[600px] grid-cols-1 justify-items-center gap-4 overflow-y-auto lg:grid-cols-2">
-              {filteredData.map((post) => (
-                <GeneralPost key={post.id} {...post} />
-              ))}
+              {generalPosts?.map((post) => <GeneralPost key={post.id} {...post} />)}
+            </div>
+
+            <div onClick={gotoNewBoard}>
+              <Button
+                variant="primary"
+                size="plus"
+                icon="plus"
+                className="absolute right-0 bottom-16"
+              >
+                글쓰기
+              </Button>
             </div>
           </div>
         </>
