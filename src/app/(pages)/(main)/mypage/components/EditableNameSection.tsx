@@ -1,8 +1,12 @@
+import { updateUserName } from '@/api/user';
 import { CurrentName } from '@/components/common/Inputs';
 import Modal from '@/components/common/Modal';
 import FormField from '@/components/FormField';
+import { QUERY_KEYS } from '@/constants/queryKeys';
 import { useModal } from '@/hooks/useModal';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 interface EditableNameProps {
   name: string;
@@ -10,10 +14,28 @@ interface EditableNameProps {
 
 export default function EditableNameSection({ name }: EditableNameProps) {
   const [inputName, setInputName] = useState(name ?? '');
+
   const { isOpen, open, close } = useModal();
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: updateUserName,
+    onSuccess: () => {
+      toast.success('이름이 변경되었습니다.');
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.user.me });
+      close();
+    },
+    onError: () => {
+      toast.error('이름 변경에 실패했습니다.');
+    },
+  });
 
   const handleNameChange = (value: string) => {
     setInputName(value);
+  };
+
+  const handleSubmit = () => {
+    mutate(inputName);
   };
 
   return (
@@ -29,6 +51,7 @@ export default function EditableNameSection({ name }: EditableNameProps) {
         submitButton={{ label: '변경하기' }}
         isOpen={isOpen}
         onClose={close}
+        onSubmit={handleSubmit}
       >
         <div className="mt-4 min-w-[280px]">
           <FormField label="이름" onValueChange={handleNameChange} value={inputName} />
