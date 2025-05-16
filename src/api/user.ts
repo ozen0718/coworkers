@@ -42,3 +42,13 @@ export const getUserInfo = async (): Promise<ParsedUser> => {
 export const updateUserName = async (name: string) => {
   await axiosInstance.patch('/user', { nickname: name });
 };
+
+export const updateUserPassword = async ({
+  password,
+  passwordConfirmation,
+}: {
+  password: string;
+  passwordConfirmation: string;
+}) => {
+  await axiosInstance.patch('/user/password', { passwordConfirmation, password });
+};
