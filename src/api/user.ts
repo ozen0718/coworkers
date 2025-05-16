@@ -52,3 +52,7 @@ export const updateUserPassword = async ({
 }) => {
   await axiosInstance.patch('/user/password', { passwordConfirmation, password });
 };
+
+export const deleteUser = async () => {
+  await axiosInstance.delete(`/user`)
+}
