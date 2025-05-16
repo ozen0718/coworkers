@@ -1,6 +1,4 @@
 'use client';
-
-import React, { useRef } from 'react';
 import clsx from 'clsx';
 
 import Button from '@/components/common/Button/Button';
@@ -10,7 +8,6 @@ import { useAddTeamForm } from '@/hooks/useAddTeamForm';
 import { AuthPagesLayout, PageTitleStyle } from '@/styles/pageStyle';
 
 export default function AddTeamPage() {
-  const fileRef = useRef<HTMLInputElement>(null);
   const {
     name,
     previewUrl,
@@ -37,19 +34,7 @@ export default function AddTeamPage() {
         }}
       >
         <span className="text-lg-medium mb-3 block">팀 프로필</span>
-        <ProfileUploader
-          fileUrl={previewUrl}
-          error={fileError}
-          onClick={() => fileRef.current?.click()}
-          onChange={onFileChange}
-        />
-        <input
-          ref={fileRef}
-          type="file"
-          accept=".jpg,.jpeg,.png"
-          className="hidden"
-          onChange={(e) => onFileChange(e.target.files?.[0] ?? null, null)}
-        />
+        <ProfileUploader fileUrl={previewUrl} error={fileError} onChange={onFileChange} />
 
         <FormField
           id="teamName"

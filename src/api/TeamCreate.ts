@@ -1,3 +1,5 @@
+import axiosInstance from '@/app/api/axiosInstance';
+
 /**
  * 이미지 업로드 API
  */
@@ -5,39 +7,42 @@ export async function uploadImage(file: File): Promise<string> {
   const form = new FormData();
   form.append('file', file);
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/images/upload`, {
-    method: 'POST',
-    body: form,
-  });
-  if (!res.ok) throw new Error('UPLOAD_FAIL');
-  const { url } = await res.json();
-  return url as string;
+  const res = await axiosInstance.post('/api/images/upload', form);
+  if (!res.data?.url) throw new Error('UPLOAD_FAIL');
+  return res.data.url as string;
 }
 
 /**
- * 팀 생성 API
+ * 팀 생성
+ * POST /groups
  */
 export async function createTeam(name: string, imageUrl?: string): Promise<{ id: string }> {
-  const form = new FormData();
-  form.append('name', name);
-  if (imageUrl) form.append('imageUrl', imageUrl);
+  const res = await axiosInstance.post('/groups', {
+    name,
+    image: imageUrl,
+  });
+  if (!res.data?.id) throw new Error('INVALID_RESPONSE');
+  return { id: String(res.data.id) };
+}
 
-  const res = await fetch('/api/teams', { method: 'POST', body: form });
-  if (res.status === 409) throw new Error('DUPLICATE_NAME');
-  if (!res.ok) throw new Error('CREATE_FAIL');
-  return res.json();
+/**
+ * 초대 수락 (팀 참여)
+ * POST /groups/{groupId}/invitations/{invitationId}/accept
+ */
+export async function acceptInvitation(
+  groupId: string,
+  invitationId: string
+): Promise<{ groupId: string }> {
+  const res = await axiosInstance.post(`/groups/${groupId}/invitations/${invitationId}/accept`);
+  if (!res.data?.groupId) throw new Error('INVALID_RESPONSE');
+  return { groupId: String(res.data.groupId) };
 }
 
 /**
  * 팀 참여 API
  */
 export async function joinTeam(link: string): Promise<{ id: string }> {
-  const res = await fetch('/api/teams/join', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ link }),
-  });
-  if (res.status === 404) throw new Error('NOT_FOUND');
-  if (!res.ok) throw new Error('JOIN_FAIL');
-  return res.json();
+  const res = await axiosInstance.post('/api/teams/join', { link });
+  if (!res.data?.id) throw new Error('INVALID_RESPONSE');
+  return { id: String(res.data.id) };
 }
