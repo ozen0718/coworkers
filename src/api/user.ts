@@ -7,6 +7,7 @@ export interface Team {
 }
 
 export interface ParsedUser {
+  id?: number;
   nickname: string;
   profileImage: string | null;
   teams: Team[];
@@ -22,6 +23,7 @@ export const getUserInfo = async (): Promise<ParsedUser> => {
   const data = response.data;
 
   return {
+    id: data.id,
     nickname: data.nickname,
     profileImage: data.profileImage ?? null,
     teams: (data.memberships ?? []).map((m: any) => ({

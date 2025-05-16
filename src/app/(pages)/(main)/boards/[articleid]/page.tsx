@@ -13,6 +13,8 @@ import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 import { useMutation } from '@tanstack/react-query';
+import { getUserInfo } from '@/api/user';
+import { toast } from 'react-toastify';
 
 export default function ArticleDetail() {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
@@ -34,25 +36,10 @@ export default function ArticleDetail() {
     setIsDropDownOpen((prev) => !prev);
   };
 
-  /* 게시글 수정 */
-  const handleEdit = () => {
-    router.push(`/boards/${id}/edit`);
-  };
-
-  /* 게시글 삭제 */
-  const handleDelete = async () => {
-    deleteMutate();
-  };
-
-  const { mutate: deleteMutate } = useMutation({
-    mutationFn: () => deleteArticle(Number(id)),
-    onSuccess: () => {
-      console.log('게시글 삭제 성공');
-      router.push('/boards');
-    },
-    onError: (err: AxiosError) => {
-      console.error('게시글 삭제 에러:', err.response?.data);
-    },
+  /* 사용자 정보 */
+  const { data: userInfo } = useQuery({
+    queryKey: ['userInfo'],
+    queryFn: getUserInfo,
   });
 
   /* 게시글 */
@@ -68,6 +55,37 @@ export default function ArticleDetail() {
     queryFn: () => fetchComment(Number(id)),
     enabled: !!id,
   });
+
+  /* 게시글 삭제 */
+  const isWriter = userInfo?.id === Number(postData?.data.writer?.id);
+
+  const handleDelete = async () => {
+    if (!isWriter) {
+      toast.error('작성자만 삭제할 수 있습니다');
+      return;
+    }
+    deleteMutate();
+  };
+
+  const { mutate: deleteMutate } = useMutation({
+    mutationFn: () => deleteArticle(Number(id)),
+    onSuccess: () => {
+      console.log('게시글 삭제 성공');
+      router.push('/boards');
+    },
+    onError: (err: AxiosError) => {
+      console.error('게시글 삭제 에러:', err.response?.data);
+    },
+  });
+
+  /* 게시글 수정 */
+  const handleEdit = () => {
+    if (!isWriter) {
+      toast.error('작성자만 수정할 수 있습니다');
+      return;
+    }
+    router.push(`/boards/${id}/edit`);
+  };
 
   return (
     <div className="text-gray300 my-16 flex flex-col md:my-20">

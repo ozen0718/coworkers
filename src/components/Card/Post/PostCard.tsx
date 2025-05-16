@@ -72,7 +72,7 @@ export default function PostCard({
     },
   });
 
-  /* 좋아요 여부 */
+  /* 좋아요 */
   const { data: postData } = useQuery({
     queryKey: ['article', id],
     queryFn: () => fetchArticle(Number(id)),
@@ -89,7 +89,6 @@ export default function PostCard({
     setIsLikedState(nextIsLiked);
     setLikeCountState(nextLikeCount);
 
-    // 1. 해당 게시글 상세 캐시 업데이트
     queryClient.setQueryData(['article', id], (old: any) => {
       if (!old) return old;
       return {
@@ -102,16 +101,16 @@ export default function PostCard({
       };
     });
 
-    queryClient.setQueriesData({ queryKey: ['generalPosts'] }, (old: any) => {
-      if (!old || !Array.isArray(old)) return old;
-      return old.map((post: any) =>
+    queryClient.setQueriesData({ queryKey: ['generalPosts'] }, (prevdata: PostCardProps) => {
+      if (!prevdata || !Array.isArray(prevdata)) return prevdata;
+      return prevdata.map((post: PostCardProps) =>
         post.id === id ? { ...post, isLiked: nextIsLiked, likeCount: nextLikeCount } : post
       );
     });
 
-    queryClient.setQueriesData({ queryKey: ['bestPosts'] }, (old: any) => {
-      if (!old || !Array.isArray(old)) return old;
-      return old.map((post: any) =>
+    queryClient.setQueriesData({ queryKey: ['bestPosts'] }, (prevdata: PostCardProps) => {
+      if (!prevdata || !Array.isArray(prevdata)) return prevdata;
+      return prevdata.map((post: PostCardProps) =>
         post.id === id ? { ...post, isLiked: nextIsLiked, likeCount: nextLikeCount } : post
       );
     });
