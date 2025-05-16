@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import 'react-datepicker/dist/react-datepicker.css';
 import '@/styles/globals.css';
 import { HeaderProvider } from '@/components/layout/Gnb/HeaderContext';
@@ -15,6 +16,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko">
+      <head>
+        <Script src="https://developers.kakao.com/sdk/js/kakao.js" strategy="beforeInteractive" />
+      </head>
       <body className="flex min-h-screen w-full flex-col">
         <QueryProvider>
           <InitializeAuth />
