@@ -1,4 +1,5 @@
-import axiosInstance from './axiosInstance';
+import axiosInstance from '@/api/axiosInstance';
+import { Memberships } from '@/types/usertypes';
 
 export interface Team {
   id: string;
@@ -12,22 +13,28 @@ export interface ParsedUser {
   teams: Team[];
 }
 
+export interface RawUserResponse {
+  nickname: string;
+  image: string | null;
+  memberships: Memberships[];
+}
+
 export const fetchUser = async () => {
   const { data } = await axiosInstance.get('/user');
   return data;
 };
 
 export const getUserInfo = async (): Promise<ParsedUser> => {
-  const response = await axiosInstance.get('/user');
+  const response = await axiosInstance.get<RawUserResponse>('/user');
   const data = response.data;
 
   return {
     nickname: data.nickname,
-    profileImage: data.profileImage ?? null,
-    teams: (data.memberships ?? []).map((m: any) => ({
+    profileImage: data.image ?? null,
+    teams: (data.memberships ?? []).map((m) => ({
       id: String(m.group.id),
-      name: m.group.name || '이름 없음',
-      image: m.group.image || null,
+      name: m.group.name ?? '이름 없음',
+      image: m.group.image ?? null,
     })),
   };
 };
