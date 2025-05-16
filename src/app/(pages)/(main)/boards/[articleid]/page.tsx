@@ -184,6 +184,7 @@ export default function ArticleDetail() {
                 handleCommentChanged();
                 handleArticleChanged();
               }}
+              writer={{ id: comment.writer.id }}
             />
           ))
         ) : (

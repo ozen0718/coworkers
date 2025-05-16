@@ -44,6 +44,9 @@ export type BoardCommentProps = {
   date?: string;
   commentId: number;
   onChange?: () => void;
+  writer: {
+    id: number;
+  };
 };
 
 /* PostCard - 게시글 */
