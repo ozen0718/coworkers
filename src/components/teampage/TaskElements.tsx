@@ -20,7 +20,7 @@ export function TaskListTab({ title, isSelected = false }: TaskListTapProps) {
 
 export function ProgressBadge({ completedTaskNumber, totalTaskNumber }: ProgressBadgeProps) {
   return (
-    <div className="bg-bg300 flex h-6 w-fit items-center justify-center gap-1 rounded-full px-2 py-1">
+    <div className="bg-bg300 flex h-6 w-fit shrink-0 items-center justify-center gap-1 rounded-full px-2 py-1">
       {completedTaskNumber === totalTaskNumber ? (
         <Image src="/icons/done.svg" alt="완료됨" width={20} height={20} />
       ) : (
