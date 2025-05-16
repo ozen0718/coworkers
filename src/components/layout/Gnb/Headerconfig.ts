@@ -62,6 +62,16 @@ export function getHeaderConfig(pathname: string, isLoggedIn: boolean): HeaderVi
       : DEFAULT_CONFIG;
   }
 
+  if (/^\/\d+$/.test(pathname)) {
+    return isLoggedIn
+      ? {
+          showTeamSelector: true,
+          showFreeBoardLink: true,
+          showProfile: true,
+        }
+      : DEFAULT_CONFIG;
+  }
+
   // 정적 경로 설정 가져오기
   const staticConfig = STATIC_HEADER_CONFIG[pathname] ?? DEFAULT_CONFIG;
 
