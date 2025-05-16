@@ -1,4 +1,4 @@
-export interface UserInfo {
+export interface User {
   role: 'ADMIN' | 'MEMBER';
   userId: number;
   userName: string;
@@ -14,8 +14,6 @@ export interface UserInfo {
     updatedAt: string;
   };
 }
-
-export type UserRoleInfo = Pick<UserInfo, 'role'>;
 
 export interface Memberships {
   role: 'ADMIN' | 'MEMBER';
