@@ -3,8 +3,15 @@
 import IconPlus from '@/assets/icons/IconPlus';
 import IconDelete from '@/assets/icons/IconDelete';
 import { useState, useRef } from 'react';
+import { toast } from 'react-toastify';
+import { uploadImage } from '@/api/articles';
 
-export default function ImgUpload() {
+interface ImgUploadProps {
+  onImageUpload: (url: string) => void;
+  previewUrl?: string;
+}
+
+export default function ImgUpload({ onImageUpload, previewUrl }: ImgUploadProps) {
   const [image, setImage] = useState<string | null>();
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -14,16 +21,23 @@ export default function ImgUpload() {
     if (fileInput.current) {
       fileInput.current.value = '';
     }
+    onImageUpload('');
   };
+
+  const displayedImage = image || previewUrl || undefined;
 
   return (
     <div
       className="bg-bg200 relative flex aspect-square max-h-[282px] w-full max-w-[282px] cursor-pointer items-center justify-center overflow-hidden rounded-xl border border-[#F8FAFC1A]"
       onClick={() => fileInput.current?.click()}
     >
-      {image ? (
+      {displayedImage ? (
         <div className="aspect-square w-full">
-          <img src={image} alt="업로드 이미지" className="h-full w-full object-cover opacity-50" />
+          <img
+            src={displayedImage}
+            alt="업로드 이미지"
+            className="h-full w-full object-cover opacity-50"
+          />
           <IconDelete
             width={40}
             height={40}
@@ -46,7 +60,7 @@ export default function ImgUpload() {
         accept="image/*"
         ref={fileInput}
         className="hidden"
-        onChange={(e) => {
+        onChange={async (e) => {
           const file = e.target.files?.[0];
           if (!file) return;
 
@@ -54,13 +68,26 @@ export default function ImgUpload() {
 
           // 10MB 초과 검사
           if (file.size > 10 * 1024 * 1024) {
-            alert('10MB 이하의 이미지만 업로드 가능합니다.');
+            toast.error('10MB 이하의 이미지만 업로드 가능합니다.');
             e.target.value = ''; // 파일 선택 초기화
             return;
           }
 
-          const imageUrl = URL.createObjectURL(file);
-          setImage(imageUrl);
+          // 업로드 전, 임시 미리보기 보여주기
+          const tempUrl = URL.createObjectURL(file);
+          setImage(tempUrl);
+
+          const formData = new FormData();
+          formData.append('image', file);
+
+          try {
+            const response = await uploadImage(formData);
+            const uploadedUrl = response.data.url;
+            setImage(uploadedUrl);
+            onImageUpload(uploadedUrl); // 부모 전달
+          } catch (error) {
+            console.error('이미지 업로드 실패:', error);
+          }
         }}
       />
     </div>

@@ -1,6 +1,5 @@
-export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
-
-export interface TextInputProps extends React.InputHTMLAttributes<HTMLInputElement> {}
+export type InputProps = React.InputHTMLAttributes<HTMLInputElement>;
+export type TextInputProps = React.InputHTMLAttributes<HTMLInputElement>;
 
 export interface TextAreaInputProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   height?: string;

@@ -1,16 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { TextInput } from '@/components/common/Inputs';
 import { TasksItem } from '@/components/teampage/TaskElements';
 import TeamHeader from '@/components/teampage/TeamHeader';
 import Report from '@/components/teampage/Report';
 import Member from '@/components/common/Member';
 import Modal from '@/components/common/Modal';
-import Toast from '@/components/common/Toast';
-import useToast from '@/hooks/useToast';
 import { Profile } from '@/components/common/Profiles';
 import { useModalGroup } from '@/hooks/useModalGroup';
+import { useGroupPageInfo } from '@/hooks/useGroupPageInfo';
 
 const mockMembers = [
   { name: '우지은', email: 'coworkers@code.com' },
@@ -32,27 +32,28 @@ export default function TeamPage() {
   const [selectedMember, setSelectedMember] = useState<{ name: string; email: string } | null>(
     null
   );
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => setIsClient(true), []);
 
   const { open, close, isOpen } = useModalGroup<'invite' | 'createList' | 'memberProfile'>();
-
-  const { message, visible, showToast } = useToast(3000);
 
   const handleCreateList = () => {
     if (!newListName.trim()) return;
     close();
-    showToast('새로운 목록이 생성되었습니다.');
+    toast.success('새로운 목록이 생성되었습니다.');
     setNewListName('');
   };
 
   const handleCopyPageLink = async () => {
     await navigator.clipboard.writeText('https://your-invite-link.com');
-    showToast('복사되었습니다.');
+    toast.success('복사되었습니다.');
   };
 
   const handleCopyMemberEmail = async () => {
     if (!selectedMember) return;
     await navigator.clipboard.writeText(selectedMember.email);
-    showToast('복사되었습니다.');
+    toast.success('복사되었습니다.');
   };
 
   const handleOpenProfile = (member: { name: string; email: string }) => {
@@ -60,9 +61,13 @@ export default function TeamPage() {
     open('memberProfile');
   };
 
+  const { data: userData } = useGroupPageInfo();
+  const isAdmin = userData?.role === 'ADMIN';
+  const groupName = userData?.group.name;
+
   return (
     <div className="py-6">
-      <TeamHeader title="팀이름" />
+      <TeamHeader title={groupName ?? '팀 이름'} showGear={isClient && isAdmin} />
 
       <section className={sectionStyle}>
         <header className={sectionHeaderStyle}>
@@ -70,9 +75,11 @@ export default function TeamPage() {
             <h2 className={sectionHeaderH2Style}>할 일 목록</h2>
             <p className={sectionHeaderPSTyle}>(4개)</p>
           </div>
-          <button className={sectionHeaderButtonStyle} onClick={() => open('createList')}>
-            + 새로운 목록 추가하기
-          </button>
+          {isClient && isAdmin && (
+            <button className={sectionHeaderButtonStyle} onClick={() => open('createList')}>
+              + 새로운 목록 추가하기
+            </button>
+          )}
 
           <Modal
             isOpen={isOpen('createList')}
@@ -90,8 +97,6 @@ export default function TeamPage() {
               />
             </div>
           </Modal>
-
-          <Toast message={message} visible={visible} />
         </header>
 
         <TasksItem completed={1} total={3} tasksTitle="할일목록 1" />
@@ -117,9 +122,11 @@ export default function TeamPage() {
             <p className={sectionHeaderPSTyle}>(8명)</p>
           </div>
           <div>
-            <button className={sectionHeaderButtonStyle} onClick={() => open('invite')}>
-              + 새로운 멤버 추가하기
-            </button>
+            {isClient && isAdmin && (
+              <button className={sectionHeaderButtonStyle} onClick={() => open('invite')}>
+                + 새로운 멤버 추가하기
+              </button>
+            )}
 
             <Modal
               isOpen={isOpen('invite')}
@@ -132,14 +139,12 @@ export default function TeamPage() {
               closeIcon
               onSubmit={handleCopyPageLink}
             />
-
-            <Toast message={message} visible={visible} />
           </div>
         </header>
         <div className="grid-rows-auto grid w-full grid-cols-[1fr_1fr] gap-4 sm:grid-cols-[1fr_1fr_1fr]">
           {mockMembers.map((member) => (
             <Member
-              key={member.email} // API 연동 후 수정
+              key={member.email}
               name={member.name}
               email={member.email}
               onClick={() => handleOpenProfile(member)}
