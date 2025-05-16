@@ -16,7 +16,7 @@ interface HeaderProps {
 export default function Header({ onOpenSideMenu }: HeaderProps) {
   const { showTeamSelector, showFreeBoardLink, showProfile } = useHeader();
   const { teams, nickname } = useUserStore();
-  const selectedTeam = teams[0]?.name ?? '팀 없음';
+  const selectedTeam = teams?.[0]?.name ?? '팀 없음';
 
   return (
     <header className="bg-bg200 border-border sticky top-0 z-50 flex h-15 w-full justify-center border-b-1 py-[14px]">

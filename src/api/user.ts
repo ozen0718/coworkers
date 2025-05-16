@@ -1,5 +1,5 @@
 import axiosInstance from '@/api/axiosInstance';
-import { Memberships } from '@/types/usertypes';
+import { Memberships, Team } from '@/types/usertypes';
 
 export interface ParsedUser {
   nickname: string;
@@ -17,13 +17,21 @@ export interface RawUserResponse {
   memberships: Memberships[];
 }
 
+// 기본 fetch 함수
 export const fetchUser = async () => {
   const { data } = await axiosInstance.get('/user');
   return data;
 };
 
-export const getUserInfo = async (): Promise<ParsedUser> => {
+// teams를 포함해서 반환하는 함수
+export const getUserInfo = async (): Promise<ParsedUser & { teams: Team[] }> => {
   const { data } = await axiosInstance.get<RawUserResponse>('/user');
+
+  const teams: Team[] = (data.memberships ?? []).map((m) => ({
+    id: String(m.group.id),
+    name: m.group.name ?? '이름 없음',
+    image: m.group.image ?? null,
+  }));
 
   return {
     nickname: data.nickname,
@@ -31,5 +39,6 @@ export const getUserInfo = async (): Promise<ParsedUser> => {
     email: data.email,
     id: data.id,
     memberships: data.memberships ?? [],
+    teams, // ✅ 새로 추가된 필드
   };
 };
