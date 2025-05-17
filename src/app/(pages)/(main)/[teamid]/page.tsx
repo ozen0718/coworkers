@@ -1,16 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { toast } from 'react-toastify';
 import { TextInput } from '@/components/common/Inputs';
 import { TasksItem } from '@/components/teampage/TaskElements';
 import TeamHeader from '@/components/teampage/TeamHeader';
 import Report from '@/components/teampage/Report';
 import Member from '@/components/common/Member';
 import Modal from '@/components/common/Modal';
-import { toast } from 'react-toastify';
 import { Profile } from '@/components/common/Profiles';
 import { useModalGroup } from '@/hooks/useModalGroup';
-import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { useGroupPageInfo } from '@/hooks/useGroupPageInfo';
 
 const mockMembers = [
   { name: '우지은', email: 'coworkers@code.com' },
@@ -61,12 +61,13 @@ export default function TeamPage() {
     open('memberProfile');
   };
 
-  const { data: userData } = useCurrentUser();
-  const isAdmin = userData?.memberships?.[0]?.role === 'ADMIN';
+  const { data: userData } = useGroupPageInfo();
+  const isAdmin = userData?.role === 'ADMIN';
+  const groupName = userData?.group.name;
 
   return (
     <div className="py-6">
-      <TeamHeader title="팀이름" showGear={isClient && isAdmin} />
+      <TeamHeader title={groupName ?? '팀 이름'} showGear={isClient && isAdmin} />
 
       <section className={sectionStyle}>
         <header className={sectionHeaderStyle}>
