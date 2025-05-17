@@ -12,6 +12,7 @@ export type ToggleInputProps = {
 
 export type CurrentNameProp = {
   name: string;
+  onClick?: () => void;
 };
 
 export type CurrentEmailProp = {

@@ -42,3 +42,21 @@ export const getUserInfo = async (): Promise<ParsedUser & { teams: Team[] }> => 
     teams, // ✅ 새로 추가된 필드
   };
 };
+
+export const updateUserName = async (name: string) => {
+  await axiosInstance.patch('/user', { nickname: name });
+};
+
+export const updateUserPassword = async ({
+  password,
+  passwordConfirmation,
+}: {
+  password: string;
+  passwordConfirmation: string;
+}) => {
+  await axiosInstance.patch('/user/password', { passwordConfirmation, password });
+};
+
+export const deleteUser = async () => {
+  await axiosInstance.delete(`/user`)
+}
