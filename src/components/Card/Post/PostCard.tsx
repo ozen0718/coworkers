@@ -14,7 +14,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { getUserInfo } from '@/api/user';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const sizeClass = {
   large: 'min-h-[176px] w-full',
@@ -76,7 +76,7 @@ export default function PostCard({
   /* Dropdown 게시글 삭제 */
   const handleDelete = async () => {
     if (!isWriter) {
-      alert('작성자만 삭제할 수 있습니다');
+      toast.error('작성자만 삭제할 수 있습니다');
       return;
     }
     deleteMutate();
@@ -146,7 +146,6 @@ export default function PostCard({
 
   return (
     <>
-      <ToastContainer />
       <div
         className={clsx(
           'border-bg100 bg-bg200 flex w-full flex-col gap-1.5 rounded-xl border p-5',
