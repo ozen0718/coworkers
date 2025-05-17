@@ -39,7 +39,7 @@ export const getUserInfo = async (): Promise<ParsedUser & { teams: Team[] }> => 
     email: data.email,
     id: data.id,
     memberships: data.memberships ?? [],
-    teams, // ✅ 새로 추가된 필드
+    teams,
   };
 };
 
@@ -58,5 +58,5 @@ export const updateUserPassword = async ({
 };
 
 export const deleteUser = async () => {
-  await axiosInstance.delete(`/user`)
-}
+  await axiosInstance.delete(`/user`);
+};

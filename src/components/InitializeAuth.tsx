@@ -19,13 +19,16 @@ export default function InitializeAuth() {
       if (token) {
         try {
           const user = await getUserInfo();
+          console.log('초기 로그인 시 getUserInfo 결과:', user);
+          console.log('초기 로그인 시 user.teams:', user.teams);
+
           setUserInfo({
             nickname: user.nickname,
             profileImage: user.profileImage,
             teams: user.teams,
           });
-        } catch (_) {
-          // 유저 정보 요청 실패 무시
+        } catch (err) {
+          console.error('❌ 초기 로그인 시 getUserInfo 실패:', err);
         }
       }
     };
@@ -40,13 +43,16 @@ export default function InitializeAuth() {
     const fetchUser = async () => {
       try {
         const user = await getUserInfo();
+        console.log('상태 변경 후 getUserInfo 결과:', user);
+        console.log('상태 변경 후 user.teams:', user.teams);
+
         setUserInfo({
           nickname: user.nickname,
           profileImage: user.profileImage,
           teams: user.teams,
         });
-      } catch (_) {
-        // 유저 정보 요청 실패 무시
+      } catch (err) {
+        console.error('상태 변경 후 getUserInfo 실패:', err);
       }
     };
 
