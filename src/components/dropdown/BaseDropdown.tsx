@@ -46,7 +46,7 @@ export default function DropDown({
             placement
           )}
         >
-          <div className="max-h-120 overflow-auto">
+          <div className="scroll-area max-h-120 overflow-auto">
             {options.map((option, idx) => (
               <div
                 key={hashedIndex + idx}
