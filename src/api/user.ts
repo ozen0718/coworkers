@@ -15,6 +15,7 @@ export interface ParsedUser {
 }
 
 export interface RawUserResponse {
+  id?: number;
   nickname: string;
   image: string | null;
   memberships: Memberships[];
@@ -56,5 +57,5 @@ export const updateUserPassword = async ({
 };
 
 export const deleteUser = async () => {
-  await axiosInstance.delete(`/user`)
-}
+  await axiosInstance.delete(`/user`);
+};
