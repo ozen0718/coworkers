@@ -110,12 +110,11 @@ export default function PostCard({
     setIsLikedState(nextIsLiked);
     setLikeCountState(nextLikeCount);
 
-    queryClient.setQueryData(['article', id], (old: any) => {
-      if (!old) return old;
+    queryClient.setQueryData(['article', id], (prevdata: PostCardProps) => {
+      if (!prevdata) return prevdata;
       return {
-        ...old,
+        ...prevdata,
         data: {
-          ...old.data,
           isLiked: nextIsLiked,
           likeCount: nextLikeCount,
         },
