@@ -18,7 +18,7 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
   if (!isOpen) return null;
 
   const handleTeamClick = (teamId: string) => {
-    router.push(`/team/${teamId}/boards`);
+    router.push(`/${teamId}`);
     onClose();
   };
 

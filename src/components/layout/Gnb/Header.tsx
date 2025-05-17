@@ -8,6 +8,10 @@ import TeamSelector from './TeamSelector';
 import ProfileDropdown from './ProfileSelector';
 import { useHeader } from './HeaderContext';
 import { useUserStore } from '@/stores/useUserStore';
+import { useQuery } from '@tanstack/react-query';
+import { QUERY_KEYS } from '@/constants/queryKeys';
+import { getUserInfo } from '@/api/user';
+import { useEffect } from 'react';
 
 interface HeaderProps {
   onOpenSideMenu: () => void;
@@ -15,8 +19,24 @@ interface HeaderProps {
 
 export default function Header({ onOpenSideMenu }: HeaderProps) {
   const { showTeamSelector, showFreeBoardLink, showProfile } = useHeader();
-  const { teams, nickname } = useUserStore();
-  const selectedTeam = teams?.[0]?.name ?? '팀 없음';
+  const { teams = [], nickname, setUserInfo } = useUserStore();
+  const selectedTeam = teams[0]?.name ?? '팀 없음';
+
+  const { data: userData } = useQuery({
+    queryKey: QUERY_KEYS.user.me,
+    queryFn: getUserInfo,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  useEffect(() => {
+    if (userData) {
+      setUserInfo({
+        nickname: userData.nickname,
+        profileImage: userData.profileImage,
+        teams: userData.teams,
+      });
+    }
+  }, [userData, setUserInfo]);
 
   return (
     <header className="bg-bg200 border-border sticky top-0 z-50 flex h-15 w-full justify-center border-b-1 py-[14px]">

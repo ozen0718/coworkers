@@ -6,29 +6,25 @@ import SelectableDropdown from '@/components/dropdown/SelectableDropdown';
 import DropDownGroupsItem from '@/components/dropdown/Groups';
 
 export default function TeamSelector() {
-  const { teams, isInitialized } = useUserStore();
+  const { teams = [], isInitialized } = useUserStore();
 
-  if (!isInitialized || !Array.isArray(teams)) return null;
+  if (!isInitialized) return null;
 
-  const defaultTeamName = teams[0]?.name || '팀 없음';
+  const defaultTeamName = teams.length > 0 && teams[0]?.name ? teams[0].name : '팀 없음';
 
-  const options = teams.map((team) => {
-    console.log('team image 확인:', team.image);
-
-    return (
-      <DropDownGroupsItem
-        key={team.id}
-        group={{
-          id: Number(team.id),
-          name: team.name || '이름 없음',
-          image: team.image && team.image.trim() !== '' ? team.image : '/team.png',
-          teamId: team.id,
-          createdAt: '',
-          updatedAt: '',
-        }}
-      />
-    );
-  });
+  const options = teams.map((team) => (
+    <DropDownGroupsItem
+      key={team.id}
+      group={{
+        id: Number(team.id),
+        name: team.name || '이름 없음',
+        image: team.image ?? '/team.png',
+        teamId: team.id,
+        createdAt: '',
+        updatedAt: '',
+      }}
+    />
+  ));
 
   return (
     <SelectableDropdown
