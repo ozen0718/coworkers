@@ -1,4 +1,4 @@
-import axiosInstance from '@/app/api/axiosInstance';
+import axiosInstance from '@/api/axiosInstance';
 
 /**
  * 이미지 업로드 API
