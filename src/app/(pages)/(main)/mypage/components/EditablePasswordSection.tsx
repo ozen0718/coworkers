@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { CurrentPassword, PasswordInput } from '@/components/common/Inputs';
 import Modal from '@/components/common/Modal';
 import { useModal } from '@/hooks/useModal';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateUserPassword } from '@/api/user';
 import { QUERY_KEYS } from '@/constants/queryKeys';
 

@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { AxiosError } from 'axios';
 import { updateUserName } from '@/api/user';
 import { CurrentName } from '@/components/common/Inputs';
 import Modal from '@/components/common/Modal';
@@ -5,9 +8,6 @@ import FormField from '@/components/FormField';
 import { QUERY_KEYS } from '@/constants/queryKeys';
 import { useModal } from '@/hooks/useModal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { AxiosError } from 'axios';
-import { useState } from 'react';
-import { toast } from 'react-toastify';
 
 interface EditableNameProps {
   name: string;
