@@ -17,5 +17,5 @@ export interface UrgentTaskProps {
 }
 
 export type GroupPageInfo = Pick<Memberships, 'role'> & {
-  group: Pick<Memberships['group'], 'name'>;
+  group: Pick<Memberships['group'], 'id' | 'name'>;
 };

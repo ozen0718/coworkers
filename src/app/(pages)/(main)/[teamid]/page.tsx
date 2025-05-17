@@ -10,6 +10,7 @@ import Report from '@/components/teampage/Report';
 import Member from '@/components/common/Member';
 import Modal from '@/components/common/Modal';
 import { Profile } from '@/components/common/Profiles';
+import { createTaskList } from '@/api/tasklist.api';
 import { useModalGroup } from '@/hooks/useModalGroup';
 import { useGroupPageInfo } from '@/hooks/useGroupPageInfo';
 
@@ -39,11 +40,23 @@ export default function TeamPage() {
 
   const { open, close, isOpen } = useModalGroup<'invite' | 'createList' | 'memberProfile'>();
 
-  const handleCreateList = () => {
+  const handleCreateList = async () => {
     if (!newListName.trim()) return;
-    close();
-    toast.success('새로운 목록이 생성되었습니다.');
-    setNewListName('');
+    if (!groupId || !teamid) return toast.error('그룹 정보를 불러오지 못했습니다.');
+
+    try {
+      await createTaskList({
+        groupId: groupId,
+        name: newListName.trim(),
+      });
+
+      toast.success('새로운 목록이 생성되었습니다.');
+      close();
+      setNewListName('');
+    } catch (error) {
+      toast.error('목록 생성에 실패했습니다.');
+      console.error(error);
+    }
   };
 
   const handleCopyPageLink = async () => {
@@ -62,14 +75,12 @@ export default function TeamPage() {
     open('memberProfile');
   };
 
-  //const groupName = userData?.group.name;
   const { teamid } = useParams() as { teamid: string };
-  console.log('현재 URL의 teamId (groupId):', teamid);
-  console.log('useParams 전체:', useParams());
   const { data: userData } = useGroupPageInfo(teamid);
 
   const isAdmin = userData?.role === 'ADMIN';
   const teamName = userData?.group.name ?? '팀 없음';
+  const groupId = userData?.group.id;
 
   return (
     <div className="py-6">
