@@ -29,6 +29,16 @@ export default function EditablePasswordSection() {
   });
 
   const handleSubmit = () => {
+    if (!password || !passwordConfirmation) {
+      toast.error('모든 항목을 입력해주세요.');
+      return;
+    }
+    
+    if (password !== passwordConfirmation) {
+      toast.error('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
     mutate({ password, passwordConfirmation });
   };
 
