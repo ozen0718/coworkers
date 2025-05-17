@@ -33,13 +33,19 @@ export default function EditablePasswordSection() {
       toast.error('모든 항목을 입력해주세요.');
       return;
     }
-    
+
     if (password !== passwordConfirmation) {
       toast.error('비밀번호가 일치하지 않습니다.');
       return;
     }
 
     mutate({ password, passwordConfirmation });
+  };
+
+  const handleClose = () => {
+    close();
+    setPassword('');
+    setPasswordConfirmation('');
   };
 
   return (
@@ -56,7 +62,7 @@ export default function EditablePasswordSection() {
         submitButton={{ label: '변경하기' }}
         onSubmit={handleSubmit}
         isOpen={isOpen}
-        onClose={close}
+        onClose={handleClose}
       >
         <div className="mt-4 flex min-w-[280px] flex-col gap-4">
           <div className="flex flex-col gap-2">
