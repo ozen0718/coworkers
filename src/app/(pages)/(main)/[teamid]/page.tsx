@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { TextInput } from '@/components/common/Inputs';
 import { TasksItem } from '@/components/teampage/TaskElements';
@@ -61,13 +62,18 @@ export default function TeamPage() {
     open('memberProfile');
   };
 
-  const { data: userData } = useGroupPageInfo();
+  //const groupName = userData?.group.name;
+  const { teamid } = useParams() as { teamid: string };
+  console.log('현재 URL의 teamId (groupId):', teamid);
+  console.log('useParams 전체:', useParams());
+  const { data: userData } = useGroupPageInfo(teamid);
+
   const isAdmin = userData?.role === 'ADMIN';
-  const groupName = userData?.group.name;
+  const teamName = userData?.group.name ?? '팀 없음';
 
   return (
     <div className="py-6">
-      <TeamHeader title={groupName ?? '팀 이름'} showGear={isClient && isAdmin} />
+      <TeamHeader title={teamName} showGear={isClient && isAdmin} />
 
       <section className={sectionStyle}>
         <header className={sectionHeaderStyle}>
