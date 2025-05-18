@@ -25,10 +25,17 @@ export default function TodoItem({
   const toggleChecked = () => setIsChecked((prev) => !prev);
 
   return (
-    <div className="flex flex-col space-y-2 rounded-lg bg-slate-800 p-3">
+    <div className="flex cursor-pointer flex-col space-y-2 rounded-lg bg-slate-800 p-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <button onClick={toggleChecked} aria-pressed={isChecked} className="cursor-pointer p-1">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              toggleChecked();
+            }}
+            aria-pressed={isChecked}
+            className="cursor-pointer p-1"
+          >
             <Image
               src={isChecked ? '/icons/checkbox_done.svg' : '/icons/checkbox_default.svg'}
               alt={isChecked ? '완료' : '미완료'}
@@ -58,7 +65,11 @@ export default function TodoItem({
           </button>
         </div>
 
-        <button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
           <Image
             src="/icons/kebab.svg"
             alt="더보기"

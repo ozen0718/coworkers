@@ -10,7 +10,7 @@ import { TodoCardReplyInput } from '@/components/common/Inputs';
 import BoardComment from '@/components/Card/Comment/BoardComment';
 
 type DetailPostProps = {
-  title: string;
+  title?: string;
   onClose: () => void;
   showComplete: boolean;
 };
@@ -72,10 +72,10 @@ export default function DetailPost({ title, onClose, showComplete }: DetailPostP
       </div>
 
       <div className="scroll-area max-h-[400px] w-full overflow-y-auto">
-        <BoardComment type="list" content="테스트" />
+        {/*<BoardComment commentId={234} writer={1234} type="list" content="테스트" />
         <BoardComment type="list" content="테스트2" />
         <BoardComment type="list" content="테스트3" />
-        <BoardComment type="list" content="테스트4" />
+        <BoardComment type="list" content="테스트4" />*/}
       </div>
 
       <Button
