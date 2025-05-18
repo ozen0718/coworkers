@@ -104,10 +104,12 @@ function UrgentTasksReportColumn() {
 }
 
 export default function Report({ total, completed }: ReportProps) {
+  const percentage = total === 0 ? 0 : Math.round((completed / total) * 100);
+
   return (
     <div className="relative w-full">
       <div className="bg-bg200 grid grid-cols-2 gap-4 rounded-xl px-2 py-2 sm:grid-cols-3 sm:px-6">
-        <LeftSide percentage={25} />
+        <LeftSide percentage={percentage} />
         <div className="hidden justify-center sm:flex">
           <UrgentTasksReportColumn />
         </div>
