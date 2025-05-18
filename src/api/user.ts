@@ -8,12 +8,14 @@ export interface Team {
 }
 
 export interface ParsedUser {
+  id?: number;
   nickname: string;
   profileImage: string | null;
   teams: Team[];
 }
 
 export interface RawUserResponse {
+  id?: number;
   nickname: string;
   image: string | null;
   memberships: Memberships[];
@@ -29,6 +31,7 @@ export const getUserInfo = async (): Promise<ParsedUser> => {
   const data = response.data;
 
   return {
+    id: data.id,
     nickname: data.nickname,
     profileImage: data.image ?? null,
     teams: (data.memberships ?? []).map((m) => ({
@@ -54,5 +57,5 @@ export const updateUserPassword = async ({
 };
 
 export const deleteUser = async () => {
-  await axiosInstance.delete(`/user`)
-}
+  await axiosInstance.delete(`/user`);
+};
