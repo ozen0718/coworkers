@@ -1,21 +1,19 @@
 import axiosInstance from '@/api/axiosInstance';
 import { GroupPageInfo } from '@/types/teampagetypes';
-/*
-export const getCurrentUser = async () => {
-  const response = await axiosInstance.get('/user');
-  return response.data;
-};*/
+import { Memberships } from '@/types/usertypes';
 
-export const getGroupPageInfo = async (): Promise<GroupPageInfo> => {
+export const getGroupPageInfo = async (groupId: string): Promise<GroupPageInfo> => {
   const res = await axiosInstance.get(`/user/memberships`);
-  const membership = res.data?.[0];
+  const memberships: Memberships[] = res.data;
 
-  if (!membership) throw new Error('No group membership found');
+  const matched = memberships.find((m) => String(m.group.id) === groupId);
+  if (!matched) throw new Error('No matching group found');
 
   return {
-    role: membership.role,
+    role: matched.role,
     group: {
-      name: membership.group.name,
+      id: matched.group.id,
+      name: matched.group.name,
     },
   };
 };
