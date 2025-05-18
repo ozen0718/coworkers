@@ -1,11 +1,32 @@
 'use client';
 
+import { toast } from 'react-toastify';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { deleteUser } from '@/api/user';
 import Modal from '@/components/common/Modal';
 import { useModal } from '@/hooks/useModal';
-import Image from 'next/image';
+import { useMutation } from '@tanstack/react-query';
 
 export default function AccountDeleteButton() {
   const { isOpen, open, close } = useModal();
+  const router = useRouter();
+
+  const { mutate } = useMutation({
+    mutationFn: deleteUser,
+    onSuccess: () => {
+      toast.success('계정이 삭제되었습니다.');
+      router.replace('/');
+    },
+    onError: () => {
+      toast.error('계정 탈퇴에 실패했습니다.');
+    },
+  });
+
+  const handleSubmit = () => {
+    mutate();
+  };
+
   return (
     <>
       <button className="text-danger flex w-fit items-center gap-2" onClick={open}>
@@ -22,6 +43,7 @@ export default function AccountDeleteButton() {
         }}
         cancelButton={{ label: '닫기', variant: 'textgray' }}
         submitButton={{ label: '회원 탈퇴', variant: 'danger' }}
+        onSubmit={handleSubmit}
         isOpen={isOpen}
         onClose={close}
       />

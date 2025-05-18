@@ -6,7 +6,6 @@ import { useState } from 'react';
 import { createComment } from '@/api/articles';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import { ToastContainer } from 'react-toastify';
 
 interface AddCommentProps {
   articleId: number;
@@ -44,7 +43,6 @@ export default function AddComment({ articleId, onSuccess }: AddCommentProps) {
 
   return (
     <div className="flex min-h-[113px] w-full max-w-[1200px] flex-col bg-transparent lg:h-[216px]">
-      <ToastContainer />
       <div className="mr-0.5 flex w-full items-start justify-between text-base font-bold sm:text-xl sm:font-medium">
         댓글달기
       </div>
