@@ -1,4 +1,5 @@
 import { Memberships } from '@/types/usertypes';
+import { Task } from './tasktypes';
 
 export interface MemberProps {
   profileUrl?: string;
@@ -19,3 +20,5 @@ export interface UrgentTaskProps {
 export type GroupPageInfo = Pick<Memberships, 'role'> & {
   group: Pick<Memberships['group'], 'id' | 'name'>;
 };
+
+export type TaskInfo = Pick<Task, 'id' | 'name' | 'description' | 'date' | 'doneAt'>;
