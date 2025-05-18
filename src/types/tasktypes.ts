@@ -43,4 +43,7 @@ export interface Task {
       image: string;
     };
   } | null;
+  recurring: {
+    startDate: string;
+  };
 }

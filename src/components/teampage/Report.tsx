@@ -1,7 +1,11 @@
 import Image from 'next/image';
 import Alert from '@/assets/icons/Alert';
 import ReportProgress from '@/components/teampage/ReportProgress';
-import { ProgressProp, UrgentTaskProps, ReportProps } from '@/types/teampagetypes';
+import {
+  ProgressProp,
+  NewestTaskProps as NewestTaskProps,
+  ReportProps,
+} from '@/types/teampagetypes';
 
 const taskReportBoxStyle = 'flex h-20 w-full items-end justify-between bg-bg100 p-4 rounded-xl';
 const taskReportTextBoxStyle = 'flex flex-col items-start justify-center gap-1 ';
@@ -63,28 +67,30 @@ function TaskReportColumn({ total, completed }: ReportProps) {
   );
 }
 
-function UrgentTask({ title, dueDate }: UrgentTaskProps) {
+function NewestTask({ title, elapsedTime: elapsedTime }: NewestTaskProps) {
   return (
     <div
       className={`${taskReportBoxStyle} border-danger from-danger via-bg200 to-bg100 bg-gradient-to-r via-[12px] to-50%`}
     >
       <div className={taskReportTextBoxStyle}>
-        <h3 className="text-xs-medium text-pink">마감임박</h3>
-        <p className={taskReportLabelStyle}>{dueDate}</p>
+        <h3 className="text-xs-medium text-pink">NEWEST</h3>
+        <p className={taskReportLabelStyle}>{elapsedTime}</p>
         <p className={`${taskReportNumberStyle} text-md-medium break-word line-clamp-1`}>{title}</p>
       </div>
     </div>
   );
 }
 
-function UrgentTaskForMobile({ title, dueDate }: UrgentTaskProps) {
+function NewestTaskForMobile({ title, elapsedTime: elapsedTime }: NewestTaskProps) {
   return (
     <div className="bg-bg200 right-[28%] flex h-14 w-full items-center justify-start gap-4 rounded-xl pr-2">
       <div className="from-danger to-bg200 flex h-full w-70 items-center justify-start gap-2 rounded-l-xl bg-gradient-to-r px-2">
         <Alert className="text-white" />
         <div className="flex flex-col items-center justify-center">
-          <p className="text-xs-regular text-tertiary whitespace-nowrap">마감 임박</p>
-          <p className="text-lg-medium h-fit w-fit rounded-l-full whitespace-nowrap">{dueDate}</p>
+          <p className="text-xs-regular text-tertiary test-left w-full whitespace-nowrap">NEWEST</p>
+          <p className="text-lg-medium h-fit w-fit rounded-l-full whitespace-nowrap">
+            {elapsedTime}
+          </p>
         </div>
       </div>
       <div className="flex h-full w-full items-center">
@@ -94,33 +100,43 @@ function UrgentTaskForMobile({ title, dueDate }: UrgentTaskProps) {
   );
 }
 
-function UrgentTasksReportColumn() {
+function NewestTasksReportColumn({ tasks }: { tasks: NewestTaskProps[] }) {
   return (
     <div className="flex w-full flex-col gap-4">
-      <UrgentTask title="주주명부 작성하기" dueDate="15시간 1분 9초" />
-      <UrgentTask title="법인 사무실 임대차 계약 체결하기" dueDate="39시간 33분 56초" />
+      {tasks.map((task, index) => (
+        <NewestTask key={index} title={task.title} elapsedTime={task.elapsedTime} />
+      ))}
     </div>
   );
 }
 
-export default function Report({ total, completed }: ReportProps) {
+export default function Report({ total, completed, newestTasks: newestTasks = [] }: ReportProps) {
   const percentage = total === 0 ? 0 : Math.round((completed / total) * 100);
 
   return (
     <div className="relative w-full">
       <div className="bg-bg200 grid grid-cols-2 gap-4 rounded-xl px-2 py-2 sm:grid-cols-3 sm:px-6">
         <LeftSide percentage={percentage} />
-        <div className="hidden justify-center sm:flex">
-          <UrgentTasksReportColumn />
-        </div>
+        {newestTasks.length > 0 && newestTasks[0].elapsedTime !== '' && (
+          <div className="hidden justify-center sm:flex">
+            <NewestTasksReportColumn tasks={newestTasks} />
+          </div>
+        )}
         <div className="flex justify-end">
           <TaskReportColumn total={total} completed={completed} />
         </div>
       </div>
-      <div className="mt-4 flex flex-col items-center justify-start gap-4 sm:hidden">
-        <UrgentTaskForMobile title="주주명부 작성하기" dueDate="15시간 1분 9초" />
-        <UrgentTaskForMobile title="법인 사무실 임대차 계약 체결하기" dueDate="39시간 33분 56초" />
-      </div>
+      {newestTasks.length > 0 && newestTasks[0].elapsedTime !== '' && (
+        <div className="mt-4 flex flex-col items-center justify-start gap-4 sm:hidden">
+          {newestTasks.map((newestTask, index) => (
+            <NewestTaskForMobile
+              key={index}
+              title={newestTask.title}
+              elapsedTime={newestTask.elapsedTime}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

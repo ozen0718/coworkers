@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { TextInput } from '@/components/common/Inputs';
@@ -10,11 +10,12 @@ import Report from '@/components/teampage/Report';
 import Member from '@/components/common/Member';
 import Modal from '@/components/common/Modal';
 import { Profile } from '@/components/common/Profiles';
-import { createTaskList } from '@/api/tasklist.api';
+import { createTaskList, getTaskDetail } from '@/api/tasklist.api';
 import { useGroupDetail } from '@/hooks/useGroupDetail';
 import { useGroupPageInfo, useAllTaskListTasks } from '@/hooks/useGroupPageInfo';
 import { useModalGroup } from '@/hooks/useModalGroup';
-import { getFutureDateString } from '@/utils/date';
+import { NewestTaskProps } from '@/types/teampagetypes';
+import { getFutureDateString, formatElapsedTime } from '@/utils/date';
 
 const mockMembers = [
   { name: '우지은', email: 'coworkers@code.com' },
@@ -90,7 +91,9 @@ export default function TeamPage() {
     setFutureDate(getFutureDateString(100));
   }, []);
 
-  const taskListIds = groupDetail?.taskLists.map((list) => list.id) ?? [];
+  const taskListIds = useMemo(() => {
+    return groupDetail?.taskLists.map((list) => list.id) ?? [];
+  }, [groupDetail]);
   const taskQueries = useAllTaskListTasks(groupId, taskListIds, futureDate ?? '');
 
   const todayDate = new Date().toISOString().split('T')[0];
@@ -98,6 +101,55 @@ export default function TeamPage() {
   const todayTasks = todayTaskQueries.flatMap((query) => query?.data ?? []);
   const totalTodayTasks = todayTasks.length;
   const completedTodayTasks = todayTasks.filter((task) => task.doneAt !== null).length;
+  const [newestTasks, setNewestTasks] = useState<NewestTaskProps[]>([]);
+
+  useEffect(() => {
+    if (!futureDate || !taskQueries.length || !groupId) return;
+
+    const currentTime = new Date().getTime();
+
+    const allTasksWithMeta = taskQueries.flatMap((queryResult, taskListIndex) => {
+      const taskListId = taskListIds[taskListIndex];
+      return (queryResult.data ?? []).map((task) => ({
+        ...task,
+        taskListId,
+      }));
+    });
+
+    const fetchNewestTaskDetails = async () => {
+      const detailedTasks = await Promise.all(
+        allTasksWithMeta.map(async (task) => {
+          const detail = await getTaskDetail(groupId, task.taskListId, task.id);
+          const startDate = detail.recurring?.startDate;
+          const startTime = new Date(startDate ?? '').getTime();
+
+          return {
+            ...task,
+            startDate,
+            startTime,
+          };
+        })
+      );
+
+      const pastTasks = detailedTasks
+        .filter((task) => !!task.startTime && task.startTime <= currentTime)
+        .sort((a, b) => b.startTime - a.startTime)
+        .slice(0, 2);
+
+      if (pastTasks.length === 0) {
+        setNewestTasks([{ title: '새롭게 시작된 할 일이 없습니다.', elapsedTime: '' }]);
+      } else {
+        setNewestTasks(
+          pastTasks.map((task) => ({
+            title: task.name,
+            elapsedTime: task.startDate ? formatElapsedTime(task.startDate) : '알 수 없음',
+          }))
+        );
+      }
+    };
+
+    fetchNewestTaskDetails();
+  }, [futureDate, taskQueries, groupId, teamid, taskListIds]);
 
   return (
     <div className="py-6">
@@ -153,7 +205,7 @@ export default function TeamPage() {
           </div>
         </header>
 
-        <Report total={totalTodayTasks} completed={completedTodayTasks} />
+        <Report total={totalTodayTasks} completed={completedTodayTasks} newestTasks={newestTasks} />
       </section>
 
       <section className={sectionStyle}>

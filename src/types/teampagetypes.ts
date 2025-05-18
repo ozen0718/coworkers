@@ -12,9 +12,9 @@ export type ProgressProp = {
   percentage: number;
 };
 
-export interface UrgentTaskProps {
+export interface NewestTaskProps {
   title: string;
-  dueDate: string;
+  elapsedTime: string;
 }
 
 export type GroupPageInfo = Pick<Memberships, 'role'> & {
@@ -26,4 +26,5 @@ export type TaskInfo = Pick<Task, 'id' | 'name' | 'description' | 'date' | 'done
 export interface ReportProps {
   total: number;
   completed: number;
+  newestTasks?: NewestTaskProps[];
 }
