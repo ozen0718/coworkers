@@ -2,7 +2,6 @@ import { useQuery, useQueries } from '@tanstack/react-query';
 import { getGroupPageInfo } from '@/api/user.api';
 import { getTasksByTaskList } from '@/api/tasklist.api';
 import { GroupPageInfo, TaskInfo } from '@/types/teampagetypes';
-import { getFutureDateString } from '@/utils/date';
 
 export const useGroupPageInfo = (groupId: string) => {
   return useQuery<GroupPageInfo>({
@@ -12,13 +11,15 @@ export const useGroupPageInfo = (groupId: string) => {
   });
 };
 
-export const useAllTaskListTasks = (groupId: number | undefined, taskListIds: number[]) => {
-  const distantFuture = getFutureDateString(100);
-
+export const useAllTaskListTasks = (
+  groupId: number | undefined,
+  taskListIds: number[],
+  date: string
+) => {
   return useQueries({
     queries: taskListIds.map((taskListId) => ({
-      queryKey: ['tasks', taskListId, distantFuture],
-      queryFn: () => getTasksByTaskList(groupId!, taskListId, distantFuture),
+      queryKey: ['tasks', taskListId, date],
+      queryFn: () => getTasksByTaskList(groupId!, taskListId, date),
       enabled: !!groupId && !!taskListId,
     })),
   }) as {

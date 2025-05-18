@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { toast } from 'react-toastify';
-//import { useQuery } from '@tanstack/react-query';
 import { TextInput } from '@/components/common/Inputs';
 import { TasksItem } from '@/components/teampage/TaskElements';
 import TeamHeader from '@/components/teampage/TeamHeader';
@@ -12,12 +11,10 @@ import Member from '@/components/common/Member';
 import Modal from '@/components/common/Modal';
 import { Profile } from '@/components/common/Profiles';
 import { createTaskList } from '@/api/tasklist.api';
-//import { getTasksByTaskList } from '@/api/tasklist.api';
 import { useGroupDetail } from '@/hooks/useGroupDetail';
 import { useGroupPageInfo, useAllTaskListTasks } from '@/hooks/useGroupPageInfo';
 import { useModalGroup } from '@/hooks/useModalGroup';
-//import { TaskList } from '@/types/tasklisttypes';
-//import { TaskInfo } from '@/types/teampagetypes';
+import { getFutureDateString } from '@/utils/date';
 
 const mockMembers = [
   { name: '우지은', email: 'coworkers@code.com' },
@@ -86,8 +83,15 @@ export default function TeamPage() {
   const teamName = userData?.group.name ?? '팀 없음';
   const groupId = userData?.group.id;
   const { data: groupDetail } = useGroupDetail(groupId);
+
+  const [futureDate, setFutureDate] = useState<string | null>(null);
+
+  useEffect(() => {
+    setFutureDate(getFutureDateString(100));
+  }, []);
+
   const taskListIds = groupDetail?.taskLists.map((list) => list.id) ?? [];
-  const taskQueries = useAllTaskListTasks(groupId, taskListIds);
+  const taskQueries = useAllTaskListTasks(groupId, taskListIds, futureDate ?? '');
 
   return (
     <div className="py-6">
@@ -128,6 +132,7 @@ export default function TeamPage() {
           const tasks = taskQuery?.data ?? [];
           const total = tasks.length;
           const completed = tasks.filter((task) => task.doneAt !== null).length;
+          if (!futureDate) return null;
 
           return (
             <TasksItem key={list.id} completed={completed} total={total} tasksTitle={list.name} />
