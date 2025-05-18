@@ -93,6 +93,12 @@ export default function TeamPage() {
   const taskListIds = groupDetail?.taskLists.map((list) => list.id) ?? [];
   const taskQueries = useAllTaskListTasks(groupId, taskListIds, futureDate ?? '');
 
+  const todayDate = new Date().toISOString().split('T')[0];
+  const todayTaskQueries = useAllTaskListTasks(groupId, taskListIds, todayDate);
+  const todayTasks = todayTaskQueries.flatMap((query) => query?.data ?? []);
+  const totalTodayTasks = todayTasks.length;
+  const completedTodayTasks = todayTasks.filter((task) => task.doneAt !== null).length;
+
   return (
     <div className="py-6">
       <TeamHeader title={teamName} showGear={isClient && isAdmin} />
@@ -147,7 +153,7 @@ export default function TeamPage() {
           </div>
         </header>
 
-        <Report />
+        <Report total={totalTodayTasks} completed={completedTodayTasks} />
       </section>
 
       <section className={sectionStyle}>

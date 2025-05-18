@@ -22,3 +22,8 @@ export type GroupPageInfo = Pick<Memberships, 'role'> & {
 };
 
 export type TaskInfo = Pick<Task, 'id' | 'name' | 'description' | 'date' | 'doneAt'>;
+
+export interface ReportProps {
+  total: number;
+  completed: number;
+}
