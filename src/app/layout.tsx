@@ -17,12 +17,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ko">
       <body className="flex min-h-screen w-full flex-col">
         <QueryProvider>
+          <GlobalToast />
           <InitializeAuth />
           <HeaderProvider>
             <ClientHeaderLayout />
             <main className="flex-grow">{children}</main>
           </HeaderProvider>
-          <GlobalToast />
         </QueryProvider>
       </body>
     </html>

@@ -12,6 +12,9 @@ import { AxiosError } from 'axios';
 import { useParams } from 'next/navigation';
 import { useMutation } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
+import { getUserInfo } from '@/api/user';
+import { toast } from 'react-toastify';
+import { useQuery } from '@tanstack/react-query';
 
 export default function BoardComment({
   commentId,
@@ -20,6 +23,7 @@ export default function BoardComment({
   author,
   date,
   onChange,
+  writer,
 }: BoardCommentProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -33,8 +37,20 @@ export default function BoardComment({
     setIsDropDownOpen((prev) => !prev);
   };
 
+  /* 사용자 정보 */
+  const { data: userInfo } = useQuery({
+    queryKey: ['userInfo'],
+    queryFn: getUserInfo,
+  });
+
+  const isWriter = userInfo?.id === writer.id;
+
   /* Dropdown 수정 */
   const handleEdit = () => {
+    if (!isWriter) {
+      toast.error('작성자만 수정할 수 있습니다');
+      return;
+    }
     setIsEditing(true);
     setEditedContent(content);
   };
@@ -43,6 +59,10 @@ export default function BoardComment({
   const handleDelete = async () => {
     if (!id) {
       console.log('아이디 없음');
+      return;
+    }
+    if (!isWriter) {
+      toast.error('작성자만 삭제할 수 있습니다');
       return;
     }
     deleteMutation.mutate();

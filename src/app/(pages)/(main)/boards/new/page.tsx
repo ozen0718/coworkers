@@ -5,7 +5,7 @@ import Button from '@/components/common/Button/Button';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { AxiosError } from 'axios';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { createArticle } from '@/api/articles';
 import { useQueryClient } from '@tanstack/react-query';
 
@@ -43,7 +43,6 @@ export default function CreateBoard() {
 
   return (
     <div className="my-14 max-h-[841px]">
-      <ToastContainer position="top-center" />
       {/* 타이틀 + 버튼 */}
       <div className="flex items-center justify-between">
         <p className="text-xl-bold flex">게시글 쓰기</p>
