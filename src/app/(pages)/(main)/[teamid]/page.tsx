@@ -12,6 +12,7 @@ import Modal from '@/components/common/Modal';
 import { Profile } from '@/components/common/Profiles';
 import { createTaskList } from '@/api/tasklist.api';
 import { useModalGroup } from '@/hooks/useModalGroup';
+import { useGroupDetail } from '@/hooks/useGroupDetail';
 import { useGroupPageInfo } from '@/hooks/useGroupPageInfo';
 
 const mockMembers = [
@@ -77,10 +78,10 @@ export default function TeamPage() {
 
   const { teamid } = useParams() as { teamid: string };
   const { data: userData } = useGroupPageInfo(teamid);
-
   const isAdmin = userData?.role === 'ADMIN';
   const teamName = userData?.group.name ?? '팀 없음';
   const groupId = userData?.group.id;
+  const { data: groupDetail } = useGroupDetail(groupId);
 
   return (
     <div className="py-6">
@@ -90,7 +91,7 @@ export default function TeamPage() {
         <header className={sectionHeaderStyle}>
           <div className={sectionHeaderTitleStyle}>
             <h2 className={sectionHeaderH2Style}>할 일 목록</h2>
-            <p className={sectionHeaderPSTyle}>(4개)</p>
+            <p className={sectionHeaderPSTyle}>({groupDetail?.taskLists.length ?? 0}개)</p>
           </div>
           {isClient && isAdmin && (
             <button className={sectionHeaderButtonStyle} onClick={() => open('createList')}>
@@ -116,10 +117,9 @@ export default function TeamPage() {
           </Modal>
         </header>
 
-        <TasksItem completed={1} total={3} tasksTitle="할일목록 1" />
-        <TasksItem completed={2} total={5} tasksTitle="할일목록 2" />
-        <TasksItem completed={3} total={7} tasksTitle="할일목록 3" />
-        <TasksItem completed={10} total={10} tasksTitle="할일목록 4" />
+        {groupDetail?.taskLists.map((list) => (
+          <TasksItem key={list.id} completed={1} total={3} tasksTitle={list.name} />
+        ))}
       </section>
 
       <section className={sectionStyle}>
