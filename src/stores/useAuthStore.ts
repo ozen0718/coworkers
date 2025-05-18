@@ -9,9 +9,10 @@ interface AuthState {
   setAccessToken: (token: string) => void;
   logout: () => void;
   initializeAuth: () => void;
+  clearTokens: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuthStore = create<AuthState>((set, get) => ({
   accessToken: null,
   isLoggedIn: false,
 
@@ -23,7 +24,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   logout: () => {
     localStorage.removeItem('accessToken');
     set({ accessToken: null, isLoggedIn: false });
-    useUserStore.getState().clearUserInfo();
+    useUserStore.getState().setUserInfo({ nickname: '', profileImage: null, teams: [] });
   },
 
   initializeAuth: () => {
@@ -31,5 +32,9 @@ export const useAuthStore = create<AuthState>((set) => ({
     if (storedToken) {
       set({ accessToken: storedToken, isLoggedIn: true });
     }
+  },
+
+  clearTokens: () => {
+    get().logout();
   },
 }));
