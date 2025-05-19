@@ -1,7 +1,7 @@
 export const QUERY_KEYS = {
   // User
   user: {
-    me: ['user'],
+    me: ['user'] as const,
     groups: ['user', 'groups'],
     memberships: ['user', 'memberships'],
     history: ['user', 'history'],

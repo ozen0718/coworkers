@@ -20,9 +20,12 @@ export const useUserStore = create<UserState>((set) => ({
   profileImage: null,
   teams: [],
   isInitialized: false,
-  setUserInfo: ({ nickname, profileImage, teams }) => {
-    set({ nickname, profileImage, teams, isInitialized: true });
-  },
+  setUserInfo: (data) =>
+    set((prev) => ({
+      ...prev,
+      ...data,
+      isInitialized: true,
+    })),
   clearUserInfo: () => {
     set({ nickname: null, profileImage: null, teams: [], isInitialized: false });
   },
