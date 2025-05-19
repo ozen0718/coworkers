@@ -178,6 +178,8 @@ export default function TaskListPage() {
                   title={selectedTodo.title}
                   showComplete={false}
                   onClose={() => setDetailOpen(false)}
+                  date={selectedTodo.date}
+                  time={selectedTodo.time}
                 />
               )}
             </SlideWrapper>

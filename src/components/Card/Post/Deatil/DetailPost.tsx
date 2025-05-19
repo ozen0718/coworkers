@@ -13,9 +13,11 @@ type DetailPostProps = {
   title?: string;
   onClose: () => void;
   showComplete: boolean;
+  date?: string;
+  time?: string;
 };
 
-export default function DetailPost({ title, onClose, showComplete }: DetailPostProps) {
+export default function DetailPost({ title, date, onClose, showComplete }: DetailPostProps) {
   const [isComplete, setIsComplete] = useState(showComplete);
 
   const handleToggleComplete = () => {
@@ -56,7 +58,7 @@ export default function DetailPost({ title, onClose, showComplete }: DetailPostP
 
       {!isComplete && (
         <div className="mt-2">
-          <DateInfo date="2025-04-25T00:00:00Z" time="15:30" repeatinfo="DAILY" />
+          <DateInfo date={date ?? ''} time="15:30" repeatinfo="DAILY" />
         </div>
       )}
 
