@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { TextInput } from '@/components/common/Inputs';
 import { TasksItem } from '@/components/teampage/TaskElements';
@@ -9,8 +10,11 @@ import Report from '@/components/teampage/Report';
 import Member from '@/components/common/Member';
 import Modal from '@/components/common/Modal';
 import { Profile } from '@/components/common/Profiles';
+import { createTaskList } from '@/api/tasklist.api';
+import { useGroupDetail } from '@/hooks/useGroupDetail';
+import { useGroupPageInfo, useAllTaskListTasks } from '@/hooks/useGroupPageInfo';
 import { useModalGroup } from '@/hooks/useModalGroup';
-import { useGroupPageInfo } from '@/hooks/useGroupPageInfo';
+import { getFutureDateString } from '@/utils/date';
 
 const mockMembers = [
   { name: '우지은', email: 'coworkers@code.com' },
@@ -38,11 +42,23 @@ export default function TeamPage() {
 
   const { open, close, isOpen } = useModalGroup<'invite' | 'createList' | 'memberProfile'>();
 
-  const handleCreateList = () => {
+  const handleCreateList = async () => {
     if (!newListName.trim()) return;
-    close();
-    toast.success('새로운 목록이 생성되었습니다.');
-    setNewListName('');
+    if (!groupId || !teamid) return toast.error('그룹 정보를 불러오지 못했습니다.');
+
+    try {
+      await createTaskList({
+        groupId: groupId,
+        name: newListName.trim(),
+      });
+
+      toast.success('새로운 목록이 생성되었습니다.');
+      close();
+      setNewListName('');
+    } catch (error) {
+      toast.error('목록 생성에 실패했습니다.');
+      console.error(error);
+    }
   };
 
   const handleCopyPageLink = async () => {
@@ -61,19 +77,37 @@ export default function TeamPage() {
     open('memberProfile');
   };
 
-  const { data: userData } = useGroupPageInfo();
+  const { teamid } = useParams() as { teamid: string };
+  const { data: userData } = useGroupPageInfo(teamid);
   const isAdmin = userData?.role === 'ADMIN';
-  const groupName = userData?.group.name;
+  const teamName = userData?.group.name ?? '팀 없음';
+  const groupId = userData?.group.id;
+  const { data: groupDetail } = useGroupDetail(groupId);
+
+  const [futureDate, setFutureDate] = useState<string | null>(null);
+
+  useEffect(() => {
+    setFutureDate(getFutureDateString(100));
+  }, []);
+
+  const taskListIds = groupDetail?.taskLists.map((list) => list.id) ?? [];
+  const taskQueries = useAllTaskListTasks(groupId, taskListIds, futureDate ?? '');
+
+  const todayDate = new Date().toISOString().split('T')[0];
+  const todayTaskQueries = useAllTaskListTasks(groupId, taskListIds, todayDate);
+  const todayTasks = todayTaskQueries.flatMap((query) => query?.data ?? []);
+  const totalTodayTasks = todayTasks.length;
+  const completedTodayTasks = todayTasks.filter((task) => task.doneAt !== null).length;
 
   return (
     <div className="py-6">
-      <TeamHeader title={groupName ?? '팀 이름'} showGear={isClient && isAdmin} />
+      <TeamHeader title={teamName} showGear={isClient && isAdmin} />
 
       <section className={sectionStyle}>
         <header className={sectionHeaderStyle}>
           <div className={sectionHeaderTitleStyle}>
             <h2 className={sectionHeaderH2Style}>할 일 목록</h2>
-            <p className={sectionHeaderPSTyle}>(4개)</p>
+            <p className={sectionHeaderPSTyle}>({groupDetail?.taskLists.length ?? 0}개)</p>
           </div>
           {isClient && isAdmin && (
             <button className={sectionHeaderButtonStyle} onClick={() => open('createList')}>
@@ -99,10 +133,17 @@ export default function TeamPage() {
           </Modal>
         </header>
 
-        <TasksItem completed={1} total={3} tasksTitle="할일목록 1" />
-        <TasksItem completed={2} total={5} tasksTitle="할일목록 2" />
-        <TasksItem completed={3} total={7} tasksTitle="할일목록 3" />
-        <TasksItem completed={10} total={10} tasksTitle="할일목록 4" />
+        {groupDetail?.taskLists.map((list, index) => {
+          const taskQuery = taskQueries[index];
+          const tasks = taskQuery?.data ?? [];
+          const total = tasks.length;
+          const completed = tasks.filter((task) => task.doneAt !== null).length;
+          if (!futureDate) return null;
+
+          return (
+            <TasksItem key={list.id} completed={completed} total={total} tasksTitle={list.name} />
+          );
+        })}
       </section>
 
       <section className={sectionStyle}>
@@ -112,7 +153,7 @@ export default function TeamPage() {
           </div>
         </header>
 
-        <Report />
+        <Report total={totalTodayTasks} completed={completedTodayTasks} />
       </section>
 
       <section className={sectionStyle}>
