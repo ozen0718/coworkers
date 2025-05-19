@@ -108,11 +108,7 @@ export default function DetailPost({
       <div className="w-full max-w-[739px]">
         <AuthorInfo
           type="detail"
-          date={(() => {
-            const d = commentData?.data.createdAt;
-            console.log('날짜:', d);
-            return d;
-          })()}
+          date={commentData?.data.createdAt}
           showLike={false}
           showDivider={false}
         />
@@ -144,6 +140,8 @@ export default function DetailPost({
             commentId={comment.id}
             writer={{ id: comment.user?.id ?? 0 }}
             content={comment.content}
+            author={comment.user?.nickname}
+            date={comment.createdAt}
           />
         ))}
       </div>

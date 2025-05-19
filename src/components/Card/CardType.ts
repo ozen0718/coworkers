@@ -119,6 +119,7 @@ export type CommentDetail = {
   taskId?: number;
   userId?: number;
   commentId?: number;
+  createdAt?: string;
   user?: {
     id: number;
     nickname: string;
