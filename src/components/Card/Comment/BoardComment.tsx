@@ -16,6 +16,7 @@ import { getUserInfo } from '@/api/user';
 import { toast } from 'react-toastify';
 import { useQuery } from '@tanstack/react-query';
 import { deleteDetailComment } from '@/api/detailPost';
+import { editDetailComment } from '@/api/detailPost';
 
 export default function BoardComment({
   commentId,
@@ -85,7 +86,6 @@ export default function BoardComment({
 
   const deleteDetailMutation = useMutation({
     mutationFn: () => {
-      console.log('🔥 deleteDetailComment 호출:', { taskId, commentId }); // ← 찍히는지 확인
       if (taskId === undefined) {
         throw new Error('taskId가 없습니다');
       }
@@ -103,11 +103,22 @@ export default function BoardComment({
 
   /* 댓글 수정*/
   const handleEditComment = async () => {
-    if (!id || !editedContent) {
+    if (!editedContent) {
+      console.log('눌림3');
       return;
     }
     try {
-      await editComment(commentId, { content: editedContent });
+      if (type === 'list') {
+        if (taskId === undefined) {
+          throw new Error('taskId가 없습니다');
+        }
+        await editDetailComment(taskId, commentId, { content: editedContent });
+        queryClient.invalidateQueries({ queryKey: ['comments', taskId] });
+        console.log('눌림1');
+      } else {
+        await editComment(commentId, { content: editedContent });
+        console.log('눌림2');
+      }
       console.log('댓글 수정 성공');
       setIsEditing(false);
       onChange?.();

@@ -16,6 +16,10 @@ export const deleteDetailComment = (taskId: number, commentId: number) => {
 };
 
 /* 상세 카드 - 댓글 수정 */
-export const editComment = (taskId: number, commentId: number, payload: { content: string }) => {
+export const editDetailComment = (
+  taskId: number,
+  commentId: number,
+  payload: { content: string }
+) => {
   return axiosInstance.patch(`/tasks/${taskId}/comments/${commentId}`, payload);
 };

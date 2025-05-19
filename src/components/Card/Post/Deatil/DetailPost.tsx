@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import AuthorInfo from '../../Comment/AuthorInfo';
 import Button from '@/components/common/Button/Button';
 import IconDelete from '@/assets/icons/IconDelete';
@@ -14,7 +14,6 @@ import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { fetchComment } from '@/api/detailPost';
-import { BoardCommentProps } from '../../CardType';
 import { useQueryClient } from '@tanstack/react-query';
 import { CommentDetail } from '../../CardType';
 
@@ -107,7 +106,16 @@ export default function DetailPost({
       </div>
 
       <div className="w-full max-w-[739px]">
-        <AuthorInfo type="detail" showLike={false} showDivider={false} />
+        <AuthorInfo
+          type="detail"
+          date={(() => {
+            const d = commentData?.data.createdAt;
+            console.log('날짜:', d);
+            return d;
+          })()}
+          showLike={false}
+          showDivider={false}
+        />
       </div>
 
       {!isComplete && (
