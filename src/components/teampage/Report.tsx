@@ -1,7 +1,7 @@
 import Image from 'next/image';
-import ReportProgress from '@/components/teampage/ReportProgress';
-import { ProgressProp, UrgentTaskProps } from '@/types/teampagetypes';
 import Alert from '@/assets/icons/Alert';
+import ReportProgress from '@/components/teampage/ReportProgress';
+import { ProgressProp, UrgentTaskProps, ReportProps } from '@/types/teampagetypes';
 
 const taskReportBoxStyle = 'flex h-20 w-full items-end justify-between bg-bg100 p-4 rounded-xl';
 const taskReportTextBoxStyle = 'flex flex-col items-start justify-center gap-1 ';
@@ -30,35 +30,35 @@ function LeftSide({ percentage }: ProgressProp) {
   );
 }
 
-function TodayTasks() {
+function TodayTasks({ total }: { total: number }) {
   return (
     <div className={taskReportBoxStyle}>
       <div className={taskReportTextBoxStyle}>
         <h3 className={taskReportLabelStyle}>오늘의 할 일</h3>
-        <p className={taskReportNumberStyle}>20개</p>
+        <p className={taskReportNumberStyle}>{total}개</p>
       </div>
       <Image src="/icons/head.svg" alt="오늘의 할 일" width={40} height={40} />
     </div>
   );
 }
 
-function TodayCompletedTasks() {
+function TodayCompletedTasks({ completed }: { completed: number }) {
   return (
     <div className={taskReportBoxStyle}>
       <div className={taskReportTextBoxStyle}>
         <h3 className={taskReportLabelStyle}>한 일</h3>
-        <p className={taskReportNumberStyle}>5</p>
+        <p className={taskReportNumberStyle}>{completed}</p>
       </div>
       <Image src="/icons/sign_done.svg" alt="한 일" width={40} height={40} />
     </div>
   );
 }
 
-function TaskReportColumn() {
+function TaskReportColumn({ total, completed }: ReportProps) {
   return (
     <div className="flex w-full flex-col gap-4">
-      <TodayTasks />
-      <TodayCompletedTasks />
+      <TodayTasks total={total} />
+      <TodayCompletedTasks completed={completed} />
     </div>
   );
 }
@@ -84,9 +84,7 @@ function UrgentTaskForMobile({ title, dueDate }: UrgentTaskProps) {
         <Alert className="text-white" />
         <div className="flex flex-col items-center justify-center">
           <p className="text-xs-regular text-tertiary whitespace-nowrap">마감 임박</p>
-          <p className="text-lg-medium h-fit w-fit rounded-l-full whitespace-nowrap">
-            {dueDate}
-          </p>
+          <p className="text-lg-medium h-fit w-fit rounded-l-full whitespace-nowrap">{dueDate}</p>
         </div>
       </div>
       <div className="flex h-full w-full items-center">
@@ -105,16 +103,18 @@ function UrgentTasksReportColumn() {
   );
 }
 
-export default function Report() {
+export default function Report({ total, completed }: ReportProps) {
+  const percentage = total === 0 ? 0 : Math.round((completed / total) * 100);
+
   return (
     <div className="relative w-full">
       <div className="bg-bg200 grid grid-cols-2 gap-4 rounded-xl px-2 py-2 sm:grid-cols-3 sm:px-6">
-        <LeftSide percentage={25} />
+        <LeftSide percentage={percentage} />
         <div className="hidden justify-center sm:flex">
           <UrgentTasksReportColumn />
         </div>
         <div className="flex justify-end">
-          <TaskReportColumn />
+          <TaskReportColumn total={total} completed={completed} />
         </div>
       </div>
       <div className="mt-4 flex flex-col items-center justify-start gap-4 sm:hidden">

@@ -1,3 +1,5 @@
+import { Task } from '@/types/tasktypes';
+
 export interface TaskList {
   id: number;
   name: string;
@@ -5,5 +7,5 @@ export interface TaskList {
   displayIndex: number;
   createdAt: string;
   updatedAt: string;
-  tasks: string[];
+  tasks: Task[];
 }
