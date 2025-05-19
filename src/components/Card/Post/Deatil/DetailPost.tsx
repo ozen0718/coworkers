@@ -131,7 +131,7 @@ export default function DetailPost({
         {commentData?.data?.map((comment: CommentDetail) => (
           <BoardComment
             type="list"
-            taskid={taskId}
+            taskId={taskId}
             key={comment.id}
             commentId={comment.id}
             writer={{ id: comment.user?.id ?? 0 }}

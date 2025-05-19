@@ -44,7 +44,7 @@ export type BoardCommentProps = {
   content?: string;
   date?: string;
   commentId: number;
-  taskid?: number;
+  taskId?: number;
   onChange?: () => void;
   writer?: {
     id: number;

@@ -15,6 +15,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { getUserInfo } from '@/api/user';
 import { toast } from 'react-toastify';
 import { useQuery } from '@tanstack/react-query';
+import { deleteDetailComment } from '@/api/detailPost';
 
 export default function BoardComment({
   commentId,
@@ -24,6 +25,7 @@ export default function BoardComment({
   date,
   onChange,
   writer,
+  taskId,
 }: BoardCommentProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -57,15 +59,16 @@ export default function BoardComment({
 
   /* 댓글 삭제 */
   const handleDelete = async () => {
-    if (!id) {
-      console.log('아이디 없음');
-      return;
-    }
     if (!isWriter) {
       toast.error('작성자만 삭제할 수 있습니다');
       return;
     }
-    deleteMutation.mutate();
+
+    if (type === 'list') {
+      deleteDetailMutation.mutate();
+    } else {
+      deleteMutation.mutate();
+    }
   };
 
   const deleteMutation = useMutation({
@@ -77,6 +80,24 @@ export default function BoardComment({
     },
     onError: (err: AxiosError) => {
       console.error('댓글 삭제 실패:', err.response?.data);
+    },
+  });
+
+  const deleteDetailMutation = useMutation({
+    mutationFn: () => {
+      console.log('🔥 deleteDetailComment 호출:', { taskId, commentId }); // ← 찍히는지 확인
+      if (taskId === undefined) {
+        throw new Error('taskId가 없습니다');
+      }
+      return deleteDetailComment(taskId, commentId);
+    },
+    onSuccess: () => {
+      console.log('상세 카드 댓글 삭제 성공');
+      onChange?.();
+      queryClient.invalidateQueries({ queryKey: ['comments', taskId] });
+    },
+    onError: (err: AxiosError) => {
+      console.error('상세 카드 댓글 삭제 실패:', err.response?.data);
     },
   });
 
