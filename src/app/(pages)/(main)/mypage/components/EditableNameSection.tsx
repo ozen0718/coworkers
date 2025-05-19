@@ -68,7 +68,13 @@ export default function EditableNameSection({ name }: EditableNameProps) {
     <>
       <div className="flex flex-col gap-3">
         <label>이름</label>
-        <CurrentName name={name} onClick={open} />
+        <CurrentName
+          name={name}
+          onClick={() => {
+            setInputName(name);
+            open();
+          }}
+        />
       </div>
 
       <Modal
