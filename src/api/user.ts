@@ -6,7 +6,6 @@ export interface ParsedUser {
   nickname: string;
   profileImage: string | null;
   email: string;
-  id: number;
   memberships: Memberships[];
 }
 
@@ -15,7 +14,6 @@ export interface RawUserResponse {
   nickname: string;
   image: string | null;
   email: string;
-  id: number;
   memberships: Memberships[];
 }
 
@@ -40,7 +38,6 @@ export const getUserInfo = async (): Promise<ParsedUser & { teams: Team[] }> => 
     nickname: data.nickname,
     profileImage: data.image,
     email: data.email,
-    id: data.id,
     memberships: data.memberships ?? [],
     teams,
   };
