@@ -111,3 +111,17 @@ export type PostDetail = {
     nickname: string;
   };
 };
+
+/* 상세 카드 - 댓글 */
+export type CommentDetail = {
+  id: number;
+  content?: string;
+  taskId?: number;
+  userId?: number;
+  commentId?: number;
+  user?: {
+    id: number;
+    nickname: string;
+    image: string | null;
+  };
+};

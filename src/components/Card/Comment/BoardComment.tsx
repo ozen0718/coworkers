@@ -110,7 +110,9 @@ export default function BoardComment({
     >
       <div className="text-lg-regular flex w-full items-start justify-between">
         {isEditing ? (
-          <div className="relative flex h-full w-full items-start">
+          <div
+            className={clsx('relative flex h-full w-full items-start', type === 'list' && 'mt-3')}
+          >
             <TextAreaInput
               value={editedContent}
               onChange={(e) => setEditedContent(e.target.value)}

@@ -16,6 +16,7 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchComment } from '@/api/detailPost';
 import { BoardCommentProps } from '../../CardType';
 import { useQueryClient } from '@tanstack/react-query';
+import { CommentDetail } from '../../CardType';
 
 type DetailPostProps = {
   taskid?: number;
@@ -127,13 +128,13 @@ export default function DetailPost({
       </div>
 
       <div className="scroll-area max-h-[400px] w-full overflow-y-auto">
-        {commentData?.data?.map((comment: BoardCommentProps) => (
+        {commentData?.data?.map((comment: CommentDetail) => (
           <BoardComment
             type="list"
             taskid={taskId}
             key={comment.id}
-            commentId={comment.commentId}
-            writer={comment.writer}
+            commentId={comment.id}
+            writer={{ id: comment.user?.id ?? 0 }}
             content={comment.content}
           />
         ))}
