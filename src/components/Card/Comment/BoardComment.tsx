@@ -43,7 +43,7 @@ export default function BoardComment({
     queryFn: getUserInfo,
   });
 
-  const isWriter = userInfo?.id === writer.id;
+  const isWriter = userInfo?.id === writer?.id;
 
   /* Dropdown 수정 */
   const handleEdit = () => {
@@ -121,7 +121,7 @@ export default function BoardComment({
           <div
             className={clsx('relative flex w-full items-start', type === 'free' ? 'mt-0' : 'mt-4')}
           >
-            <span className="scroll-area mr-2 block max-h-[50px] min-h-[40px] overflow-x-hidden overflow-y-auto pr-6">
+            <span className="scroll-area mr-2 block max-h-[50px] min-h-[40px] overflow-x-hidden overflow-y-auto pr-6 whitespace-pre-line">
               {content}
             </span>
             <Image

@@ -1,6 +1,6 @@
 'use client';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AuthorInfo from '../../Comment/AuthorInfo';
 import Button from '@/components/common/Button/Button';
 import IconDelete from '@/assets/icons/IconDelete';
@@ -13,7 +13,9 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
 import { useQuery } from '@tanstack/react-query';
-import { fetchComment } from '@/api/articles';
+import { fetchComment } from '@/api/detailPost';
+import { BoardCommentProps } from '../../CardType';
+import { useQueryClient } from '@tanstack/react-query';
 
 type DetailPostProps = {
   taskid?: number;
@@ -36,11 +38,12 @@ export default function DetailPost({
 }: DetailPostProps) {
   const [isComplete, setIsComplete] = useState(showComplete);
 
+  const queryClient = useQueryClient();
+
   /* 댓글 내용 */
   const { data: commentData } = useQuery({
-    queryKey: ['comments', taskid],
-    queryFn: () => fetchComment(Number(taskid)),
-    enabled: !!taskid,
+    queryKey: ['comments', taskId],
+    queryFn: () => fetchComment(taskId),
   });
 
   /* 댓글 작성 */
@@ -62,6 +65,7 @@ export default function DetailPost({
     onSuccess: () => {
       console.log('댓글 작성 성공');
       toast.success('댓글이 작성되었습니다');
+      queryClient.invalidateQueries({ queryKey: ['comments', taskId] });
     },
     onError: (error: AxiosError) => {
       console.error('댓글 작성 실패', error.message);
@@ -123,10 +127,16 @@ export default function DetailPost({
       </div>
 
       <div className="scroll-area max-h-[400px] w-full overflow-y-auto">
-        {/*<BoardComment commentId={234} writer={1234} type="list" content="테스트" />
-        <BoardComment type="list" content="테스트2" />
-        <BoardComment type="list" content="테스트3" />
-        <BoardComment type="list" content="테스트4" />*/}
+        {commentData?.data?.map((comment: BoardCommentProps) => (
+          <BoardComment
+            type="list"
+            taskid={taskId}
+            key={comment.id}
+            commentId={comment.commentId}
+            writer={comment.writer}
+            content={comment.content}
+          />
+        ))}
       </div>
 
       <Button
