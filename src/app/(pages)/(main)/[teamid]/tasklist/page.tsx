@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { addDays, format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import clsx from 'clsx';
+import { useParams } from 'next/navigation';
+import { Toaster, toast } from 'react-hot-toast';
 
 import Modal from '@/components/common/Modal';
 import TodoItem from '@/components/List/todo';
@@ -12,6 +14,9 @@ import { TextInput } from '@/components/common/Inputs';
 import DetailPost from '@/components/Card/Post/Deatil/DetailPost';
 import SlideWrapper from '@/components/Card/SlideWrapper';
 import TodoFullCreateModal, { TodoFullCreateModalProps } from './components/TodoFullCreateModal';
+import { createTaskList, getTaskLists, getTasksByTaskList } from '@/api/tasklist.api';
+import { TaskList } from '@/types/tasklisttypes';
+import { Task } from '@/types/tasktypes';
 
 const MAX_LIST_NAME_LENGTH = 15;
 
@@ -25,15 +30,30 @@ interface Todo {
   completed: boolean;
 }
 
+const convertTaskToTodo = (task: Task): Todo => ({
+  id: task.id,
+  title: task.name,
+  date: task.date,
+  time: '',
+  recurring: false,
+  comments: 0,
+  completed: task.doneAt !== null,
+});
+
 export default function TaskListPage() {
+  const params = useParams();
+  const groupId = params.teamid as string;
+
   const [currentDate, setCurrentDate] = useState(new Date());
   const prevDay = () => setCurrentDate((d) => addDays(d, -1));
   const nextDay = () => setCurrentDate((d) => addDays(d, +1));
   const dateKey = format(currentDate, 'yyyy-MM-dd');
 
+  const [taskLists, setTaskLists] = useState<TaskList[]>([]);
   const [tabsMap, setTabsMap] = useState<Record<string, string[]>>({});
   const [todosMap, setTodosMap] = useState<Record<string, Record<string, Todo[]>>>({});
   const [selectedTab, setSelectedTab] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const [newListName, setNewListName] = useState('');
   const [isListModalOpen, setListModalOpen] = useState(false);
@@ -43,29 +63,90 @@ export default function TaskListPage() {
   const [detailopen, setDetailOpen] = useState(false);
 
   useEffect(() => {
+    const fetchTaskLists = async () => {
+      setIsLoading(true);
+      try {
+        const lists = await getTaskLists(groupId);
+        setTaskLists(lists);
+
+        // 탭 맵 초기화
+        const tabNames = lists.map((list) => list.name);
+        setTabsMap((prev) => ({
+          ...prev,
+          [dateKey]: tabNames,
+        }));
+
+        // 각 리스트의 할 일 불러오기
+        await Promise.all(lists.map(loadTasksForList));
+      } catch (error) {
+        console.error('Failed to fetch task lists:', error);
+        toast.error('목록을 불러오는데 실패했습니다.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTaskLists();
+  }, [groupId, dateKey]);
+
+  useEffect(() => {
     setSelectedTab('');
   }, [dateKey]);
 
   const visibleTabs = tabsMap[dateKey] || [];
   const visibleTodos = selectedTab ? todosMap[dateKey]?.[selectedTab] || [] : [];
 
-  const handleAddList = () => {
+  const handleAddList = async () => {
     const name = newListName.trim().slice(0, MAX_LIST_NAME_LENGTH);
     if (!name) return;
-    setTabsMap((prev) => ({
-      ...prev,
-      [dateKey]: [...(prev[dateKey] || []), name],
-    }));
-    setTodosMap((prev) => ({
-      ...prev,
-      [dateKey]: {
-        ...(prev[dateKey] || {}),
-        [name]: [],
-      },
-    }));
-    setSelectedTab(name);
-    setNewListName('');
-    setListModalOpen(false);
+    const formattedName = `[${name}]`;
+
+    setIsLoading(true);
+    try {
+      const newTaskList = await createTaskList({
+        groupId,
+        name: formattedName,
+      });
+
+      setTaskLists((prev) => [...prev, newTaskList]);
+      setTabsMap((prev) => ({
+        ...prev,
+        [dateKey]: [...(prev[dateKey] || []), formattedName],
+      }));
+      setTodosMap((prev) => ({
+        ...prev,
+        [dateKey]: {
+          ...(prev[dateKey] || {}),
+          [formattedName]: [],
+        },
+      }));
+      setSelectedTab(formattedName);
+      setNewListName('');
+      setListModalOpen(false);
+      toast.success('새로운 목록이 생성되었습니다.');
+    } catch (error) {
+      console.error('Failed to create task list:', error);
+      toast.error('목록 생성에 실패했습니다. 다시 시도해주세요.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const loadTasksForList = async (taskList: TaskList) => {
+    try {
+      const tasks = await getTasksByTaskList(groupId, taskList.id, dateKey);
+      const todos = tasks.map(convertTaskToTodo);
+      setTodosMap((prev) => ({
+        ...prev,
+        [dateKey]: {
+          ...(prev[dateKey] || {}),
+          [taskList.name]: todos,
+        },
+      }));
+    } catch (error) {
+      console.error(`Failed to load tasks for list ${taskList.name}:`, error);
+      toast.error(`${taskList.name} 목록의 할 일을 불러오는데 실패했습니다.`);
+    }
   };
 
   const handleCreateTodo: TodoFullCreateModalProps['onSubmit'] = ({
@@ -106,6 +187,7 @@ export default function TaskListPage() {
 
   return (
     <>
+      <Toaster position="top-center" />
       <main className="py-6">
         <div className="relative mx-auto mt-6 max-w-[1200px] space-y-6 px-4 sm:px-6 md:px-8 lg:mt-10">
           <header className="space-y-4">
@@ -201,7 +283,7 @@ export default function TaskListPage() {
         isOpen={isTodoModalOpen}
         onClose={() => setTodoModalOpen(false)}
         onSubmit={handleCreateTodo}
-        disabled={!selectedTab}
+        disabled={!selectedTab || isLoading}
       />
 
       <Modal
@@ -214,8 +296,10 @@ export default function TaskListPage() {
           description: `할 일에 대한 목록을 추가하고 
         목록별 할 일을 만들 수 있습니다.`,
         }}
-        submitButton={{ label: '만들기' }}
-        disabled={!newListName.trim()}
+        submitButton={{
+          label: isLoading ? '생성 중...' : '만들기',
+        }}
+        disabled={!newListName.trim() || isLoading}
       >
         <div className="mt-4">
           <TextInput
@@ -223,6 +307,7 @@ export default function TaskListPage() {
             onChange={(e) => setNewListName(e.target.value)}
             placeholder="목록 이름을 입력해주세요."
             className="w-full text-gray-300 placeholder-gray-500"
+            disabled={isLoading}
           />
         </div>
       </Modal>
