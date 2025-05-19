@@ -1,6 +1,6 @@
 import MyHistoryItem from '@/components/myhistory/MyHistoryItem';
 import { MyHistoryByDateProps } from '@/types/myhistorytypes';
-import getKoreanDateString from '@/utils/date';
+import { getKoreanDateString } from '@/utils/date';
 
 export default function TaskHistoryByDate({ date, history }: MyHistoryByDateProps) {
   return (

@@ -2,6 +2,7 @@ import axiosInstance from '@/api/axiosInstance';
 import { Memberships, Team } from '@/types/usertypes';
 
 export interface ParsedUser {
+  id?: number;
   nickname: string;
   profileImage: string | null;
   email: string;
@@ -10,6 +11,7 @@ export interface ParsedUser {
 }
 
 export interface RawUserResponse {
+  id?: number;
   nickname: string;
   image: string | null;
   email: string;
@@ -34,6 +36,7 @@ export const getUserInfo = async (): Promise<ParsedUser & { teams: Team[] }> => 
   }));
 
   return {
+    id: data.id,
     nickname: data.nickname,
     profileImage: data.image,
     email: data.email,

@@ -8,7 +8,7 @@ import { useParams, useRouter } from 'next/navigation';
 export default function TeamHeader({ title, showGear }: TeamHeaderProp) {
   const router = useRouter();
   const params = useParams();
-  const teamid = params.teamId as string;
+  const teamid = params.teamid as string;
 
   return (
     <div
