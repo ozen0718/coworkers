@@ -3,9 +3,12 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createTeam } from '@/api/TeamCreate';
+import { useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEYS } from '@/constants/queryKeys';
 
 export function useAddTeamForm() {
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const [name, setName] = useState('');
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -50,9 +53,7 @@ export function useAddTeamForm() {
       return;
     }
 
-    if (!file && uploadedUrl) {
-      return;
-    }
+    if (!file && uploadedUrl) return;
 
     if (!file) {
       setPreviewUrl(null);
@@ -76,6 +77,9 @@ export function useAddTeamForm() {
     setIsLoading(true);
     try {
       const { id } = await createTeam(name, uploadedUrl ?? undefined);
+
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.user.me });
+
       router.push(`${id}`);
     } catch (err: unknown) {
       if (err instanceof Error) {

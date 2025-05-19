@@ -1,44 +1,45 @@
 import axiosInstance from '@/api/axiosInstance';
-import { Memberships } from '@/types/usertypes';
-
-export interface Team {
-  id: string;
-  name: string;
-  image?: string | null;
-}
+import { Memberships, Team } from '@/types/usertypes';
 
 export interface ParsedUser {
   id?: number;
   nickname: string;
   profileImage: string | null;
-  teams: Team[];
+  email: string;
+  memberships: Memberships[];
 }
 
 export interface RawUserResponse {
   id?: number;
   nickname: string;
   image: string | null;
+  email: string;
   memberships: Memberships[];
 }
 
+// 기본 fetch 함수
 export const fetchUser = async () => {
   const { data } = await axiosInstance.get('/user');
   return data;
 };
 
-export const getUserInfo = async (): Promise<ParsedUser> => {
-  const response = await axiosInstance.get<RawUserResponse>('/user');
-  const data = response.data;
+// teams를 포함해서 반환하는 함수
+export const getUserInfo = async (): Promise<ParsedUser & { teams: Team[] }> => {
+  const { data } = await axiosInstance.get<RawUserResponse>('/user');
+
+  const teams: Team[] = (data.memberships ?? []).map((m) => ({
+    id: String(m.group.id),
+    name: m.group.name ?? '이름 없음',
+    image: m.group.image ?? null,
+  }));
 
   return {
     id: data.id,
     nickname: data.nickname,
-    profileImage: data.image ?? null,
-    teams: (data.memberships ?? []).map((m) => ({
-      id: String(m.group.id),
-      name: m.group.name ?? '이름 없음',
-      image: m.group.image ?? null,
-    })),
+    profileImage: data.image,
+    email: data.email,
+    memberships: data.memberships ?? [],
+    teams,
   };
 };
 

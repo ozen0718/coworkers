@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
@@ -8,6 +10,7 @@ import FormField from '@/components/FormField';
 import { QUERY_KEYS } from '@/constants/queryKeys';
 import { useModal } from '@/hooks/useModal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useUserStore } from '@/stores/useUserStore';
 
 interface EditableNameProps {
   name: string;
@@ -15,15 +18,28 @@ interface EditableNameProps {
 
 export default function EditableNameSection({ name }: EditableNameProps) {
   const [inputName, setInputName] = useState(name ?? '');
-
   const { isOpen, open, close } = useModal();
   const queryClient = useQueryClient();
 
+  // 1) Zustand 업데이트 함수 가져오기
+  const setUserInfo = useUserStore((s) => s.setUserInfo);
+
   const { mutate } = useMutation({
     mutationFn: updateUserName,
-    onSuccess: () => {
+    onSuccess: (updated) => {
       toast.success('이름이 변경되었습니다.');
+
+      // 2) React Query 캐시 무효화
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.user.me });
+
+      // 3) Zustand store에도 병합 업데이트
+      const { profileImage, teams } = useUserStore.getState();
+      setUserInfo({
+        nickname: inputName,
+        profileImage, // 기존 값 유지
+        teams, // 기존 팀 목록 유지
+      });
+
       close();
     },
     onError: (error) => {
