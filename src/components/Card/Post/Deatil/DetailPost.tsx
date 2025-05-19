@@ -87,12 +87,7 @@ export default function DetailPost({
 
   /* 할 일 삭제 */
   const handleDelete = async () => {
-    console.log('게시글 삭제');
-  };
-
-  /* 할 일 수정 */
-  const handleEdit = () => {
-    console.log('게시글 수정');
+    console.log('할 일 삭제');
   };
 
   return (
@@ -123,12 +118,9 @@ export default function DetailPost({
           />
           {isDropDownOpen && (
             <PostDropdown
-              type="kebab"
+              type="detail"
               textJustify="center"
-              options={[
-                { label: '수정', value: '수정', action: handleEdit },
-                { label: '삭제', value: '삭제', action: handleDelete },
-              ]}
+              options={[{ label: '삭제', value: '삭제', action: handleDelete }]}
               isOpen={isDropDownOpen}
               toggleDropdown={toggleDropdown}
               toppercent="12%"

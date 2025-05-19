@@ -4,7 +4,7 @@ import React from 'react';
 import clsx from 'clsx';
 
 type PostDropdownProps = {
-  type?: 'sort' | 'kebab';
+  type?: 'sort' | 'kebab' | 'detail';
   textJustify: 'center' | 'left';
   options: { label: string; value: string; action: () => void }[];
   isOpen: boolean;
@@ -30,7 +30,8 @@ export default function PostDropdown({
         textJustify === 'center' && 'text-center',
         textJustify === 'left' && 'text-left',
         type === 'sort' ? 'w-[120px] min-w-[94px]' : 'w-[120px]',
-        type === 'kebab' && 'h-[80px] w-[120px]'
+        type === 'kebab' && 'h-[80px] w-[120px]',
+        type === 'detail' && 'h-[42px] w-[120px]'
       )}
       style={{
         top: toppercent,
