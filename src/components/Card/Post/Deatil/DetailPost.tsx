@@ -16,6 +16,8 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchComment } from '@/api/detailPost';
 import { useQueryClient } from '@tanstack/react-query';
 import { CommentDetail } from '../../CardType';
+import PostDropdown from '../PostDropdown';
+import clsx from 'clsx';
 
 type DetailPostProps = {
   taskid?: number;
@@ -37,6 +39,7 @@ export default function DetailPost({
   showComplete,
 }: DetailPostProps) {
   const [isComplete, setIsComplete] = useState(showComplete);
+  const [isDropDownOpen, setIsDropDownOpen] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -73,8 +76,23 @@ export default function DetailPost({
     },
   });
 
+  /* 케밥 드롭다운 */
   const handleToggleComplete = () => {
     setIsComplete((prev) => !prev);
+  };
+
+  const toggleDropdown = () => {
+    setIsDropDownOpen((prev) => !prev);
+  };
+
+  /* 할 일 삭제 */
+  const handleDelete = async () => {
+    console.log('게시글 삭제');
+  };
+
+  /* 할 일 수정 */
+  const handleEdit = () => {
+    console.log('게시글 수정');
   };
 
   return (
@@ -93,15 +111,29 @@ export default function DetailPost({
             <p className="text-tertiary text-xs font-medium">완료</p>
           </div>
         )}
-        <div className="text-xl-bold mt-2 flex items-center md:w-[747px]">
-          <span className={isComplete ? 'line-through' : ''}>{title}</span>
+        <div className="mt-2 flex items-center md:w-[747px]">
+          <span className={clsx('text-xl-bold', isComplete && 'line-through')}>{title}</span>
           <Image
             className="ml-auto flex h-[24px] min-h-[21px] max-w-[699px] cursor-pointer"
             src="/icons/kebab.svg"
             alt="Kebab Icon"
             width={24}
             height={24}
+            onClick={toggleDropdown}
           />
+          {isDropDownOpen && (
+            <PostDropdown
+              type="kebab"
+              textJustify="center"
+              options={[
+                { label: '수정', value: '수정', action: handleEdit },
+                { label: '삭제', value: '삭제', action: handleDelete },
+              ]}
+              isOpen={isDropDownOpen}
+              toggleDropdown={toggleDropdown}
+              toppercent="12%"
+            />
+          )}
         </div>
       </div>
 
