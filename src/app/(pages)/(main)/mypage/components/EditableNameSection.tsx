@@ -78,6 +78,7 @@ export default function EditableNameSection({ name }: EditableNameProps) {
         isOpen={isOpen}
         onClose={close}
         onSubmit={handleSubmit}
+        disabled={inputName.trim() === '' || inputName === name}
       >
         <div className="mt-4 min-w-[280px]">
           <FormField label="이름" onValueChange={handleNameChange} value={inputName} />
