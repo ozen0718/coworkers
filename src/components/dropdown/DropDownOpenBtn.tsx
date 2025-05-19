@@ -1,3 +1,4 @@
+// src/components/dropdown/DropDownOpenBtn.tsx
 'use client';
 
 import clsx from 'clsx';
@@ -11,6 +12,9 @@ interface Props {
 }
 
 export default function DropDownOpenBtn({ size, currentSelected }: Props) {
+  // 🎯 넘어오는 값 확인
+  console.log('[DropDownOpenBtn] currentSelected:', currentSelected);
+
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -36,6 +40,7 @@ export default function DropDownOpenBtn({ size, currentSelected }: Props) {
       )}
     >
       <div className="flex w-full justify-end">
+        {/* 여기서 currentSelected가 화면에도 그대로 렌더됩니다 */}
         <p className="w-full truncate text-center">{currentSelected}</p>
         <Image src={iconSrc} width={16} height={16} alt="드롭다운 아이콘" />
       </div>

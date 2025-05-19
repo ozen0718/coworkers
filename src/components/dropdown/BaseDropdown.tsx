@@ -1,3 +1,4 @@
+// src/components/dropdown/BaseDropdown.tsx
 'use client';
 
 import React, { useState } from 'react';
@@ -32,19 +33,21 @@ export default function DropDown({
   };
 
   return (
-    <div className="relative h-fit w-fit">
+    <div className="relative overflow-visible">
+      {' '}
+      {/* overflow-visible로 부모가 자식 잘림 방지 */}
       <div className="cursor-pointer" onClick={() => setIsOpen((prev) => !prev)}>
         {dropDownOpenBtn}
       </div>
-
       {isOpen && (
         <div
           className={clsx(
-            'bg-bg200 border-bg100 absolute z-100 rounded-lg border-1',
+            'bg-bg200 border-bg100 absolute z-50 rounded-lg border', // z-50로 수정
             size === 'xl' && 'h-fit px-4 py-4',
             footerBtn && 'flex flex-col gap-4',
             placement
           )}
+          style={{ overflow: 'visible' }} // 메뉴 내 자식 요소도 잘리지 않도록
         >
           <div className="scroll-area max-h-120 overflow-auto">
             {options.map((option, idx) => (
