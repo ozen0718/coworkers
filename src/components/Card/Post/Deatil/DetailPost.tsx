@@ -8,8 +8,15 @@ import IconCheck from '@/assets/icons/IconCheck';
 import { DateInfo } from './DateInfo';
 import { TodoCardReplyInput } from '@/components/common/Inputs';
 import BoardComment from '@/components/Card/Comment/BoardComment';
+import { createComment } from '@/api/detailPost';
+import { useMutation } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
+import { AxiosError } from 'axios';
+import { useQuery } from '@tanstack/react-query';
+import { fetchComment } from '@/api/articles';
 
 type DetailPostProps = {
+  taskid?: number;
   title?: string;
   onClose: () => void;
   showComplete: boolean;
@@ -17,8 +24,50 @@ type DetailPostProps = {
   time?: string;
 };
 
-export default function DetailPost({ title, date, time, onClose, showComplete }: DetailPostProps) {
+const taskId = 3704; // 예시 id 추후 수정
+
+export default function DetailPost({
+  taskid,
+  title,
+  date,
+  time,
+  onClose,
+  showComplete,
+}: DetailPostProps) {
   const [isComplete, setIsComplete] = useState(showComplete);
+
+  /* 댓글 내용 */
+  const { data: commentData } = useQuery({
+    queryKey: ['comments', taskid],
+    queryFn: () => fetchComment(Number(taskid)),
+    enabled: !!taskid,
+  });
+
+  /* 댓글 작성 */
+  const handleSubmit = (content: string) => {
+    if (!taskId) {
+      console.log('아이디 없음');
+      return;
+    }
+    if (!content.trim()) {
+      console.log('내용 없음');
+      toast.error('댓글 내용이 없습니다');
+      return;
+    }
+    mutation.mutate(content);
+  };
+
+  const mutation = useMutation({
+    mutationFn: (content: string) => createComment(taskId, { content }),
+    onSuccess: () => {
+      console.log('댓글 작성 성공');
+      toast.success('댓글이 작성되었습니다');
+    },
+    onError: (error: AxiosError) => {
+      console.error('댓글 작성 실패', error.message);
+      toast.error('댓글 작성에 실패했습니다');
+    },
+  });
 
   const handleToggleComplete = () => {
     setIsComplete((prev) => !prev);
@@ -70,7 +119,7 @@ export default function DetailPost({ title, date, time, onClose, showComplete }:
       </div>
 
       <div className="mt-2">
-        <TodoCardReplyInput />
+        <TodoCardReplyInput onSubmit={handleSubmit} />
       </div>
 
       <div className="scroll-area max-h-[400px] w-full overflow-y-auto">

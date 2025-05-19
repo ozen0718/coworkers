@@ -205,9 +205,19 @@ export function ToggleInput({ options, onSelect }: ToggleInputProps) {
   );
 }
 
-export function TodoCardReplyInput() {
+interface TodoCardReplyInputProps {
+  onSubmit: (content: string) => void;
+}
+
+export function TodoCardReplyInput({ onSubmit }: TodoCardReplyInputProps) {
   const [value, setValue] = useState('');
   const isEmpty = value.trim() === '';
+
+  const handleClick = () => {
+    if (isEmpty) return;
+    onSubmit(value);
+    setValue('');
+  };
 
   return (
     <div className="border-y-gray100/10 text-3.5 flex w-full items-center gap-3 border border-x-0 py-3.25">
@@ -224,6 +234,7 @@ export function TodoCardReplyInput() {
         }}
       />
       <button
+        onClick={handleClick}
         disabled={isEmpty}
         className={`flex h-6 w-6 items-center justify-center rounded-full ${
           isEmpty ? 'bg-gray500 cursor-not-allowed' : 'bg-primary hover:bg-primary-hover'
