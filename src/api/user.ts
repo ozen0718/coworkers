@@ -1,5 +1,5 @@
 import axiosInstance from '@/api/axiosInstance';
-import { Memberships } from '@/types/usertypes';
+import { Membership } from '@/types/usertypes';
 
 export interface Team {
   id: string;
@@ -18,7 +18,7 @@ export interface RawUserResponse {
   id?: number;
   nickname: string;
   image: string | null;
-  memberships: Memberships[];
+  memberships: Membership[];
 }
 
 export const fetchUser = async () => {

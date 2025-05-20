@@ -1,4 +1,4 @@
-import { Memberships } from '@/types/usertypes';
+import { Membership } from '@/types/usertypes';
 import { Task } from './tasktypes';
 
 export interface MemberProps {
@@ -17,8 +17,8 @@ export interface NewestTaskProps {
   elapsedTime: string;
 }
 
-export type GroupPageInfo = Pick<Memberships, 'role'> & {
-  group: Pick<Memberships['group'], 'id' | 'name'>;
+export type GroupPageInfo = Pick<Membership, 'role'> & {
+  group: Pick<Membership['group'], 'id' | 'name'>;
 };
 
 export type TaskInfo = Pick<Task, 'id' | 'name' | 'description' | 'date' | 'doneAt'>;

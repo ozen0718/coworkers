@@ -10,6 +10,7 @@ import Report from '@/components/teampage/Report';
 import Member from '@/components/common/Member';
 import Modal from '@/components/common/Modal';
 import { Profile } from '@/components/common/Profiles';
+import { getInvitationToken } from '@/api/group.api';
 import { createTaskList, getTaskDetail } from '@/api/tasklist.api';
 import { useGroupDetail } from '@/hooks/useGroupDetail';
 import { useGroupPageInfo, useAllTaskListTasks } from '@/hooks/useGroupPageInfo';
@@ -63,8 +64,19 @@ export default function TeamPage() {
   };
 
   const handleCopyPageLink = async () => {
-    await navigator.clipboard.writeText('https://your-invite-link.com');
-    toast.success('복사되었습니다.');
+    if (!groupId) {
+      toast.error('그룹 정보를 불러오지 못했습니다.');
+      return;
+    }
+    try {
+      const token = await getInvitationToken(groupId);
+      const inviteUrl = `${window.location.origin}/invite?token=${token}`;
+      await navigator.clipboard.writeText(inviteUrl);
+      toast.success('초대 링크가 복사되었습니다.');
+    } catch (error) {
+      console.error(error);
+      toast.error('초대 링크 생성에 실패했습니다.');
+    }
   };
 
   const handleCopyMemberEmail = async () => {
