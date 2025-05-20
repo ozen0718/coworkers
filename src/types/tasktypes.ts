@@ -13,10 +13,11 @@ export interface ProgressBadgeProps {
   totalTaskNumber: number;
 }
 
-export interface TasksItemProp {
+export interface TaskListsItemProp {
   tasksTitle: string;
   completed: number;
   total: number;
+  onClick?: () => void;
 }
 
 export interface Task {

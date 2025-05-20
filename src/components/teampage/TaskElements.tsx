@@ -1,7 +1,7 @@
 'use client';
 
 import { trimColors } from '@/styles/trimColors';
-import { TaskListTapProps, ProgressBadgeProps, TasksItemProp } from '@/types/tasktypes';
+import { TaskListTapProps, ProgressBadgeProps, TaskListsItemProp } from '@/types/tasktypes';
 import stringToHash from '@/utils/stringToHash';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -48,12 +48,15 @@ function getTrimColor(text: string): string {
   return trimColors[hash % trimColors.length];
 }
 
-export function TasksItem({ tasksTitle, completed, total }: TasksItemProp) {
+export function TaskListsItem({ tasksTitle, completed, total, onClick }: TaskListsItemProp) {
   const trimColor = getTrimColor(tasksTitle);
 
   return (
     <div className="bg-bg200 flex h-10 w-full items-center justify-between rounded-xl">
-      <button className="flex w-full items-center justify-start gap-3 overflow-hidden rounded-xl">
+      <button
+        className="flex w-full items-center justify-start gap-3 overflow-hidden rounded-xl"
+        onClick={onClick}
+      >
         <div className="h-10 w-3" style={{ backgroundColor: trimColor }} />
         <p className="text-md-medium w-full text-left">{tasksTitle}</p>
       </button>

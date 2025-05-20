@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useQueryClient } from '@tanstack/react-query';
 import { TextInput } from '@/components/common/Inputs';
-import { TasksItem } from '@/components/teampage/TaskElements';
+import { TaskListsItem } from '@/components/teampage/TaskElements';
 import TeamHeader from '@/components/teampage/TeamHeader';
 import Report from '@/components/teampage/Report';
 import Member from '@/components/common/Member';
@@ -27,6 +27,7 @@ export default function TeamPage() {
   const sectionHeaderPSTyle = 'text-lg-regular text-gray500';
   const sectionHeaderButtonStyle = 'text-md-regular text-primary';
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const [newListName, setNewListName] = useState('');
   const [selectedMember, setSelectedMember] = useState<{
@@ -207,7 +208,15 @@ export default function TeamPage() {
           if (!futureDate) return null;
 
           return (
-            <TasksItem key={list.id} completed={completed} total={total} tasksTitle={list.name} />
+            <TaskListsItem
+              key={list.id}
+              completed={completed}
+              total={total}
+              tasksTitle={list.name}
+              onClick={() => {
+                router.push(`/${groupId}/tasklist?listId=${list.id}`);
+              }}
+            />
           );
         })}
       </section>
