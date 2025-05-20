@@ -1,12 +1,12 @@
 'use client';
 
 import { toast } from 'react-toastify';
+import { useMutation } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { deleteUser } from '@/api/user';
 import Modal from '@/components/common/Modal';
 import { useModal } from '@/hooks/useModal';
-import { useMutation } from '@tanstack/react-query';
 
 export default function AccountDeleteButton() {
   const { isOpen, open, close } = useModal();

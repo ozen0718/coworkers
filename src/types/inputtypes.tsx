@@ -16,7 +16,7 @@ export type CurrentNameProp = {
 };
 
 export type CurrentEmailProp = {
-  email: string;
+  email?: string;
 };
 
 export type CurrentPasswordProp = {
