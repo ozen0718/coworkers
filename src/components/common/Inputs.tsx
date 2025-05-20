@@ -22,7 +22,7 @@ const BaseInputStyle =
 const EmailInputStyle = `${BaseInputStyle} focus:outline-none placeholder:text-gray500 sm:text-4 sm:text-lg-regular text-md-regular text-3.5 text-gray100`;
 
 const PasswordInputStyle =
-  'w-full h-full focus:outline-none sm:text-4 sm:text-lg-regular text-md-regular text-3.5 placeholder:text-gray500';
+  'w-full focus:outline-none sm:text-4 sm:text-lg-regular text-md-regular text-3.5 placeholder:text-gray500';
 
 const InputStyle =
   'w-full sm:h-12 h-11 bg-bg200 border border-gray100/10 rounded-xl px-4 focus:outline-none focus:border-primary hover:border-primary-hover sm:text-4 sm:text-lg-regular text-md-regular text-3.5 placeholder:text-gray500';
