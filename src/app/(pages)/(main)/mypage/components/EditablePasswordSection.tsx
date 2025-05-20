@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { CurrentPassword, PasswordInput } from '@/components/common/Inputs';
 import Modal from '@/components/common/Modal';
 import { useModal } from '@/hooks/useModal';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateUserPassword } from '@/api/user';
 import { QUERY_KEYS } from '@/constants/queryKeys';
 
@@ -29,7 +29,23 @@ export default function EditablePasswordSection() {
   });
 
   const handleSubmit = () => {
+    if (!password || !passwordConfirmation) {
+      toast.error('모든 항목을 입력해주세요.');
+      return;
+    }
+
+    if (password !== passwordConfirmation) {
+      toast.error('비밀번호가 일치하지 않습니다.');
+      return;
+    }
+
     mutate({ password, passwordConfirmation });
+  };
+
+  const handleClose = () => {
+    close();
+    setPassword('');
+    setPasswordConfirmation('');
   };
 
   return (
@@ -46,7 +62,7 @@ export default function EditablePasswordSection() {
         submitButton={{ label: '변경하기' }}
         onSubmit={handleSubmit}
         isOpen={isOpen}
-        onClose={close}
+        onClose={handleClose}
       >
         <div className="mt-4 flex min-w-[280px] flex-col gap-4">
           <div className="flex flex-col gap-2">

@@ -1,5 +1,8 @@
 'use client';
 
+import { useState } from 'react';
+import { toast } from 'react-toastify';
+import { AxiosError } from 'axios';
 import { updateUserName } from '@/api/user';
 import { CurrentName } from '@/components/common/Inputs';
 import Modal from '@/components/common/Modal';
@@ -7,8 +10,6 @@ import FormField from '@/components/FormField';
 import { QUERY_KEYS } from '@/constants/queryKeys';
 import { useModal } from '@/hooks/useModal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
-import { toast } from 'react-toastify';
 import { useUserStore } from '@/stores/useUserStore';
 
 interface EditableNameProps {
@@ -41,8 +42,17 @@ export default function EditableNameSection({ name }: EditableNameProps) {
 
       close();
     },
-    onError: () => {
-      toast.error('이름 변경에 실패했습니다.');
+    onError: (error) => {
+      const err = error as AxiosError<{ message?: string }>;
+      const message = err.response?.data?.message;
+
+      if (message === '이미 사용중인 닉네임입니다.') {
+        toast.error('이미 사용중인 닉네임입니다.');
+      } else if (message === 'jwt expired') {
+        toast.error('세션이 만료되었습니다. 다시 로그인해주세요.');
+      } else {
+        toast.error('이름 변경에 실패했습니다.');
+      }
     },
   });
 
@@ -58,7 +68,13 @@ export default function EditableNameSection({ name }: EditableNameProps) {
     <>
       <div className="flex flex-col gap-3">
         <label>이름</label>
-        <CurrentName name={name} onClick={open} />
+        <CurrentName
+          name={name}
+          onClick={() => {
+            setInputName(name);
+            open();
+          }}
+        />
       </div>
 
       <Modal
@@ -68,6 +84,7 @@ export default function EditableNameSection({ name }: EditableNameProps) {
         isOpen={isOpen}
         onClose={close}
         onSubmit={handleSubmit}
+        disabled={inputName.trim() === '' || inputName === name}
       >
         <div className="mt-4 min-w-[280px]">
           <FormField label="이름" onValueChange={handleNameChange} value={inputName} />

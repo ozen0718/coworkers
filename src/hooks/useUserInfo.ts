@@ -3,7 +3,7 @@ import { QUERY_KEYS } from '@/constants/queryKeys';
 import { useQuery } from '@tanstack/react-query';
 import { useUserStore } from '@/stores/useUserStore';
 import { useEffect } from 'react';
-import type { Memberships } from '@/types/usertypes';
+import type { Membership } from '@/types/usertypes';
 
 export const useUserInfo = () => {
   const query = useQuery({
@@ -19,7 +19,7 @@ export const useUserInfo = () => {
       setUserInfo({
         nickname: query.data.nickname ?? '',
         profileImage: query.data.image ?? null,
-        teams: ((query.data.memberships as Memberships[]) ?? []).map((m) => ({
+        teams: ((query.data.memberships as Membership[]) ?? []).map((m) => ({
           id: String(m.group.id),
           name: m.group.name ?? '이름 없음',
           image: m.group.image ?? null,

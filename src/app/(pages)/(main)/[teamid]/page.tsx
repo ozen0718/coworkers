@@ -1,28 +1,23 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
+import { useState, useEffect, useMemo } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
+import { useQueryClient } from '@tanstack/react-query';
 import { TextInput } from '@/components/common/Inputs';
-import { TasksItem } from '@/components/teampage/TaskElements';
+import { TaskListsItem } from '@/components/teampage/TaskElements';
 import TeamHeader from '@/components/teampage/TeamHeader';
 import Report from '@/components/teampage/Report';
 import Member from '@/components/common/Member';
 import Modal from '@/components/common/Modal';
 import { Profile } from '@/components/common/Profiles';
-import { createTaskList } from '@/api/tasklist.api';
+import { getInvitationToken } from '@/api/group.api';
+import { createTaskList, getTaskDetail } from '@/api/tasklist.api';
 import { useGroupDetail } from '@/hooks/useGroupDetail';
 import { useGroupPageInfo, useAllTaskListTasks } from '@/hooks/useGroupPageInfo';
 import { useModalGroup } from '@/hooks/useModalGroup';
-import { getFutureDateString } from '@/utils/date';
-
-const mockMembers = [
-  { name: '우지은', email: 'coworkers@code.com' },
-  { name: '김하늘', email: 'skyblue@example.com' },
-  { name: '박서준', email: 'seojoon@example.com' },
-  { name: '이수민', email: 'soomin@example.com' },
-  { name: '정해인', email: 'haein@example.com' },
-];
+import { NewestTaskProps } from '@/types/teampagetypes';
+import { getFutureDateString, formatElapsedTime } from '@/utils/date';
 
 export default function TeamPage() {
   const sectionStyle = 'w-full py-6 flex flex-col items-center justify-start gap-4';
@@ -31,11 +26,15 @@ export default function TeamPage() {
   const sectionHeaderH2Style = 'text-lg-medium font-semibold';
   const sectionHeaderPSTyle = 'text-lg-regular text-gray500';
   const sectionHeaderButtonStyle = 'text-md-regular text-primary';
+  const queryClient = useQueryClient();
+  const router = useRouter();
 
   const [newListName, setNewListName] = useState('');
-  const [selectedMember, setSelectedMember] = useState<{ name: string; email: string } | null>(
-    null
-  );
+  const [selectedMember, setSelectedMember] = useState<{
+    name: string;
+    email: string;
+    profileUrl?: string | null;
+  } | null>(null);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => setIsClient(true), []);
@@ -52,6 +51,8 @@ export default function TeamPage() {
         name: newListName.trim(),
       });
 
+      await queryClient.invalidateQueries({ queryKey: ['groupDetail', groupId] });
+
       toast.success('새로운 목록이 생성되었습니다.');
       close();
       setNewListName('');
@@ -62,8 +63,19 @@ export default function TeamPage() {
   };
 
   const handleCopyPageLink = async () => {
-    await navigator.clipboard.writeText('https://your-invite-link.com');
-    toast.success('복사되었습니다.');
+    if (!groupId) {
+      toast.error('그룹 정보를 불러오지 못했습니다.');
+      return;
+    }
+    try {
+      const token = await getInvitationToken(groupId);
+      const inviteUrl = `${window.location.origin}/invite?token=${token}`;
+      await navigator.clipboard.writeText(inviteUrl);
+      toast.success('초대 링크가 복사되었습니다.');
+    } catch (error) {
+      console.error(error);
+      toast.error('초대 링크 생성에 실패했습니다.');
+    }
   };
 
   const handleCopyMemberEmail = async () => {
@@ -72,7 +84,11 @@ export default function TeamPage() {
     toast.success('복사되었습니다.');
   };
 
-  const handleOpenProfile = (member: { name: string; email: string }) => {
+  const handleOpenProfile = (member: {
+    name: string;
+    email: string;
+    profileUrl?: string | null;
+  }) => {
     setSelectedMember(member);
     open('memberProfile');
   };
@@ -90,7 +106,9 @@ export default function TeamPage() {
     setFutureDate(getFutureDateString(100));
   }, []);
 
-  const taskListIds = groupDetail?.taskLists.map((list) => list.id) ?? [];
+  const taskListIds = useMemo(() => {
+    return groupDetail?.taskLists.map((list) => list.id) ?? [];
+  }, [groupDetail]);
   const taskQueries = useAllTaskListTasks(groupId, taskListIds, futureDate ?? '');
 
   const todayDate = new Date().toISOString().split('T')[0];
@@ -98,6 +116,55 @@ export default function TeamPage() {
   const todayTasks = todayTaskQueries.flatMap((query) => query?.data ?? []);
   const totalTodayTasks = todayTasks.length;
   const completedTodayTasks = todayTasks.filter((task) => task.doneAt !== null).length;
+  const [newestTasks, setNewestTasks] = useState<NewestTaskProps[]>([]);
+
+  useEffect(() => {
+    if (!futureDate || !taskQueries.length || !groupId) return;
+
+    const currentTime = new Date().getTime();
+
+    const allTasksWithMeta = taskQueries.flatMap((queryResult, taskListIndex) => {
+      const taskListId = taskListIds[taskListIndex];
+      return (queryResult.data ?? []).map((task) => ({
+        ...task,
+        taskListId,
+      }));
+    });
+
+    const fetchNewestTaskDetails = async () => {
+      const detailedTasks = await Promise.all(
+        allTasksWithMeta.map(async (task) => {
+          const detail = await getTaskDetail(groupId, task.taskListId, task.id);
+          const startDate = detail.recurring?.startDate;
+          const startTime = new Date(startDate ?? '').getTime();
+
+          return {
+            ...task,
+            startDate,
+            startTime,
+          };
+        })
+      );
+
+      const pastTasks = detailedTasks
+        .filter((task) => !!task.startTime && task.startTime <= currentTime)
+        .sort((a, b) => b.startTime - a.startTime)
+        .slice(0, 2);
+
+      if (pastTasks.length === 0) {
+        setNewestTasks([{ title: '새롭게 시작된 할 일이 없습니다.', elapsedTime: '' }]);
+      } else {
+        setNewestTasks(
+          pastTasks.map((task) => ({
+            title: task.name,
+            elapsedTime: task.startDate ? formatElapsedTime(task.startDate) : '알 수 없음',
+          }))
+        );
+      }
+    };
+
+    fetchNewestTaskDetails();
+  }, [futureDate, taskQueries, groupId, teamid, taskListIds]);
 
   return (
     <div className="py-6">
@@ -141,7 +208,15 @@ export default function TeamPage() {
           if (!futureDate) return null;
 
           return (
-            <TasksItem key={list.id} completed={completed} total={total} tasksTitle={list.name} />
+            <TaskListsItem
+              key={list.id}
+              completed={completed}
+              total={total}
+              tasksTitle={list.name}
+              onClick={() => {
+                router.push(`/${groupId}/tasklist?listId=${list.id}`);
+              }}
+            />
           );
         })}
       </section>
@@ -153,14 +228,14 @@ export default function TeamPage() {
           </div>
         </header>
 
-        <Report total={totalTodayTasks} completed={completedTodayTasks} />
+        <Report total={totalTodayTasks} completed={completedTodayTasks} newestTasks={newestTasks} />
       </section>
 
       <section className={sectionStyle}>
         <header className={sectionHeaderStyle}>
           <div className={sectionHeaderTitleStyle}>
             <h2 className={sectionHeaderH2Style}>멤버</h2>
-            <p className={sectionHeaderPSTyle}>(8명)</p>
+            <p className={sectionHeaderPSTyle}>({groupDetail?.members.length ?? 0}명)</p>
           </div>
           <div>
             {isClient && isAdmin && (
@@ -183,12 +258,19 @@ export default function TeamPage() {
           </div>
         </header>
         <div className="grid-rows-auto grid w-full grid-cols-[1fr_1fr] gap-4 sm:grid-cols-[1fr_1fr_1fr]">
-          {mockMembers.map((member) => (
+          {groupDetail?.members.map((member) => (
             <Member
-              key={member.email}
-              name={member.name}
-              email={member.email}
-              onClick={() => handleOpenProfile(member)}
+              key={member.userId}
+              name={member.userName}
+              email={member.userEmail}
+              profileUrl={member.userImage}
+              onClick={() =>
+                handleOpenProfile({
+                  name: member.userName,
+                  email: member.userEmail,
+                  profileUrl: member.userImage,
+                })
+              }
             />
           ))}
         </div>
@@ -201,7 +283,7 @@ export default function TeamPage() {
           onSubmit={handleCopyMemberEmail}
         >
           <div className="flex flex-col items-center gap-6">
-            <Profile width={52} />
+            <Profile width={52} profileUrl={selectedMember?.profileUrl} />
             <div className="flex flex-col items-center gap-2 text-center">
               <p className="text-md-medium">{selectedMember?.name}</p>
               <p className="text-xs-regular">{selectedMember?.email}</p>
