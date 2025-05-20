@@ -6,38 +6,24 @@ import { useUserStore } from '@/stores/useUserStore';
 import { getUserInfo } from '@/api/user';
 
 export default function InitializeAuth() {
-  const initializeAuth = useAuthStore((state) => state.initializeAuth);
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const setUserInfo = useUserStore((state) => state.setUserInfo);
+  const setAccessToken = useAuthStore((s) => s.setAccessToken);
+  const accessToken = useAuthStore((s) => s.accessToken);
+  const logout = useAuthStore((s) => s.logout);
+  const setUserInfo = useUserStore((s) => s.setUserInfo);
 
-  // 초기 mount 시
+  // 1) 마운트 시: localStorage → Zustand
   useEffect(() => {
-    const init = async () => {
-      initializeAuth();
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      setAccessToken(token);
+    }
+  }, [setAccessToken]);
 
-      const token = localStorage.getItem('accessToken');
-      if (token) {
-        try {
-          const user = await getUserInfo();
-          setUserInfo({
-            nickname: user.nickname,
-            profileImage: user.profileImage,
-            teams: user.teams,
-          });
-        } catch (_) {
-          // 유저 정보 요청 실패 무시
-        }
-      }
-    };
-
-    init();
-  }, [initializeAuth, setUserInfo]);
-
-  // 로그인 상태가 변경되었을 때도 유저 정보 fetch
+  // 2) accessToken이 바뀔 때마다: getUserInfo → setUserInfo
   useEffect(() => {
-    if (!isLoggedIn) return;
+    if (!accessToken) return;
 
-    const fetchUser = async () => {
+    (async () => {
       try {
         const user = await getUserInfo();
         setUserInfo({
@@ -45,13 +31,11 @@ export default function InitializeAuth() {
           profileImage: user.profileImage,
           teams: user.teams,
         });
-      } catch (_) {
-        // 유저 정보 요청 실패 무시
+      } catch {
+        logout();
       }
-    };
-
-    fetchUser();
-  }, [isLoggedIn, setUserInfo]);
+    })();
+  }, [accessToken, setUserInfo, logout]);
 
   return null;
 }
