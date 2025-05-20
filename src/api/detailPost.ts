@@ -23,3 +23,5 @@ export const editDetailComment = (
 ) => {
   return axiosInstance.patch(`/tasks/${taskId}/comments/${commentId}`, payload);
 };
+
+/* 상세 카드 - 할일 삭제 */
