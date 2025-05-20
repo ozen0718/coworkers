@@ -145,7 +145,7 @@ export function CurrentName({ name, onClick }: CurrentNameProp) {
 }
 
 export function CurrentEmail({ email }: CurrentEmailProp) {
-  return <div className={`${CurrentValueStyle} flex items-center`}>{email}</div>;
+  return <div className={`${CurrentValueStyle} flex items-center`}>{email ?? '이메일 없음'}</div>;
 }
 
 export function CurrentPassword({ onClick }: CurrentPasswordProp) {
