@@ -19,14 +19,6 @@ import { useModalGroup } from '@/hooks/useModalGroup';
 import { NewestTaskProps } from '@/types/teampagetypes';
 import { getFutureDateString, formatElapsedTime } from '@/utils/date';
 
-const mockMembers = [
-  { name: '우지은', email: 'coworkers@code.com' },
-  { name: '김하늘', email: 'skyblue@example.com' },
-  { name: '박서준', email: 'seojoon@example.com' },
-  { name: '이수민', email: 'soomin@example.com' },
-  { name: '정해인', email: 'haein@example.com' },
-];
-
 export default function TeamPage() {
   const sectionStyle = 'w-full py-6 flex flex-col items-center justify-start gap-4';
   const sectionHeaderStyle = 'flex w-full items-center justify-between';
@@ -37,9 +29,11 @@ export default function TeamPage() {
   const queryClient = useQueryClient();
 
   const [newListName, setNewListName] = useState('');
-  const [selectedMember, setSelectedMember] = useState<{ name: string; email: string } | null>(
-    null
-  );
+  const [selectedMember, setSelectedMember] = useState<{
+    name: string;
+    email: string;
+    profileUrl?: string | null;
+  } | null>(null);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => setIsClient(true), []);
@@ -89,7 +83,11 @@ export default function TeamPage() {
     toast.success('복사되었습니다.');
   };
 
-  const handleOpenProfile = (member: { name: string; email: string }) => {
+  const handleOpenProfile = (member: {
+    name: string;
+    email: string;
+    profileUrl?: string | null;
+  }) => {
     setSelectedMember(member);
     open('memberProfile');
   };
@@ -228,7 +226,7 @@ export default function TeamPage() {
         <header className={sectionHeaderStyle}>
           <div className={sectionHeaderTitleStyle}>
             <h2 className={sectionHeaderH2Style}>멤버</h2>
-            <p className={sectionHeaderPSTyle}>(8명)</p>
+            <p className={sectionHeaderPSTyle}>({groupDetail?.members.length ?? 0}명)</p>
           </div>
           <div>
             {isClient && isAdmin && (
@@ -251,12 +249,19 @@ export default function TeamPage() {
           </div>
         </header>
         <div className="grid-rows-auto grid w-full grid-cols-[1fr_1fr] gap-4 sm:grid-cols-[1fr_1fr_1fr]">
-          {mockMembers.map((member) => (
+          {groupDetail?.members.map((member) => (
             <Member
-              key={member.email}
-              name={member.name}
-              email={member.email}
-              onClick={() => handleOpenProfile(member)}
+              key={member.userId}
+              name={member.userName}
+              email={member.userEmail}
+              profileUrl={member.userImage}
+              onClick={() =>
+                handleOpenProfile({
+                  name: member.userName,
+                  email: member.userEmail,
+                  profileUrl: member.userImage,
+                })
+              }
             />
           ))}
         </div>
@@ -269,7 +274,7 @@ export default function TeamPage() {
           onSubmit={handleCopyMemberEmail}
         >
           <div className="flex flex-col items-center gap-6">
-            <Profile width={52} />
+            <Profile width={52} profileUrl={selectedMember?.profileUrl} />
             <div className="flex flex-col items-center gap-2 text-center">
               <p className="text-md-medium">{selectedMember?.name}</p>
               <p className="text-xs-regular">{selectedMember?.email}</p>

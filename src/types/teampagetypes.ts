@@ -2,7 +2,7 @@ import { Membership } from '@/types/usertypes';
 import { Task } from './tasktypes';
 
 export interface MemberProps {
-  profileUrl?: string;
+  profileUrl?: string | null;
   name: string;
   email: string;
   onClick: () => void;
