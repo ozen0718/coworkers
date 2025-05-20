@@ -1,19 +1,27 @@
+// src/components/layout/Gnb/TeamSelector.tsx
 'use client';
 
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 import { useUserStore } from '@/stores/useUserStore';
 import SelectableDropdown from '@/components/dropdown/SelectableDropdown';
 import DropDownGroupsItem from '@/components/dropdown/Groups';
 
 export default function TeamSelector() {
-  const { teams, isInitialized } = useUserStore();
+  const teams = useUserStore((s) => s.teams) ?? [];
 
-  // 초기화되지 않은 경우 렌더링하지 않음 (팀 없음 깜빡임 방지)
-  if (!isInitialized) return null;
+  // value 상태 초기화: teams가 로드되지 않았다면 '팀 없음'
+  const [value, setValue] = useState<string>(teams[0]?.name ?? '팀 없음');
 
-  // 첫 번째 팀 이름이 존재할 때만 버튼 텍스트로 사용
-  const defaultTeamName = teams.length > 0 && teams[0].name ? teams[0].name : '팀 없음';
+  // teams가 **0→N** 으로 바뀔 때만 value를 업데이트
+  useEffect(() => {
+    if (teams.length > 0) {
+      setValue(teams[0].name!);
+    }
+    // teams가 비었을 때는 건너뛰기
+  }, [teams]);
 
+  // 옵션 렌더링
   const options = teams.map((team) => (
     <DropDownGroupsItem
       key={team.id}
@@ -32,7 +40,8 @@ export default function TeamSelector() {
     <SelectableDropdown
       placement="top-10 mt-2"
       size="xl"
-      defaultValue={defaultTeamName}
+      value={value}
+      onChange={setValue}
       options={options}
       footerBtn={
         <Link
