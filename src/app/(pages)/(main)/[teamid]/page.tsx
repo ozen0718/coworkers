@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams } from 'next/navigation';
 import { toast } from 'react-toastify';
+import { useQueryClient } from '@tanstack/react-query';
 import { TextInput } from '@/components/common/Inputs';
 import { TasksItem } from '@/components/teampage/TaskElements';
 import TeamHeader from '@/components/teampage/TeamHeader';
@@ -33,6 +34,7 @@ export default function TeamPage() {
   const sectionHeaderH2Style = 'text-lg-medium font-semibold';
   const sectionHeaderPSTyle = 'text-lg-regular text-gray500';
   const sectionHeaderButtonStyle = 'text-md-regular text-primary';
+  const queryClient = useQueryClient();
 
   const [newListName, setNewListName] = useState('');
   const [selectedMember, setSelectedMember] = useState<{ name: string; email: string } | null>(
@@ -53,6 +55,8 @@ export default function TeamPage() {
         groupId: groupId,
         name: newListName.trim(),
       });
+
+      await queryClient.invalidateQueries({ queryKey: ['groupDetail', groupId] });
 
       toast.success('새로운 목록이 생성되었습니다.');
       close();
