@@ -30,3 +30,14 @@ export const getTasksByTaskList = async (
   });
   return response.data;
 };
+
+export const getTaskDetail = async (
+  groupId: number,
+  taskListId: number,
+  taskId: number
+): Promise<Task> => {
+  const response = await axiosInstance.get(
+    `/groups/${groupId}/task-lists/${taskListId}/tasks/${taskId}`
+  );
+  return response.data;
+};

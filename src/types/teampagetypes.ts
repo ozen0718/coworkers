@@ -1,8 +1,8 @@
-import { Memberships } from '@/types/usertypes';
+import { Membership } from '@/types/usertypes';
 import { Task } from './tasktypes';
 
 export interface MemberProps {
-  profileUrl?: string;
+  profileUrl?: string | null;
   name: string;
   email: string;
   onClick: () => void;
@@ -12,13 +12,13 @@ export type ProgressProp = {
   percentage: number;
 };
 
-export interface UrgentTaskProps {
+export interface NewestTaskProps {
   title: string;
-  dueDate: string;
+  elapsedTime: string;
 }
 
-export type GroupPageInfo = Pick<Memberships, 'role'> & {
-  group: Pick<Memberships['group'], 'id' | 'name'>;
+export type GroupPageInfo = Pick<Membership, 'role'> & {
+  group: Pick<Membership['group'], 'id' | 'name'>;
 };
 
 export type TaskInfo = Pick<Task, 'id' | 'name' | 'description' | 'date' | 'doneAt'>;
@@ -26,4 +26,5 @@ export type TaskInfo = Pick<Task, 'id' | 'name' | 'description' | 'date' | 'done
 export interface ReportProps {
   total: number;
   completed: number;
+  newestTasks?: NewestTaskProps[];
 }

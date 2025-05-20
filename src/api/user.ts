@@ -1,12 +1,12 @@
 import axiosInstance from '@/api/axiosInstance';
-import { Memberships, Team } from '@/types/usertypes';
+import { Membership, Team } from '@/types/usertypes';
 
 export interface ParsedUser {
   id?: number;
   nickname: string;
   profileImage: string | null;
   email: string;
-  memberships: Memberships[];
+  memberships: Membership[];
 }
 
 export interface RawUserResponse {
@@ -14,7 +14,7 @@ export interface RawUserResponse {
   nickname: string;
   image: string | null;
   email: string;
-  memberships: Memberships[];
+  memberships: Membership[];
 }
 
 // 기본 fetch 함수

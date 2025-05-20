@@ -1,10 +1,10 @@
 import axiosInstance from '@/api/axiosInstance';
 import { GroupPageInfo } from '@/types/teampagetypes';
-import { Memberships } from '@/types/usertypes';
+import { Membership, User } from '@/types/usertypes';
 
 export const getGroupPageInfo = async (groupId: string): Promise<GroupPageInfo> => {
   const res = await axiosInstance.get(`/user/memberships`);
-  const memberships: Memberships[] = res.data;
+  const memberships: Membership[] = res.data;
 
   const matched = memberships.find((m) => String(m.group.id) === groupId);
   if (!matched) throw new Error('No matching group found');
@@ -16,4 +16,9 @@ export const getGroupPageInfo = async (groupId: string): Promise<GroupPageInfo> 
       name: matched.group.name,
     },
   };
+};
+
+export const fetchUser = async (): Promise<User> => {
+  const { data } = await axiosInstance.get('/user');
+  return data;
 };
