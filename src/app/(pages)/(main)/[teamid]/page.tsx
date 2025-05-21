@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { useQueryClient } from '@tanstack/react-query';
@@ -17,7 +17,7 @@ import { useGroupDetail } from '@/hooks/useGroupDetail';
 import { useGroupPageInfo, useAllTaskListTasks } from '@/hooks/useGroupPageInfo';
 import { useModalGroup } from '@/hooks/useModalGroup';
 import { NewestTaskProps } from '@/types/teampagetypes';
-import { getFutureDateString, formatElapsedTime } from '@/utils/date';
+import { getFutureDateString } from '@/utils/date';
 
 export default function TeamPage() {
   const sectionStyle = 'w-full py-6 flex flex-col items-center justify-start gap-4';
@@ -99,41 +99,43 @@ export default function TeamPage() {
   const teamName = userData?.group.name ?? '팀 없음';
   const groupId = userData?.group.id;
   const { data: groupDetail } = useGroupDetail(groupId);
-
+  const todayDate = useMemo(() => new Date().toISOString().split('T')[0], []);
   const [futureDate, setFutureDate] = useState<string | null>(null);
+  const taskListIds = useMemo(() => {
+    return groupDetail?.taskLists?.map((list) => list.id) ?? [];
+  }, [groupDetail?.taskLists]);
+  const { future: futureTasks, today: todayTasks } = useAllTaskListTasks(
+    groupId,
+    taskListIds,
+    futureDate ?? '',
+    todayDate
+  );
+
+  const futureTaskList = useMemo(() => {
+    return futureTasks.flatMap(({ taskListId, data }) =>
+      (data ?? []).map((task) => ({ ...task, taskListId }))
+    );
+  }, [futureTasks]);
+
+  const todayTaskList = todayTasks.flatMap((entry) => entry.data ?? []);
+  const totalTodayTasks = todayTaskList.length;
+  const completedTodayTasks = todayTaskList.filter((task) => task.doneAt !== null).length;
 
   useEffect(() => {
     setFutureDate(getFutureDateString(100));
   }, []);
 
-  const taskListIds = useMemo(() => {
-    return groupDetail?.taskLists.map((list) => list.id) ?? [];
-  }, [groupDetail]);
-  const taskQueries = useAllTaskListTasks(groupId, taskListIds, futureDate ?? '');
-
-  const todayDate = new Date().toISOString().split('T')[0];
-  const todayTaskQueries = useAllTaskListTasks(groupId, taskListIds, todayDate);
-  const todayTasks = todayTaskQueries.flatMap((query) => query?.data ?? []);
-  const totalTodayTasks = todayTasks.length;
-  const completedTodayTasks = todayTasks.filter((task) => task.doneAt !== null).length;
   const [newestTasks, setNewestTasks] = useState<NewestTaskProps[]>([]);
+  const prevNewestRef = useRef<string>('');
 
   useEffect(() => {
-    if (!futureDate || !taskQueries.length || !groupId) return;
-
-    const currentTime = new Date().getTime();
-
-    const allTasksWithMeta = taskQueries.flatMap((queryResult, taskListIndex) => {
-      const taskListId = taskListIds[taskListIndex];
-      return (queryResult.data ?? []).map((task) => ({
-        ...task,
-        taskListId,
-      }));
-    });
+    if (!futureDate || !groupId || futureTaskList.length === 0) return;
 
     const fetchNewestTaskDetails = async () => {
+      const currentTime = new Date().getTime();
+
       const detailedTasks = await Promise.all(
-        allTasksWithMeta.map(async (task) => {
+        futureTaskList.map(async (task) => {
           const detail = await getTaskDetail(groupId, task.taskListId, task.id);
           const startDate = detail.recurring?.startDate;
           const startTime = new Date(startDate ?? '').getTime();
@@ -151,20 +153,28 @@ export default function TeamPage() {
         .sort((a, b) => b.startTime - a.startTime)
         .slice(0, 2);
 
+      const taskKey = pastTasks.map((t) => `${t.id}-${t.startDate}`).join('|');
+
+      if (taskKey === prevNewestRef.current) {
+        return;
+      }
+
+      prevNewestRef.current = taskKey;
+
       if (pastTasks.length === 0) {
-        setNewestTasks([{ title: '새롭게 시작된 할 일이 없습니다.', elapsedTime: '' }]);
+        setNewestTasks([{ title: '새롭게 시작된 할 일이 없습니다.', startDate: '' }]);
       } else {
         setNewestTasks(
           pastTasks.map((task) => ({
             title: task.name,
-            elapsedTime: task.startDate ? formatElapsedTime(task.startDate) : '알 수 없음',
+            startDate: task.startDate,
           }))
         );
       }
     };
 
     fetchNewestTaskDetails();
-  }, [futureDate, taskQueries, groupId, teamid, taskListIds]);
+  }, [futureDate, futureTaskList, groupId]);
 
   return (
     <div className="py-6">
@@ -200,11 +210,10 @@ export default function TeamPage() {
           </Modal>
         </header>
 
-        {groupDetail?.taskLists.map((list, index) => {
-          const taskQuery = taskQueries[index];
-          const tasks = taskQuery?.data ?? [];
-          const total = tasks.length;
-          const completed = tasks.filter((task) => task.doneAt !== null).length;
+        {groupDetail?.taskLists.map((list) => {
+          const taskData = futureTasks.find((entry) => entry.taskListId === list.id)?.data ?? [];
+          const total = taskData.length;
+          const completed = taskData.filter((task) => task.doneAt !== null).length;
           if (!futureDate) return null;
 
           return (
