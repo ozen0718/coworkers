@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { addDays, format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import clsx from 'clsx';
-import { useParams } from 'next/navigation';
+import { notFound, useParams } from 'next/navigation';
 import { Toaster, toast } from 'react-hot-toast';
 
 import Modal from '@/components/common/Modal';
@@ -17,6 +17,7 @@ import TodoFullCreateModal, { TodoFullCreateModalProps } from './components/Todo
 import { createTaskList, getTaskLists, getTasksByTaskList } from '@/api/tasklist.api';
 import { TaskList } from '@/types/tasklisttypes';
 import { Task } from '@/types/tasktypes';
+import { getGroupDetail } from '@/api/group.api';
 
 const MAX_LIST_NAME_LENGTH = 15;
 
@@ -42,7 +43,11 @@ const convertTaskToTodo = (task: Task): Todo => ({
 
 export default function TaskListPage() {
   const params = useParams();
-  const groupId = params.teamid as string;
+  const groupId = params.teamid as unknown as number;
+  if (!groupId) {
+    notFound();
+    // return;
+  }
 
   const [currentDate, setCurrentDate] = useState(new Date());
   const prevDay = () => setCurrentDate((d) => addDays(d, -1));
@@ -66,18 +71,20 @@ export default function TaskListPage() {
     const fetchTaskLists = async () => {
       setIsLoading(true);
       try {
-        const lists = await getTaskLists(groupId);
-        setTaskLists(lists);
+        const { taskLists } = await getTaskLists(groupId, taskListId);
+        // tasklistid 가져오기
+        // groupid 옆 파라미터
+        setTaskLists(taskLists);
 
         // 탭 맵 초기화
-        const tabNames = lists.map((list) => list.name);
+        const tabNames = taskLists.map((list) => list.name);
         setTabsMap((prev) => ({
           ...prev,
           [dateKey]: tabNames,
         }));
 
         // 각 리스트의 할 일 불러오기
-        await Promise.all(lists.map(loadTasksForList));
+        await Promise.all(taskLists.map(loadTasksForList));
       } catch (error) {
         console.error('Failed to fetch task lists:', error);
         toast.error('목록을 불러오는데 실패했습니다.');

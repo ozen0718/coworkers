@@ -2,8 +2,11 @@ import axiosInstance from '@/api/axiosInstance';
 import { Task } from '@/types/tasktypes';
 import { TaskList } from '@/types/tasklisttypes';
 
-export const getTaskLists = async (groupId: string | number): Promise<TaskList[]> => {
-  const response = await axiosInstance.get(`/groups/${groupId}/task-lists`);
+export const getTaskLists = async (
+  groupId: string | number,
+  taskListId: number | string
+): Promise<TaskList[]> => {
+  const response = await axiosInstance.get(`/groups/${groupId}/task-lists/${taskListId}`);
   return response.data;
 };
 
