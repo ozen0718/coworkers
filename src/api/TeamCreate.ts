@@ -1,28 +1,43 @@
 import axiosInstance from './axiosInstance';
 
-/**
- * 이미지 업로드 API
- */
-export async function uploadImage(file: File): Promise<string> {
-  const form = new FormData();
-  form.append('file', file);
-
-  const res = await axiosInstance.post('/api/images/upload', form);
-  if (!res.data?.url) throw new Error('UPLOAD_FAIL');
-  return res.data.url as string;
+export interface CreateTeamResponse {
+  id: number;
 }
 
 /**
  * 팀 생성
  * POST /groups
+ * @param name - 팀 이름
+ * @param imageUrl - 업로드된 이미지 URL (선택)
  */
 export async function createTeam(name: string, imageUrl?: string): Promise<{ id: string }> {
-  const res = await axiosInstance.post('/groups', {
+  const { data } = await axiosInstance.post<CreateTeamResponse>('/groups', {
     name,
     image: imageUrl,
   });
-  if (!res.data?.id) throw new Error('INVALID_RESPONSE');
-  return { id: String(res.data.id) };
+  if (typeof data.id !== 'number') {
+    throw new Error('INVALID_RESPONSE');
+  }
+  return { id: String(data.id) };
+}
+
+/**
+ * 이미지 업로드 API
+ * POST /images/upload
+ * (baseURL 에 teamId=13-4가 이미 포함되어 있습니다)
+ */
+export async function uploadImage(file: File): Promise<string> {
+  const form = new FormData();
+  form.append('image', file); // Swagger 문서상 필드명
+
+  const { data } = await axiosInstance.post<{ url: string }>('/images/upload', form, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
+
+  if (!data.url) {
+    throw new Error('UPLOAD_FAIL');
+  }
+  return data.url;
 }
 
 /**
@@ -33,16 +48,19 @@ export async function acceptInvitation(
   groupId: string,
   invitationId: string
 ): Promise<{ groupId: string }> {
-  const res = await axiosInstance.post(`/groups/${groupId}/invitations/${invitationId}/accept`);
-  if (!res.data?.groupId) throw new Error('INVALID_RESPONSE');
-  return { groupId: String(res.data.groupId) };
+  const { data } = await axiosInstance.post<{ groupId: number }>(
+    `/groups/${groupId}/invitations/${invitationId}/accept`
+  );
+  if (!data.groupId) throw new Error('INVALID_RESPONSE');
+  return { groupId: String(data.groupId) };
 }
 
 /**
  * 팀 참여 API
+ * POST /groups/join
  */
 export async function joinTeam(link: string): Promise<{ id: string }> {
-  const res = await axiosInstance.post('/api/teams/join', { link });
-  if (!res.data?.id) throw new Error('INVALID_RESPONSE');
-  return { id: String(res.data.id) };
+  const { data } = await axiosInstance.post<{ id: number }>('/groups/join', { link });
+  if (!data.id) throw new Error('INVALID_RESPONSE');
+  return { id: String(data.id) };
 }
