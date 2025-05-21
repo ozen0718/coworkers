@@ -14,7 +14,7 @@ export type ProgressProp = {
 
 export interface NewestTaskProps {
   title: string;
-  elapsedTime: string;
+  startDate?: string;
 }
 
 export type GroupPageInfo = Pick<Membership, 'role'> & {

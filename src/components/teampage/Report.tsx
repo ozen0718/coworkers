@@ -6,6 +6,7 @@ import {
   NewestTaskProps as NewestTaskProps,
   ReportProps,
 } from '@/types/teampagetypes';
+import { formatElapsedTime } from '@/utils/date';
 
 const taskReportBoxStyle = 'flex h-20 w-full items-end justify-between bg-bg100 p-4 rounded-xl';
 const taskReportTextBoxStyle = 'flex flex-col items-start justify-center gap-1 ';
@@ -67,7 +68,9 @@ function TaskReportColumn({ total, completed }: ReportProps) {
   );
 }
 
-function NewestTask({ title, elapsedTime: elapsedTime }: NewestTaskProps) {
+function NewestTask({ title, startDate }: NewestTaskProps) {
+  const elapsedTime = startDate ? formatElapsedTime(startDate) : '알 수 없음';
+
   return (
     <div
       className={`${taskReportBoxStyle} border-danger from-danger via-bg200 to-bg100 bg-gradient-to-r via-[12px] to-50%`}
@@ -81,7 +84,9 @@ function NewestTask({ title, elapsedTime: elapsedTime }: NewestTaskProps) {
   );
 }
 
-function NewestTaskForMobile({ title, elapsedTime: elapsedTime }: NewestTaskProps) {
+function NewestTaskForMobile({ title, startDate }: NewestTaskProps) {
+  const elapsedTime = startDate ? formatElapsedTime(startDate) : '알 수 없음';
+
   return (
     <div className="bg-bg200 right-[28%] flex h-14 w-full items-center justify-start gap-4 rounded-xl pr-2">
       <div className="from-danger to-bg200 flex h-full w-70 items-center justify-start gap-2 rounded-l-xl bg-gradient-to-r px-2">
@@ -104,7 +109,7 @@ function NewestTasksReportColumn({ tasks }: { tasks: NewestTaskProps[] }) {
   return (
     <div className="flex w-full flex-col gap-4">
       {tasks.map((task, index) => (
-        <NewestTask key={index} title={task.title} elapsedTime={task.elapsedTime} />
+        <NewestTask key={index} title={task.title} startDate={task.startDate} />
       ))}
     </div>
   );
@@ -117,7 +122,7 @@ export default function Report({ total, completed, newestTasks: newestTasks = []
     <div className="relative w-full">
       <div className="bg-bg200 grid grid-cols-2 gap-4 rounded-xl px-2 py-2 sm:grid-cols-3 sm:px-6">
         <LeftSide percentage={percentage} />
-        {newestTasks.length > 0 && newestTasks[0].elapsedTime !== '' && (
+        {newestTasks.length > 0 && newestTasks[0].startDate !== '' && (
           <div className="hidden justify-center sm:flex">
             <NewestTasksReportColumn tasks={newestTasks} />
           </div>
@@ -126,13 +131,13 @@ export default function Report({ total, completed, newestTasks: newestTasks = []
           <TaskReportColumn total={total} completed={completed} />
         </div>
       </div>
-      {newestTasks.length > 0 && newestTasks[0].elapsedTime !== '' && (
+      {newestTasks.length > 0 && newestTasks[0].startDate !== '' && (
         <div className="mt-4 flex flex-col items-center justify-start gap-4 sm:hidden">
           {newestTasks.map((newestTask, index) => (
             <NewestTaskForMobile
               key={index}
               title={newestTask.title}
-              elapsedTime={newestTask.elapsedTime}
+              startDate={newestTask.startDate}
             />
           ))}
         </div>
