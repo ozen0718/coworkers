@@ -44,7 +44,7 @@ export default function PostDropdown({
           {options.map((option, idx) => (
             <div
               key={idx}
-              className="hover:bg-bg100 cursor-pointer rounded-lg p-2"
+              className="hover:bg-primary-hover cursor-pointer rounded-lg p-2"
               onClick={() => {
                 option.action();
                 toggleDropdown();
