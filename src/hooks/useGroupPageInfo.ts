@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useQuery, useQueries } from '@tanstack/react-query';
-import { getGroupPageInfo } from '@/api/user.api';
+import { getGroupPageInfo, getUserGroupList } from '@/api/user.api';
 import { getTasksByTaskList } from '@/api/tasklist.api';
 import { GroupPageInfo, TaskInfo } from '@/types/teampagetypes';
 
@@ -57,4 +57,11 @@ export const useAllTaskListTasks = (
   }, [queries, taskListIds]);
 
   return { future, today };
+};
+
+export const useGroupList = () => {
+  return useQuery({
+    queryKey: ['groupList'],
+    queryFn: getUserGroupList,
+  });
 };

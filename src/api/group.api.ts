@@ -24,3 +24,7 @@ export const acceptGroupInvitation = async ({
   });
   return response.data;
 };
+
+export const deleteGroup = async (groupId: number): Promise<void> => {
+  await axiosInstance.delete(`/groups/${groupId}`);
+};
