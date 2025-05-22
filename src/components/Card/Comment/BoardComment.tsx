@@ -15,6 +15,8 @@ import { useQueryClient } from '@tanstack/react-query';
 import { getUserInfo } from '@/api/user';
 import { toast } from 'react-toastify';
 import { useQuery } from '@tanstack/react-query';
+import { deleteDetailComment } from '@/api/detailPost';
+import { editDetailComment } from '@/api/detailPost';
 
 export default function BoardComment({
   commentId,
@@ -24,6 +26,7 @@ export default function BoardComment({
   date,
   onChange,
   writer,
+  taskId,
 }: BoardCommentProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -43,7 +46,7 @@ export default function BoardComment({
     queryFn: getUserInfo,
   });
 
-  const isWriter = userInfo?.id === writer.id;
+  const isWriter = userInfo?.id === writer?.id;
 
   /* Dropdown 수정 */
   const handleEdit = () => {
@@ -57,15 +60,16 @@ export default function BoardComment({
 
   /* 댓글 삭제 */
   const handleDelete = async () => {
-    if (!id) {
-      console.log('아이디 없음');
-      return;
-    }
     if (!isWriter) {
       toast.error('작성자만 삭제할 수 있습니다');
       return;
     }
-    deleteMutation.mutate();
+
+    if (type === 'list') {
+      deleteDetailMutation.mutate();
+    } else {
+      deleteMutation.mutate();
+    }
   };
 
   const deleteMutation = useMutation({
@@ -80,13 +84,41 @@ export default function BoardComment({
     },
   });
 
+  const deleteDetailMutation = useMutation({
+    mutationFn: () => {
+      if (taskId === undefined) {
+        throw new Error('taskId가 없습니다');
+      }
+      return deleteDetailComment(taskId, commentId);
+    },
+    onSuccess: () => {
+      console.log('상세 카드 댓글 삭제 성공');
+      onChange?.();
+      queryClient.invalidateQueries({ queryKey: ['comments', taskId] });
+    },
+    onError: (err: AxiosError) => {
+      console.error('상세 카드 댓글 삭제 실패:', err.response?.data);
+    },
+  });
+
   /* 댓글 수정*/
   const handleEditComment = async () => {
-    if (!id || !editedContent) {
+    if (!editedContent) {
+      console.log('눌림3');
       return;
     }
     try {
-      await editComment(commentId, { content: editedContent });
+      if (type === 'list') {
+        if (taskId === undefined) {
+          throw new Error('taskId가 없습니다');
+        }
+        await editDetailComment(taskId, commentId, { content: editedContent });
+        queryClient.invalidateQueries({ queryKey: ['comments', taskId] });
+        console.log('눌림1');
+      } else {
+        await editComment(commentId, { content: editedContent });
+        console.log('눌림2');
+      }
       console.log('댓글 수정 성공');
       setIsEditing(false);
       onChange?.();
@@ -110,7 +142,9 @@ export default function BoardComment({
     >
       <div className="text-lg-regular flex w-full items-start justify-between">
         {isEditing ? (
-          <div className="relative flex h-full w-full items-start">
+          <div
+            className={clsx('relative flex h-full w-full items-start', type === 'list' && 'mt-3')}
+          >
             <TextAreaInput
               value={editedContent}
               onChange={(e) => setEditedContent(e.target.value)}
@@ -121,7 +155,7 @@ export default function BoardComment({
           <div
             className={clsx('relative flex w-full items-start', type === 'free' ? 'mt-0' : 'mt-4')}
           >
-            <span className="scroll-area mr-2 block max-h-[50px] min-h-[40px] overflow-x-hidden overflow-y-auto pr-6">
+            <span className="scroll-area mr-2 block max-h-[50px] min-h-[40px] overflow-x-hidden overflow-y-auto pr-6 whitespace-pre-line">
               {content}
             </span>
             <Image

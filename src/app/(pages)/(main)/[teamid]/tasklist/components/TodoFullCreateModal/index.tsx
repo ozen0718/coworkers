@@ -12,6 +12,7 @@ import DatePickerTime from './DatePickerTime';
 export interface TodoFullCreateModalProps {
   isOpen: boolean;
   onClose: () => void;
+  taskListId?: number;
   onSubmit: (newTodo: {
     title: string;
     date: Date | null;
@@ -30,6 +31,7 @@ export default function TodoFullCreateModal({
   isOpen,
   onClose,
   onSubmit,
+  taskListId,
   disabled = false,
 }: TodoFullCreateModalProps) {
   const [title, setTitle] = useState('');
@@ -61,7 +63,7 @@ export default function TodoFullCreateModal({
         {/* 제목 */}
         <div className="flex flex-col gap-4">
           <label htmlFor="todo-title" className="text-lg-medium">
-            할 일 제목
+            할 일 제목 {taskListId}
           </label>
           <TextInput
             id="todo-title"
