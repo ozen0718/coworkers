@@ -1,5 +1,7 @@
 import axiosInstance from './axiosInstance';
 
+/* 상세 카드 - 할 일 내용 */
+
 /* 상세 카드 - 댓글 내용 */
 export const fetchComment = (taskid: number) => {
   return axiosInstance.get(`/tasks/${taskid}/comments?limit=30`);

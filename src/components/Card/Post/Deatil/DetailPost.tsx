@@ -28,8 +28,6 @@ type DetailPostProps = {
   time?: string;
 };
 
-//const taskId = 3704; // 예시 id 추후 수정
-
 export default function DetailPost({
   taskid,
   title,
@@ -90,6 +88,11 @@ export default function DetailPost({
     setIsDropDownOpen((prev) => !prev);
   };
 
+  /* 할 일 수정 */
+  const handleEdit = async () => {
+    console.log('할 일 수정');
+  };
+
   /* 할 일 삭제 */
   const handleDelete = async () => {
     console.log('할 일 삭제');
@@ -111,7 +114,7 @@ export default function DetailPost({
             <p className="text-tertiary text-xs font-medium">완료</p>
           </div>
         )}
-        <div className="mt-2 flex items-center md:w-[747px]">
+        <div className="mt-2 flex items-center md:max-w-[747px]">
           <span className={clsx('text-xl-bold', isComplete && 'line-through')}>{title}</span>
           <Image
             className="ml-auto flex h-[24px] min-h-[21px] max-w-[699px] cursor-pointer"
@@ -123,12 +126,15 @@ export default function DetailPost({
           />
           {isDropDownOpen && (
             <PostDropdown
-              type="detail"
+              type="kebab"
               textJustify="center"
-              options={[{ label: '삭제', value: '삭제', action: handleDelete }]}
+              options={[
+                { label: '수정', value: '수정', action: handleEdit },
+                { label: '삭제', value: '삭제', action: handleDelete },
+              ]}
               isOpen={isDropDownOpen}
               toggleDropdown={toggleDropdown}
-              toppercent="12%"
+              toppercent="11%"
             />
           )}
         </div>
