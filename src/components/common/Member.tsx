@@ -11,7 +11,14 @@ import DeleteConfirmModal from '@/components/common/Modal/DeleteConfirmModal';
 import { Profile } from '@/components/common/Profiles';
 import { MemberProps } from '@/types/teampagetypes';
 
-export default function Member({ profileUrl, name, email, onClick, userId }: MemberProps) {
+export default function Member({
+  profileUrl,
+  name,
+  email,
+  onClick,
+  userId,
+  hideMenu,
+}: MemberProps) {
   const { teamid } = useParams() as { teamid: string };
   const queryClient = useQueryClient();
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -42,10 +49,15 @@ export default function Member({ profileUrl, name, email, onClick, userId }: Mem
           </p>
         </div>
       </button>
-      <ActionMenu
-        trigger={<Image src="/icons/kebab.svg" alt="멤버 메뉴" width={16} height={16}></Image>}
-        onDelete={() => setDeleteModalOpen(true)}
-      />
+
+      {!hideMenu ? (
+        <ActionMenu
+          trigger={<Image src="/icons/kebab.svg" alt="멤버 메뉴" width={16} height={16} />}
+          onDelete={() => setDeleteModalOpen(true)}
+        />
+      ) : (
+        <Image src="/icons/crown.svg" alt="관리자" width={16} height={16} className="" />
+      )}
 
       <DeleteConfirmModal
         isOpen={isDeleteModalOpen}
