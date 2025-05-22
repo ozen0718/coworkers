@@ -65,3 +65,12 @@ export const createTask = async ({
   });
   return response.data;
 };
+
+export const updateTaskListOrder = async (
+  teamId: string | number,
+  groupId: number | string,
+  taskListId: number,
+  displayIndex: number
+) => {
+  await axiosInstance.patch(`/groups/${groupId}/task-lists/${taskListId}/order`, { displayIndex });
+};

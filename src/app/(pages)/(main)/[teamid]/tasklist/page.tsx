@@ -7,6 +7,8 @@ import { ko } from 'date-fns/locale';
 import clsx from 'clsx';
 import { notFound, useParams } from 'next/navigation';
 import { Toaster, toast } from 'react-hot-toast';
+import { DndProvider, useDrag, useDrop } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 import Modal from '@/components/common/Modal';
 import TodoItem from '@/components/List/todo';
@@ -14,7 +16,7 @@ import { TextInput } from '@/components/common/Inputs';
 import DetailPost from '@/components/Card/Post/Deatil/DetailPost';
 import SlideWrapper from '@/components/Card/SlideWrapper';
 import TodoFullCreateModal, { TodoFullCreateModalProps } from './components/TodoFullCreateModal';
-import { createTaskList, getTasksByTaskList } from '@/api/tasklist.api';
+import { createTaskList, getTasksByTaskList, updateTaskListOrder } from '@/api/tasklist.api';
 import { TaskList } from '@/types/tasklisttypes';
 import { Task } from '@/types/tasktypes';
 import { getGroupDetail } from '@/api/group.api';
@@ -41,8 +43,59 @@ const convertTaskToTodo = (task: Task): Todo => ({
   completed: task.doneAt !== null,
 });
 
+interface DraggableTaskListProps {
+  taskList: TaskList;
+  index: number;
+  moveTaskList: (dragIndex: number, hoverIndex: number) => void;
+  isSelected: boolean;
+  onSelect: (taskList: TaskList) => void;
+}
+
+const DraggableTaskList: React.FC<DraggableTaskListProps> = ({
+  taskList,
+  index,
+  moveTaskList,
+  isSelected,
+  onSelect,
+}) => {
+  const [{ isDragging }, drag] = useDrag({
+    type: 'TASKLIST',
+    item: { index },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  const [, drop] = useDrop({
+    accept: 'TASKLIST',
+    hover: (draggedItem: { index: number }) => {
+      if (draggedItem.index !== index) {
+        moveTaskList(draggedItem.index, index);
+        draggedItem.index = index;
+      }
+    },
+  });
+
+  return (
+    <div
+      ref={(node) => {
+        drag(drop(node));
+      }}
+      className={clsx(
+        'cursor-move pb-1 text-sm font-medium',
+        isSelected ? 'border-b-2 border-white text-white' : 'text-gray400',
+        isDragging ? 'opacity-50' : ''
+      )}
+      onClick={() => onSelect(taskList)}
+    >
+      {taskList.name}
+    </div>
+  );
+};
+
 export default function TaskListPage() {
   const params = useParams();
+  const teamId = params.teamid as string;
   const groupId = params.teamid as unknown as number;
   if (!groupId) {
     notFound();
@@ -66,6 +119,12 @@ export default function TaskListPage() {
 
   const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
   const [detailopen, setDetailOpen] = useState(false);
+
+  const [isDragging, setIsDragging] = useState(false);
+  const [pendingOrderUpdate, setPendingOrderUpdate] = useState<{
+    taskListId: number;
+    displayIndex: number;
+  } | null>(null);
 
   useEffect(() => {
     const fetchTaskLists = async () => {
@@ -160,8 +219,40 @@ export default function TaskListPage() {
     setDetailOpen(true);
   };
 
+  const moveTaskList = async (dragIndex: number, hoverIndex: number) => {
+    const draggedTaskList = taskLists[dragIndex];
+    const newTaskLists = [...taskLists];
+    newTaskLists.splice(dragIndex, 1);
+    newTaskLists.splice(hoverIndex, 0, draggedTaskList);
+    setTaskLists(newTaskLists);
+    setPendingOrderUpdate({
+      taskListId: draggedTaskList.id,
+      displayIndex: hoverIndex,
+    });
+  };
+
+  // 드래그가 끝났을 때 API 호출
+  const handleDragEnd = async () => {
+    if (pendingOrderUpdate) {
+      try {
+        await updateTaskListOrder(
+          teamId,
+          groupId,
+          pendingOrderUpdate.taskListId,
+          pendingOrderUpdate.displayIndex
+        );
+        setPendingOrderUpdate(null);
+      } catch (error) {
+        console.error('Failed to update task list order:', error);
+        toast.error('목록 순서 변경에 실패했습니다.');
+        // Revert the order if the API call fails
+        setTaskLists(taskLists);
+      }
+    }
+  };
+
   return (
-    <>
+    <DndProvider backend={HTML5Backend}>
       <Toaster position="top-center" />
       <main className="py-6">
         <div className="relative mx-auto mt-6 max-w-[1200px] space-y-6 px-4 sm:px-6 md:px-8 lg:mt-10">
@@ -194,20 +285,19 @@ export default function TaskListPage() {
           </header>
 
           {taskLists.length > 0 && (
-            <nav className="flex flex-wrap space-x-6 border-b border-slate-700 pb-2">
-              {taskLists.map((taskList) => (
-                <button
+            <nav
+              className="flex flex-wrap space-x-6 border-b border-slate-700 pb-2"
+              onDragEnd={handleDragEnd}
+            >
+              {taskLists.map((taskList, index) => (
+                <DraggableTaskList
                   key={taskList.id}
-                  className={clsx(
-                    'pb-1 text-sm font-medium',
-                    taskList.id === selectedTaskList?.id
-                      ? 'border-b-2 border-white text-white'
-                      : 'text-gray400'
-                  )}
-                  onClick={() => setSelectedTaskList(taskList)}
-                >
-                  {taskList.name}
-                </button>
+                  taskList={taskList}
+                  index={index}
+                  moveTaskList={moveTaskList}
+                  isSelected={taskList.id === selectedTaskList?.id}
+                  onSelect={setSelectedTaskList}
+                />
               ))}
             </nav>
           )}
@@ -288,6 +378,6 @@ export default function TaskListPage() {
           />
         </div>
       </Modal>
-    </>
+    </DndProvider>
   );
 }
