@@ -263,6 +263,7 @@ export default function TaskListPage() {
         onClose={() => setTodoModalOpen(false)}
         onSubmit={handleCreateTodo}
         disabled={!selectedTaskList?.id || isLoading}
+        taskListId={selectedTaskList?.id}
       />
 
       <Modal
