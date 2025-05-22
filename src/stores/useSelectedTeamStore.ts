@@ -1,4 +1,3 @@
-// src/stores/useSelectedTeamStore.ts
 import { create } from 'zustand';
 
 interface Team {

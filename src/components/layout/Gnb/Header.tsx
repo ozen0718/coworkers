@@ -22,7 +22,7 @@ interface HeaderProps {
 export default function Header({ onOpenSideMenu }: HeaderProps) {
   const { showTeamSelector, showFreeBoardLink, showProfile } = useHeader();
   const accessToken = useAuthStore((s) => s.accessToken);
-  const { setUserInfo } = useUserStore();
+  const { teams, setUserInfo } = useUserStore();
   const { selectedTeam, setSelectedTeam } = useSelectedTeamStore();
 
   const { data: userData } = useQuery({
@@ -39,13 +39,14 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
         profileImage: userData.profileImage,
         teams: userData.teams,
       });
-
-      //여기에서 teams 존재 여부를 먼저 확인해줘야 함
-      if (!selectedTeam && Array.isArray(userData.teams) && userData.teams.length > 0) {
-        setSelectedTeam(userData.teams[0]);
-      }
     }
-  }, [userData, setUserInfo, selectedTeam, setSelectedTeam]);
+  }, [userData, setUserInfo]);
+
+  useEffect(() => {
+    if (!selectedTeam && teams.length > 0) {
+      setSelectedTeam(teams[0]);
+    }
+  }, [teams, selectedTeam, setSelectedTeam]);
 
   return (
     <header className="bg-bg200 border-border sticky top-0 z-50 flex h-15 w-full justify-center border-b-1 py-[14px]">
