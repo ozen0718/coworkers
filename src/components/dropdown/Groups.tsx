@@ -1,3 +1,4 @@
+// src/components/dropdown/Groups.tsx
 'use client';
 
 import Link from 'next/link';
@@ -7,7 +8,7 @@ export interface GroupOption {
   teamId: string;
   updatedAt: string;
   createdAt: string;
-  image: string;
+  image: string | null;
   name: string;
   id: number;
 }
@@ -28,9 +29,15 @@ export default function DropDownGroupsItem({ group }: DropDownGroupsItemProps) {
       )}
     >
       <Link href={`/${id}`} className="flex items-center gap-3 text-white">
-        <div className="h-[32px] w-[32px] overflow-hidden rounded-md bg-gray-200">
-          <img src={image} alt={`${name} 이미지`} className="h-full w-full object-cover" />
+        {/* 사각 박스로 변경: rounded-full -> rounded-md */}
+        <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-md bg-gray-600">
+          {image ? (
+            <img src={image} alt={`${name} 이미지`} className="h-full w-full object-cover" />
+          ) : (
+            <img src="/icons/team.svg" alt="기본 팀 아이콘" className="h-4 w-4" />
+          )}
         </div>
+
         <p className="text-lg-md w-[110px] truncate">{name}</p>
       </Link>
 
