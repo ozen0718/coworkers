@@ -35,7 +35,7 @@ export default function ResetPasswordPage() {
       });
       toast.success('비밀번호 재설정 완료!');
       router.push('/login');
-    } catch (error) {
+    } catch {
       toast.error('비밀번호 재설정에 실패했습니다.');
     }
   };
@@ -84,7 +84,7 @@ export default function ResetPasswordPage() {
             });
             toast.success('비밀번호 재설정 메일이 발송되었습니다.');
             setShowModal(false);
-          } catch (error) {
+          } catch {
             toast.error('메일 발송에 실패했습니다.');
           }
         }}
