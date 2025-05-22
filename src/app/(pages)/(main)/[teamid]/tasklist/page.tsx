@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { addDays, format } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import clsx from 'clsx';
-import { notFound, useParams } from 'next/navigation';
+import { notFound, useParams, useSearchParams, useRouter } from 'next/navigation';
 import { Toaster, toast } from 'react-hot-toast';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -97,6 +97,8 @@ const DraggableTaskList: React.FC<DraggableTaskListProps> = ({
 
 export default function TaskListPage() {
   const params = useParams();
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const teamId = params.teamid as string;
   const groupId = params.teamid as unknown as number;
   if (!groupId) {
@@ -106,9 +108,23 @@ export default function TaskListPage() {
 
   const { reloadKey } = useTaskReload();
 
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const prevDay = () => setCurrentDate((d) => addDays(d, -1));
-  const nextDay = () => setCurrentDate((d) => addDays(d, +1));
+  const [currentDate, setCurrentDate] = useState(() => {
+    const dateParam = searchParams.get('date');
+    return dateParam ? new Date(dateParam) : new Date();
+  });
+
+  const prevDay = () => {
+    const newDate = addDays(currentDate, -1);
+    setCurrentDate(newDate);
+    router.push(`?date=${format(newDate, 'yyyy-MM-dd')}`);
+  };
+
+  const nextDay = () => {
+    const newDate = addDays(currentDate, +1);
+    setCurrentDate(newDate);
+    router.push(`?date=${format(newDate, 'yyyy-MM-dd')}`);
+  };
+
   const dateKey = format(currentDate, 'yyyy-MM-dd');
 
   const [taskLists, setTaskLists] = useState<TaskList[]>([]);
@@ -135,12 +151,17 @@ export default function TaskListPage() {
       setIsLoading(true);
       try {
         const { taskLists } = await getGroupDetail(groupId);
-        // tasklistid 가져오기
-        // groupid 옆 파라미터
-        setTaskLists(taskLists);
+        const filteredTaskLists = taskLists.filter((taskList) => {
+          const taskListDate = format(new Date(taskList.createdAt), 'yyyy-MM-dd');
+          return taskListDate === dateKey;
+        });
 
-        if (taskLists.length > 0) {
-          setSelectedTaskList(taskLists[0]);
+        setTaskLists(filteredTaskLists);
+
+        if (filteredTaskLists.length > 0) {
+          setSelectedTaskList(filteredTaskLists[0]);
+        } else {
+          setSelectedTaskList(null);
         }
       } catch (error) {
         console.error('Failed to fetch task lists:', error);
