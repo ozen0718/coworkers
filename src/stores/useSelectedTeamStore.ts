@@ -8,7 +8,7 @@ interface Team {
 
 interface SelectedTeamState {
   selectedTeam: Team | null;
-  setSelectedTeam: (team: Team) => void;
+  setSelectedTeam: (team: Team | null) => void;
 }
 
 export const useSelectedTeamStore = create<SelectedTeamState>((set) => ({

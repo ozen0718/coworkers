@@ -42,11 +42,17 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
     }
   }, [userData, setUserInfo]);
 
+  // ✅ teams 배열이 바뀔 때마다 selectedTeam 유효성 검사
   useEffect(() => {
-    if (!selectedTeam && teams.length > 0) {
-      setSelectedTeam(teams[0]);
+    if (teams.length > 0) {
+      const stillExists = teams.find((team) => team.id === selectedTeam?.id);
+      if (!stillExists) {
+        setSelectedTeam(teams[0]); // 현재 선택된 팀이 삭제된 경우, 첫 번째 팀으로 설정
+      }
+    } else {
+      setSelectedTeam(null); // 팀이 없는 경우 null로 초기화
     }
-  }, [teams, selectedTeam, setSelectedTeam]);
+  }, [teams]); // selectedTeam은 deps에서 제거 (의도적)
 
   return (
     <header className="bg-bg200 border-border sticky top-0 z-50 flex h-15 w-full justify-center border-b-1 py-[14px]">

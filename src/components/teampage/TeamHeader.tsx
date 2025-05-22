@@ -10,6 +10,7 @@ import Modal from '@/components/common/Modal';
 import { getUserInfo } from '@/api/user';
 import { deleteGroup } from '@/api/group.api';
 import { useUserStore } from '@/stores/useUserStore';
+import { useSelectedTeamStore } from '@/stores/useSelectedTeamStore';
 import { TeamHeaderProps } from '@/types/tasktypes';
 
 export default function TeamHeader({ title, showGear }: TeamHeaderProps) {
@@ -17,7 +18,9 @@ export default function TeamHeader({ title, showGear }: TeamHeaderProps) {
   const params = useParams();
   const groupId = Number(params.teamid);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+
   const setUserInfo = useUserStore((s) => s.setUserInfo);
+  const setSelectedTeam = useSelectedTeamStore((s) => s.setSelectedTeam);
 
   const deleteMutation = useMutation({
     mutationFn: () => deleteGroup(groupId),
@@ -32,9 +35,10 @@ export default function TeamHeader({ title, showGear }: TeamHeaderProps) {
         teams: updatedUserInfo.teams,
       });
 
-      const firstGroupId = updatedUserInfo.teams[0]?.id;
+      const firstGroup = updatedUserInfo.teams[0] ?? null;
 
-      router.push(firstGroupId ? `/${firstGroupId}` : '/noteam');
+      setSelectedTeam(firstGroup);
+      router.push(firstGroup ? `/${firstGroup.id}` : '/noteam');
     },
     onError: () => {
       toast.error('그룹 삭제에 실패했습니다.');

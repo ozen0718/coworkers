@@ -12,10 +12,19 @@ export default function TeamSelector() {
   const { selectedTeam, setSelectedTeam } = useSelectedTeamStore();
   const [value, setValue] = useState<string>(selectedTeam?.name ?? '팀 없음');
 
+  // ✅ selectedTeam 변경 시 드롭다운 텍스트도 자동 업데이트
+  useEffect(() => {
+    if (selectedTeam) {
+      setValue(selectedTeam.name);
+    } else {
+      setValue('팀 없음');
+    }
+  }, [selectedTeam]);
+
+  // ✅ 초기 selectedTeam이 없을 경우 첫 번째 팀 자동 설정
   useEffect(() => {
     if (teams.length > 0 && !selectedTeam) {
       setSelectedTeam(teams[0]);
-      setValue(teams[0].name);
     }
   }, [teams, selectedTeam, setSelectedTeam]);
 
@@ -35,7 +44,7 @@ export default function TeamSelector() {
         group={group}
         onClick={() => {
           setSelectedTeam(team);
-          setValue(team.name);
+          setValue(team.name); // 직접 선택했을 때도 value 갱신
         }}
       />
     );
