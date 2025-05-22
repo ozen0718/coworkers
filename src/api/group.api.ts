@@ -24,3 +24,14 @@ export const acceptGroupInvitation = async ({
   });
   return response.data;
 };
+
+export const deleteGroup = async (groupId: number): Promise<void> => {
+  await axiosInstance.delete(`/groups/${groupId}`);
+};
+
+export const patchGroup = async (
+  groupId: number,
+  body: { name: string; image: string | null }
+): Promise<void> => {
+  await axiosInstance.patch(`/groups/${groupId}`, body);
+};
