@@ -122,9 +122,13 @@ export default function Report({ total, completed, newestTasks: newestTasks = []
     <div className="relative w-full">
       <div className="bg-bg200 grid grid-cols-2 gap-4 rounded-xl px-2 py-2 sm:grid-cols-3 sm:px-6">
         <LeftSide percentage={percentage} />
-        {newestTasks.length > 0 && newestTasks[0].startDate !== '' && (
+        {newestTasks.length > 0 && newestTasks[0].startDate !== '' ? (
           <div className="hidden justify-center sm:flex">
             <NewestTasksReportColumn tasks={newestTasks} />
+          </div>
+        ) : (
+          <div className="bg-bg200 border-bg100 flex w-full items-center justify-center gap-4 rounded-xl border-4 border-dashed">
+            <p className="text-md-regular text-gray500">새로운 할 일이 없습니다.</p>
           </div>
         )}
         <div className="flex justify-end">
