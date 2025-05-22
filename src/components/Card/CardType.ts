@@ -38,13 +38,15 @@ export type AuthorInfoProps = {
 
 /* BoardComment - 게시글 댓글 내용 */
 export type BoardCommentProps = {
+  id?: string;
   type?: 'free' | 'list';
   author?: string;
   content?: string;
   date?: string;
   commentId: number;
+  taskId?: number;
   onChange?: () => void;
-  writer: {
+  writer?: {
     id: number;
   };
 };
@@ -107,5 +109,20 @@ export type PostDetail = {
   writer?: {
     id: number;
     nickname: string;
+  };
+};
+
+/* 상세 카드 - 댓글 */
+export type CommentDetail = {
+  id: number;
+  content?: string;
+  taskId?: number;
+  userId?: number;
+  commentId?: number;
+  createdAt?: string;
+  user?: {
+    id: number;
+    nickname: string;
+    image: string | null;
   };
 };

@@ -14,14 +14,6 @@ const repeatMap = {
 };
 
 /* 날짜, 시간 변경 */
-function formatDate(dateString: string) {
-  const dateObj = new Date(dateString);
-  const year = dateObj.getFullYear();
-  const month = dateObj.getMonth() + 1;
-  const date = dateObj.getDate();
-
-  return `${year}년 ${month}월 ${date}일`;
-}
 
 function formatTime(timeString: string) {
   const [hourStr, minute] = timeString.split(':');
@@ -38,7 +30,7 @@ export function DateInfo({ date, time, repeatinfo }: DateInfoProps) {
     <div className="flex items-center space-x-1 text-xs text-gray-400 sm:space-x-3">
       <div className="flex items-center space-x-1">
         <Image src="/icons/icon_calendar.svg" alt="날짜 아이콘" width={12} height={12} />
-        <span>{formatDate(date)}</span>
+        <span>{date}</span>
       </div>
       {time && (
         <>
