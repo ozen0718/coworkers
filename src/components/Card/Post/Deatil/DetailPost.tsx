@@ -53,23 +53,30 @@ export default function DetailPost({
     return;
   }
 
-  const router = useRouter();
-
   /* 할일 내용 */
   const { data: taskData } = useQuery({
     queryKey: ['task', groupId, tasklistid, taskid],
-    queryFn: () => {
-      if (!groupId || !tasklistid || !taskid) {
-        throw new Error('필수 값이 없습니다');
-      }
-      return fetchTask(groupId, tasklistid, taskid);
-    },
+    queryFn: () => fetchTask(groupId, tasklistid, taskid),
+    enabled: !!groupId && !!tasklistid && !!taskid,
   });
 
   /* 댓글 내용 */
   const { data: commentData } = useQuery({
     queryKey: ['comments', taskid],
     queryFn: () => fetchComment(taskid),
+  });
+
+  const mutation = useMutation({
+    mutationFn: (content: string) => createComment(taskid, { content }),
+    onSuccess: () => {
+      console.log('댓글 작성 성공');
+      toast.success('댓글이 작성되었습니다');
+      queryClient.invalidateQueries({ queryKey: ['comments', taskid] });
+    },
+    onError: (error: AxiosError) => {
+      console.error('댓글 작성 실패', error.message);
+      toast.error('댓글 작성에 실패했습니다');
+    },
   });
 
   /* 댓글 작성 */
@@ -85,19 +92,6 @@ export default function DetailPost({
     }
     mutation.mutate(content);
   };
-
-  const mutation = useMutation({
-    mutationFn: (content: string) => createComment(taskid, { content }),
-    onSuccess: () => {
-      console.log('댓글 작성 성공');
-      toast.success('댓글이 작성되었습니다');
-      queryClient.invalidateQueries({ queryKey: ['comments', taskid] });
-    },
-    onError: (error: AxiosError) => {
-      console.error('댓글 작성 실패', error.message);
-      toast.error('댓글 작성에 실패했습니다');
-    },
-  });
 
   /* 케밥 드롭다운 */
   const handleToggleComplete = () => {
@@ -129,6 +123,10 @@ export default function DetailPost({
       console.error('할 일 삭제 실패:', err.response?.data);
     },
   });
+
+  if (!taskid || !groupId || !tasklistid) {
+    return <div>필수 데이터가 없습니다.</div>;
+  }
 
   return (
     <div

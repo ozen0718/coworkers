@@ -270,6 +270,7 @@ export default function TaskListPage() {
         onSubmit={handleCreateTodo}
         disabled={!selectedTaskList?.id || isLoading}
         taskListId={selectedTaskList?.id}
+        groupId={groupId}
       />
 
       <Modal

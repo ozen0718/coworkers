@@ -9,10 +9,17 @@ import { useDateTimePicker } from './useDateTimePicker';
 import DatePickerCalendar from './DatePickerCalender';
 import DatePickerTime from './DatePickerTime';
 
+import { useMutation } from '@tanstack/react-query';
+import { createRecurringTask } from '@/api/createTask';
+import { AxiosError } from 'axios';
+import { toast } from 'react-toastify';
+import { useQueryClient } from '@tanstack/react-query';
+
 export interface TodoFullCreateModalProps {
   isOpen: boolean;
   onClose: () => void;
   taskListId?: number;
+  groupId?: number;
   onSubmit: (newTodo: {
     title: string;
     date: Date | null;
@@ -32,6 +39,7 @@ export default function TodoFullCreateModal({
   onClose,
   onSubmit,
   taskListId,
+  groupId,
   disabled = false,
 }: TodoFullCreateModalProps) {
   const [title, setTitle] = useState('');

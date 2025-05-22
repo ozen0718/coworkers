@@ -6,7 +6,6 @@ import { AuthorInfoProps } from '../CardType';
 import { AxiosError } from 'axios';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { addLike, deleteLike } from '@/api/articles';
-import { useQuery } from '@tanstack/react-query';
 import { useQueryClient } from '@tanstack/react-query';
 
 export default function AuthorInfo({
