@@ -3,7 +3,7 @@ export interface TaskListTapProps {
   isSelected?: boolean;
 }
 
-export type TeamHeaderProp = {
+export type TeamHeaderProps = {
   title: string;
   showGear?: boolean;
 };

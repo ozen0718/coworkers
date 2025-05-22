@@ -14,7 +14,7 @@ import { Profile } from '@/components/common/Profiles';
 import { getInvitationToken } from '@/api/group.api';
 import { createTaskList, getTaskDetail } from '@/api/tasklist.api';
 import { useGroupDetail } from '@/hooks/useGroupDetail';
-import { useGroupPageInfo, useAllTaskListTasks } from '@/hooks/useGroupPageInfo';
+import { useGroupPageInfo, useAllTaskListTasks, useGroupList } from '@/hooks/useGroupPageInfo';
 import { useModalGroup } from '@/hooks/useModalGroup';
 import { NewestTaskProps } from '@/types/teampagetypes';
 import { getFutureDateString } from '@/utils/date';
@@ -28,6 +28,7 @@ export default function TeamPage() {
   const sectionHeaderButtonStyle = 'text-md-regular text-primary';
   const queryClient = useQueryClient();
   const router = useRouter();
+  const { data: groupList, isLoading } = useGroupList();
 
   const [newListName, setNewListName] = useState('');
   const [selectedMember, setSelectedMember] = useState<{
@@ -175,6 +176,11 @@ export default function TeamPage() {
 
     fetchNewestTaskDetails();
   }, [futureDate, futureTaskList, groupId]);
+
+  if (!isLoading && (!groupList || groupList.length === 0)) {
+    router.replace('/noteam');
+    return null;
+  }
 
   return (
     <div className="py-6">
