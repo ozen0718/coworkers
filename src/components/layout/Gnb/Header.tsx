@@ -22,7 +22,7 @@ interface HeaderProps {
 export default function Header({ onOpenSideMenu }: HeaderProps) {
   const { showTeamSelector, showFreeBoardLink, showProfile } = useHeader();
   const accessToken = useAuthStore((s) => s.accessToken);
-  const { teams = [], setUserInfo } = useUserStore();
+  const { setUserInfo } = useUserStore();
   const { selectedTeam, setSelectedTeam } = useSelectedTeamStore();
 
   const { data: userData } = useQuery({
