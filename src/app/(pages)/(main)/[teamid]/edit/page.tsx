@@ -1,14 +1,23 @@
 'use client';
 
+import { useState } from 'react';
+import { useParams } from 'next/navigation';
+import clsx from 'clsx';
 import EditableTeamProfileSection from './EditableTeamProfileSection';
 import EditableTeamNameSection from './EditableTeamNameSection';
 import EditButton from './EditButton';
-import clsx from 'clsx';
 import { AuthPagesLayout, PageTitleStyle } from '@/styles/pageStyle';
-import { useState } from 'react';
+import { useGroupPageInfo } from '@/hooks/useGroupPageInfo';
+import { useGroupDetail } from '@/hooks/useGroupDetail';
 
 export default function TeamEditPage() {
   const [teamName, setTeamName] = useState('');
+
+  const { teamid } = useParams() as { teamid: string };
+  const { data: userData } = useGroupPageInfo(teamid);
+  const { data: groupDetail } = useGroupDetail(userData?.group.id);
+
+  if (!userData || !groupDetail) return null;
 
   return (
     <div className={clsx(AuthPagesLayout, 'mt-14')}>
