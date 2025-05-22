@@ -283,6 +283,7 @@ export default function TeamPage() {
               name={member.userName}
               email={member.userEmail}
               profileUrl={member.userImage}
+              userId={member.userId}
               onClick={() =>
                 handleOpenProfile({
                   name: member.userName,

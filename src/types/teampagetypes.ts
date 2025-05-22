@@ -6,6 +6,7 @@ export interface MemberProps {
   name: string;
   email: string;
   onClick: () => void;
+  userId: number;
 }
 
 export type ProgressProp = {
