@@ -1,40 +1,54 @@
-// src/components/layout/Gnb/TeamSelector.tsx
 'use client';
 
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useUserStore } from '@/stores/useUserStore';
+import { useSelectedTeamStore } from '@/stores/useSelectedTeamStore';
 import SelectableDropdown from '@/components/dropdown/SelectableDropdown';
-import DropDownGroupsItem from '@/components/dropdown/Groups';
+import DropDownGroupsItem, { GroupOption } from '@/components/dropdown/Groups';
 
 export default function TeamSelector() {
   const teams = useUserStore((s) => s.teams) ?? [];
+  const { selectedTeam, setSelectedTeam } = useSelectedTeamStore();
+  const [value, setValue] = useState<string>(selectedTeam?.name ?? '팀 없음');
 
-  // value 상태 초기화: teams가 로드되지 않았다면 '팀 없음'
-  const [value, setValue] = useState<string>(teams[0]?.name ?? '팀 없음');
-
-  // teams가 **0→N** 으로 바뀔 때만 value를 업데이트
+  //selectedTeam 변경 시 드롭다운 텍스트도 자동 업데이트
   useEffect(() => {
-    if (teams.length > 0) {
-      setValue(teams[0].name!);
+    if (selectedTeam) {
+      setValue(selectedTeam.name);
+    } else {
+      setValue('팀 없음');
     }
-    // teams가 비었을 때는 건너뛰기
-  }, [teams]);
+  }, [selectedTeam]);
 
-  // 옵션 렌더링
-  const options = teams.map((team) => (
-    <DropDownGroupsItem
-      key={team.id}
-      group={{
-        id: Number(team.id),
-        name: team.name || '이름 없음',
-        image: team.image ?? '/team.png',
-        teamId: team.id,
-        createdAt: '',
-        updatedAt: '',
-      }}
-    />
-  ));
+  //초기 selectedTeam이 없을 경우 첫 번째 팀 자동 설정
+  useEffect(() => {
+    if (teams.length > 0 && !selectedTeam) {
+      setSelectedTeam(teams[0]);
+    }
+  }, [teams, selectedTeam, setSelectedTeam]);
+
+  const options = teams.map((team) => {
+    const group: GroupOption = {
+      id: Number(team.id),
+      teamId: team.id,
+      name: team.name || '이름 없음',
+      image: team.image ?? '/team.svg',
+      createdAt: '',
+      updatedAt: '',
+    };
+
+    return (
+      <DropDownGroupsItem
+        key={group.id}
+        group={group}
+        onClick={() => {
+          setSelectedTeam(team);
+          setValue(team.name); // 직접 선택했을 때도 value 갱신
+        }}
+      />
+    );
+  });
 
   return (
     <SelectableDropdown

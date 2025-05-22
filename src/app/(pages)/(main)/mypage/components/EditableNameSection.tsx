@@ -21,23 +21,20 @@ export default function EditableNameSection({ name }: EditableNameProps) {
   const { isOpen, open, close } = useModal();
   const queryClient = useQueryClient();
 
-  // 1) Zustand 업데이트 함수 가져오기
   const setUserInfo = useUserStore((s) => s.setUserInfo);
 
   const { mutate } = useMutation({
     mutationFn: updateUserName,
-    onSuccess: (updated) => {
+    onSuccess: () => {
       toast.success('이름이 변경되었습니다.');
 
-      // 2) React Query 캐시 무효화
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.user.me });
 
-      // 3) Zustand store에도 병합 업데이트
       const { profileImage, teams } = useUserStore.getState();
       setUserInfo({
         nickname: inputName,
-        profileImage, // 기존 값 유지
-        teams, // 기존 팀 목록 유지
+        profileImage,
+        teams,
       });
 
       close();

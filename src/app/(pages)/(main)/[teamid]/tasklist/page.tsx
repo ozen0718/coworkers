@@ -13,7 +13,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import Modal from '@/components/common/Modal';
 import TodoItem from '@/components/List/todo';
 import { TextInput } from '@/components/common/Inputs';
-import DetailPost from '@/components/Card/Post/Deatil/DetailPost';
+import DetailPost from '@/components/Card/Post/Detail/DetailPost';
 import SlideWrapper from '@/components/Card/SlideWrapper';
 import TodoFullCreateModal, { TodoFullCreateModalProps } from './components/TodoFullCreateModal';
 import { createTaskList, getTasksByTaskList, updateTaskListOrder } from '@/api/tasklist.api';
@@ -381,6 +381,7 @@ export default function TaskListPage() {
         onSubmit={handleCreateTodo}
         disabled={!selectedTaskList?.id || isLoading}
         taskListId={selectedTaskList?.id}
+        groupId={groupId}
       />
 
       <Modal
