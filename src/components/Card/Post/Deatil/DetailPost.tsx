@@ -28,7 +28,7 @@ type DetailPostProps = {
   time?: string;
 };
 
-const taskId = 3704; // 예시 id 추후 수정
+//const taskId = 3704; // 예시 id 추후 수정
 
 export default function DetailPost({
   taskid,
@@ -43,15 +43,20 @@ export default function DetailPost({
 
   const queryClient = useQueryClient();
 
+  if (!taskid) {
+    console.log('아이디 없음');
+    return;
+  }
+
   /* 댓글 내용 */
   const { data: commentData } = useQuery({
-    queryKey: ['comments', taskId],
-    queryFn: () => fetchComment(taskId),
+    queryKey: ['comments', taskid],
+    queryFn: () => fetchComment(taskid),
   });
 
   /* 댓글 작성 */
   const handleSubmit = (content: string) => {
-    if (!taskId) {
+    if (!taskid) {
       console.log('아이디 없음');
       return;
     }
@@ -64,11 +69,11 @@ export default function DetailPost({
   };
 
   const mutation = useMutation({
-    mutationFn: (content: string) => createComment(taskId, { content }),
+    mutationFn: (content: string) => createComment(taskid, { content }),
     onSuccess: () => {
       console.log('댓글 작성 성공');
       toast.success('댓글이 작성되었습니다');
-      queryClient.invalidateQueries({ queryKey: ['comments', taskId] });
+      queryClient.invalidateQueries({ queryKey: ['comments', taskid] });
     },
     onError: (error: AxiosError) => {
       console.error('댓글 작성 실패', error.message);
@@ -159,7 +164,7 @@ export default function DetailPost({
         {commentData?.data?.map((comment: CommentDetail) => (
           <BoardComment
             type="list"
-            taskId={taskId}
+            taskId={taskid}
             key={comment.id}
             commentId={comment.id}
             writer={{ id: comment.user?.id ?? 0 }}

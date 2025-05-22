@@ -234,6 +234,7 @@ export default function TaskListPage() {
             <SlideWrapper isOpen={detailopen} onClose={() => setDetailOpen(false)}>
               {selectedTodo && (
                 <DetailPost
+                  taskid={selectedTodo.id}
                   title={selectedTodo.title}
                   showComplete={false}
                   onClose={() => setDetailOpen(false)}

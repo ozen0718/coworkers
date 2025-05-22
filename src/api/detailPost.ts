@@ -1,27 +1,27 @@
 import axiosInstance from './axiosInstance';
 
 /* 상세 카드 - 댓글 내용 */
-export const fetchComment = (taskId: number) => {
-  return axiosInstance.get(`/tasks/${taskId}/comments?limit=30`);
+export const fetchComment = (taskid: number) => {
+  return axiosInstance.get(`/tasks/${taskid}/comments?limit=30`);
 };
 
 /* 상세 카드 - 댓글 작성 */
-export const createComment = (taskId: number, payload: { content: string }) => {
-  return axiosInstance.post(`/tasks/${taskId}/comments`, payload);
+export const createComment = (taskid: number, payload: { content: string }) => {
+  return axiosInstance.post(`/tasks/${taskid}/comments`, payload);
 };
 
 /* 상세 카드 - 댓글 삭제 */
-export const deleteDetailComment = (taskId: number, commentId: number) => {
-  return axiosInstance.delete(`/tasks/${taskId}/comments/${commentId}`);
+export const deleteDetailComment = (taskid: number, commentId: number) => {
+  return axiosInstance.delete(`/tasks/${taskid}/comments/${commentId}`);
 };
 
 /* 상세 카드 - 댓글 수정 */
 export const editDetailComment = (
-  taskId: number,
+  taskid: number,
   commentId: number,
   payload: { content: string }
 ) => {
-  return axiosInstance.patch(`/tasks/${taskId}/comments/${commentId}`, payload);
+  return axiosInstance.patch(`/tasks/${taskid}/comments/${commentId}`, payload);
 };
 
 /* 상세 카드 - 할일 삭제 */
