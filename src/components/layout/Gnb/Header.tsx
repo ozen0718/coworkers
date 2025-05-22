@@ -9,6 +9,7 @@ import ProfileDropdown from './ProfileSelector';
 import { useHeader } from './HeaderContext';
 import { useUserStore } from '@/stores/useUserStore';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { useSelectedTeamStore } from '@/stores/useSelectedTeamStore';
 import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/constants/queryKeys';
 import { getUserInfo } from '@/api/user';
@@ -20,14 +21,10 @@ interface HeaderProps {
 
 export default function Header({ onOpenSideMenu }: HeaderProps) {
   const { showTeamSelector, showFreeBoardLink, showProfile } = useHeader();
-
-  // 1) zustand에서 토큰 가져오기
   const accessToken = useAuthStore((s) => s.accessToken);
+  const { teams, setUserInfo } = useUserStore();
+  const { selectedTeam, setSelectedTeam } = useSelectedTeamStore();
 
-  // 2) userStore에서 팀 목록과 setter
-  const { teams = [], setUserInfo } = useUserStore();
-
-  // 3) 로그인(토큰 보유) 상태에서만 호출
   const { data: userData } = useQuery({
     queryKey: QUERY_KEYS.user.me,
     queryFn: getUserInfo,
@@ -35,7 +32,6 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
     enabled: !!accessToken,
   });
 
-  // 4) API 응답이 오면 store에 반영
   useEffect(() => {
     if (userData) {
       setUserInfo({
@@ -45,6 +41,18 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
       });
     }
   }, [userData, setUserInfo]);
+
+  //teams 배열이 바뀔 때마다 selectedTeam 유효성 검사
+  useEffect(() => {
+    if (teams.length > 0) {
+      const stillExists = teams.find((team) => team.id === selectedTeam?.id);
+      if (!stillExists) {
+        setSelectedTeam(teams[0]); // 현재 선택된 팀이 삭제된 경우, 첫 번째 팀으로 설정
+      }
+    } else {
+      setSelectedTeam(null); // 팀이 없는 경우 null로 초기화
+    }
+  }, [teams]); // selectedTeam은 deps에서 제거 (의도적)
 
   return (
     <header className="bg-bg200 border-border sticky top-0 z-50 flex h-15 w-full justify-center border-b-1 py-[14px]">
@@ -58,14 +66,12 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
             <Logo />
           </div>
 
-          {/* PC 이상에서만 보이는 팀셀렉터 & 자유게시판 링크 */}
           <div className="text-lg-md hidden items-center gap-8 md:flex lg:gap-10">
             {showTeamSelector && (
               <div className="relative">
                 <TeamSelector />
               </div>
             )}
-
             {showFreeBoardLink && (
               <Link href="/boards" className="cursor-pointer">
                 자유게시판
@@ -74,11 +80,9 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
           </div>
         </div>
 
-        {/* 우측 프로필 드롭다운 */}
         <div className="relative ml-auto">{showProfile && <ProfileDropdown />}</div>
       </div>
 
-      {/* 사이드메뉴: 열린 상태 관리 로직은 상위에서 props로 넘겨주세요 */}
       <SideMenu isOpen={false} onClose={() => {}} />
     </header>
   );
