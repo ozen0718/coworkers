@@ -206,7 +206,7 @@ export default function TaskListPage() {
                   )}
                   onClick={() => setSelectedTaskList(taskList)}
                 >
-                  {taskList.name}
+                  {taskList.name} {taskList.id}
                 </button>
               ))}
             </nav>
@@ -232,8 +232,10 @@ export default function TaskListPage() {
             )}
 
             <SlideWrapper isOpen={detailopen} onClose={() => setDetailOpen(false)}>
-              {selectedTodo && (
+              {selectedTodo && selectedTaskList && (
                 <DetailPost
+                  groupId={groupId}
+                  tasklistid={selectedTaskList.id}
                   taskid={selectedTodo.id}
                   title={selectedTodo.title}
                   showComplete={false}

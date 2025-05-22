@@ -1,6 +1,9 @@
 import axiosInstance from './axiosInstance';
 
 /* 상세 카드 - 할 일 내용 */
+export const fetchTask = (groupId: number, tasklistid: number, taskid: number) => {
+  return axiosInstance.get(`/groups/${groupId}/task-lists/${tasklistid}/tasks/${taskid}`);
+};
 
 /* 상세 카드 - 댓글 내용 */
 export const fetchComment = (taskid: number) => {
