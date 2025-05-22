@@ -11,7 +11,7 @@ import { Toaster, toast } from 'react-hot-toast';
 import Modal from '@/components/common/Modal';
 import TodoItem from '@/components/List/todo';
 import { TextInput } from '@/components/common/Inputs';
-import DetailPost from '@/components/Card/Post/Deatil/DetailPost';
+import DetailPost from '@/components/Card/Post/Detail/DetailPost';
 import SlideWrapper from '@/components/Card/SlideWrapper';
 import TodoFullCreateModal, { TodoFullCreateModalProps } from './components/TodoFullCreateModal';
 import { createTaskList, getTasksByTaskList } from '@/api/tasklist.api';
