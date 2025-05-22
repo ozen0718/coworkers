@@ -42,7 +42,7 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
     }
   }, [userData, setUserInfo]);
 
-  // ✅ teams 배열이 바뀔 때마다 selectedTeam 유효성 검사
+  //teams 배열이 바뀔 때마다 selectedTeam 유효성 검사
   useEffect(() => {
     if (teams.length > 0) {
       const stillExists = teams.find((team) => team.id === selectedTeam?.id);

@@ -24,7 +24,6 @@ export async function createTeam(name: string, imageUrl?: string): Promise<{ id:
 /**
  * 이미지 업로드 API
  * POST /images/upload
- * (baseURL 에 teamId=13-4가 이미 포함되어 있습니다)
  */
 export async function uploadImage(file: File): Promise<string> {
   const form = new FormData();

@@ -12,7 +12,7 @@ export default function TeamSelector() {
   const { selectedTeam, setSelectedTeam } = useSelectedTeamStore();
   const [value, setValue] = useState<string>(selectedTeam?.name ?? '팀 없음');
 
-  // ✅ selectedTeam 변경 시 드롭다운 텍스트도 자동 업데이트
+  //selectedTeam 변경 시 드롭다운 텍스트도 자동 업데이트
   useEffect(() => {
     if (selectedTeam) {
       setValue(selectedTeam.name);
@@ -21,7 +21,7 @@ export default function TeamSelector() {
     }
   }, [selectedTeam]);
 
-  // ✅ 초기 selectedTeam이 없을 경우 첫 번째 팀 자동 설정
+  //초기 selectedTeam이 없을 경우 첫 번째 팀 자동 설정
   useEffect(() => {
     if (teams.length > 0 && !selectedTeam) {
       setSelectedTeam(teams[0]);

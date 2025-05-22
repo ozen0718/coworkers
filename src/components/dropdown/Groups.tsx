@@ -14,7 +14,7 @@ export interface GroupOption {
 
 interface DropDownGroupsItemProps {
   group: GroupOption;
-  onClick?: () => void; // ✅ 추가
+  onClick?: () => void;
 }
 
 export default function DropDownGroupsItem({ group, onClick }: DropDownGroupsItemProps) {
