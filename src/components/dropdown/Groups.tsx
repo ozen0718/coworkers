@@ -1,4 +1,3 @@
-// src/components/dropdown/Groups.tsx
 'use client';
 
 import Link from 'next/link';
@@ -15,13 +14,15 @@ export interface GroupOption {
 
 interface DropDownGroupsItemProps {
   group: GroupOption;
+  onClick?: () => void; // ✅ 추가
 }
 
-export default function DropDownGroupsItem({ group }: DropDownGroupsItemProps) {
+export default function DropDownGroupsItem({ group, onClick }: DropDownGroupsItemProps) {
   const { name, id, image } = group;
 
   return (
     <div
+      onClick={onClick}
       className={clsx(
         'hover:bg-bg100',
         'flex w-[186px] cursor-pointer items-center justify-between',
@@ -29,7 +30,6 @@ export default function DropDownGroupsItem({ group }: DropDownGroupsItemProps) {
       )}
     >
       <Link href={`/${id}`} className="flex items-center gap-3 text-white">
-        {/* 사각 박스로 변경: rounded-full -> rounded-md */}
         <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-md bg-gray-600">
           {image ? (
             <img src={image} alt={`${name} 이미지`} className="h-full w-full object-cover" />

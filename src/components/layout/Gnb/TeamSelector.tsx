@@ -3,32 +3,42 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useUserStore } from '@/stores/useUserStore';
+import { useSelectedTeamStore } from '@/stores/useSelectedTeamStore';
 import SelectableDropdown from '@/components/dropdown/SelectableDropdown';
 import DropDownGroupsItem, { GroupOption } from '@/components/dropdown/Groups';
 
 export default function TeamSelector() {
   const teams = useUserStore((s) => s.teams) ?? [];
-
-  // 첫 렌더링 시 teams[0]이 있으면 값 초기화
-  const [value, setValue] = useState<string>(teams[0]?.name ?? '팀 없음');
+  const { selectedTeam, setSelectedTeam } = useSelectedTeamStore();
+  const [value, setValue] = useState<string>(selectedTeam?.name ?? '팀 없음');
 
   useEffect(() => {
-    if (teams.length > 0) {
+    if (teams.length > 0 && !selectedTeam) {
+      setSelectedTeam(teams[0]);
       setValue(teams[0].name);
     }
-  }, [teams]);
+  }, [teams, selectedTeam, setSelectedTeam]);
 
-  // DropDownGroupsItem 에 넘겨줄 GroupOption 배열 생성
   const options = teams.map((team) => {
     const group: GroupOption = {
-      id: Number(team.id), // DropDownGroupsItem 에서 id는 number
-      teamId: team.id, // 원래 팀 식별자(문자열)
+      id: Number(team.id),
+      teamId: team.id,
       name: team.name || '이름 없음',
-      image: team.image ?? '/team.svg', // null 이면 기본 아이콘
-      createdAt: '', // 필요에 따라 값 채워주세요
+      image: team.image ?? '/team.svg',
+      createdAt: '',
       updatedAt: '',
     };
-    return <DropDownGroupsItem key={group.id} group={group} />;
+
+    return (
+      <DropDownGroupsItem
+        key={group.id}
+        group={group}
+        onClick={() => {
+          setSelectedTeam(team);
+          setValue(team.name);
+        }}
+      />
+    );
   });
 
   return (

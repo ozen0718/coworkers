@@ -5,10 +5,12 @@ import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 import { createTeam, uploadImage } from '@/api/TeamCreate';
 import { QUERY_KEYS } from '@/constants/queryKeys';
+import { useSelectedTeamStore } from '@/stores/useSelectedTeamStore';
 
 export function useAddTeamForm() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { setSelectedTeam } = useSelectedTeamStore();
 
   const [name, setName] = useState('');
   const [file, setFile] = useState<File | null>(null);
@@ -21,7 +23,7 @@ export function useAddTeamForm() {
 
   const MIN_NAME = 2;
   const MAX_NAME = 15;
-  const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+  const MAX_SIZE = 10 * 1024 * 1024;
 
   const validateName = (v: string): string | null => {
     if (!v.trim()) return '이름을 입력해 주세요.';
@@ -79,6 +81,9 @@ export function useAddTeamForm() {
       }
 
       const { id: teamId } = await createTeam(name, imageUrl);
+
+      // ✅ 생성된 팀을 selectedTeam 상태에 저장
+      setSelectedTeam({ id: teamId, name, image: imageUrl ?? null });
 
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.user.me });
       router.push(`/${teamId}`);
