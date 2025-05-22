@@ -2,17 +2,19 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { createTeam } from '@/api/TeamCreate';
 import { useQueryClient } from '@tanstack/react-query';
+import { createTeam, uploadImage } from '@/api/TeamCreate';
 import { QUERY_KEYS } from '@/constants/queryKeys';
+import { useSelectedTeamStore } from '@/stores/useSelectedTeamStore';
 
 export function useAddTeamForm() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { setSelectedTeam } = useSelectedTeamStore();
 
   const [name, setName] = useState('');
+  const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [uploadedUrl, setUploadedUrl] = useState<string | null>(null);
 
   const [nameError, setNameError] = useState<string | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
@@ -21,10 +23,10 @@ export function useAddTeamForm() {
 
   const MIN_NAME = 2;
   const MAX_NAME = 15;
-  const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+  const MAX_SIZE = 10 * 1024 * 1024;
 
   const validateName = (v: string): string | null => {
-    if (!v.trim()) return null;
+    if (!v.trim()) return '이름을 입력해 주세요.';
     if (v.length < MIN_NAME) return `최소 ${MIN_NAME}자 이상 입력해 주세요.`;
     if (v.length > MAX_NAME) return `최대 ${MAX_NAME}자까지 입력 가능합니다.`;
     const validPattern = /^[가-힣A-Za-z0-9._-]+$/;
@@ -43,27 +45,24 @@ export function useAddTeamForm() {
     setNameError(validateName(name));
   };
 
-  const onFileChange = async (file: File | null, err: string | null) => {
+  const onFileChange = (file: File | null, err: string | null) => {
     setFileError(err);
+    setSubmitError(null);
 
-    if (err) {
+    if (err || !file) {
+      setFile(null);
       setPreviewUrl(null);
-      setUploadedUrl(null);
-      setIsLoading(false);
+      return;
+    }
+    if (file.size > MAX_SIZE) {
+      setFileError('10MB 이하만 가능합니다.');
+      setFile(null);
+      setPreviewUrl(null);
       return;
     }
 
-    if (!file && uploadedUrl) return;
-
-    if (!file) {
-      setPreviewUrl(null);
-      setUploadedUrl(null);
-      setIsLoading(false);
-      return;
-    }
-
+    setFile(file);
     setPreviewUrl(URL.createObjectURL(file));
-    setIsLoading(false);
   };
 
   const onCreate = async () => {
@@ -76,18 +75,21 @@ export function useAddTeamForm() {
     setSubmitError(null);
     setIsLoading(true);
     try {
-      const { id } = await createTeam(name, uploadedUrl ?? undefined);
+      let imageUrl: string | undefined;
+      if (file) {
+        imageUrl = await uploadImage(file);
+      }
+
+      const { id: teamId } = await createTeam(name, imageUrl);
+
+      //생성된 팀을 selectedTeam 상태에 저장
+      setSelectedTeam({ id: teamId, name, image: imageUrl ?? null });
 
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.user.me });
-
-      router.push(`${id}`);
+      router.push(`/${teamId}`);
     } catch (err: unknown) {
       if (err instanceof Error) {
-        if (err.message === 'DUPLICATE_NAME') {
-          setNameError('이미 존재하는 이름입니다.');
-        } else {
-          setSubmitError('팀 생성 중 오류가 발생했습니다.');
-        }
+        setSubmitError(err.message || '팀 생성 중 오류가 발생했습니다.');
       } else {
         setSubmitError('알 수 없는 오류가 발생했습니다.');
       }

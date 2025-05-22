@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 import { useRouter, useParams } from 'next/navigation';
 import { toast } from 'react-toastify';
@@ -10,19 +10,28 @@ import Modal from '@/components/common/Modal';
 import { getUserInfo } from '@/api/user';
 import { deleteGroup } from '@/api/group.api';
 import { useUserStore } from '@/stores/useUserStore';
+import { useSelectedTeamStore } from '@/stores/useSelectedTeamStore';
 import { TeamHeaderProps } from '@/types/tasktypes';
+import { QUERY_KEYS } from '@/constants/queryKeys';
 
 export default function TeamHeader({ title, showGear }: TeamHeaderProps) {
   const router = useRouter();
   const params = useParams();
   const groupId = Number(params.teamid);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+
   const setUserInfo = useUserStore((s) => s.setUserInfo);
+  const setSelectedTeam = useSelectedTeamStore((s) => s.setSelectedTeam);
+
+  const queryClient = useQueryClient(); // react-query 클라이언트 사용
 
   const deleteMutation = useMutation({
     mutationFn: () => deleteGroup(groupId),
     onSuccess: async () => {
       toast.success('그룹이 삭제되었습니다.');
+
+      //유저 정보 캐시 무효화 → useQuery로 자동 refetch됨
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.user.me });
 
       const updatedUserInfo = await getUserInfo();
 
@@ -32,9 +41,10 @@ export default function TeamHeader({ title, showGear }: TeamHeaderProps) {
         teams: updatedUserInfo.teams,
       });
 
-      const firstGroupId = updatedUserInfo.teams[0]?.id;
+      const firstGroup = updatedUserInfo.teams[0] ?? null;
+      setSelectedTeam(firstGroup);
 
-      router.push(firstGroupId ? `/${firstGroupId}` : '/noteam');
+      router.push(firstGroup ? `/${firstGroup.id}` : '/noteam');
     },
     onError: () => {
       toast.error('그룹 삭제에 실패했습니다.');
