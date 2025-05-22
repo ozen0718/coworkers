@@ -20,7 +20,6 @@ import PostDropdown from '../PostDropdown';
 import clsx from 'clsx';
 import { fetchTask } from '@/api/detailPost';
 import { useTaskReload } from '@/context/TaskReloadContext';
-import { useRouter } from 'next/navigation';
 
 type DetailPostProps = {
   groupId?: number;
@@ -66,6 +65,7 @@ export default function DetailPost({
     queryFn: () => fetchComment(taskid),
   });
 
+  /* 댓글 작성 */
   const mutation = useMutation({
     mutationFn: (content: string) => createComment(taskid, { content }),
     onSuccess: () => {
@@ -79,7 +79,6 @@ export default function DetailPost({
     },
   });
 
-  /* 댓글 작성 */
   const handleSubmit = (content: string) => {
     if (!taskid) {
       console.log('아이디 없음');
@@ -108,9 +107,6 @@ export default function DetailPost({
   };
 
   /* 할 일 삭제 */
-  const handleDelete = async () => {
-    deleteMutation.mutate();
-  };
 
   const deleteMutation = useMutation({
     mutationFn: () => deleteTask(groupId, tasklistid, taskid),
@@ -123,6 +119,10 @@ export default function DetailPost({
       console.error('할 일 삭제 실패:', err.response?.data);
     },
   });
+
+  const handleDelete = async () => {
+    deleteMutation.mutate();
+  };
 
   if (!taskid || !groupId || !tasklistid) {
     return <div>필수 데이터가 없습니다.</div>;
