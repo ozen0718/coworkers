@@ -10,6 +10,6 @@ export type ProfileProps = {
 };
 
 export type TeamProfileProps = {
-  teamProfileUrl?: string;
+  teamProfileUrl?: string | null;
   width: number;
 };
