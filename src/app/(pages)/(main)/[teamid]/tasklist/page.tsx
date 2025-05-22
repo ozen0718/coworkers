@@ -19,6 +19,8 @@ import { TaskList } from '@/types/tasklisttypes';
 import { Task } from '@/types/tasktypes';
 import { getGroupDetail } from '@/api/group.api';
 
+import { useTaskReload } from '@/context/TaskReloadContext';
+
 const MAX_LIST_NAME_LENGTH = 15;
 
 interface Todo {
@@ -48,6 +50,8 @@ export default function TaskListPage() {
     notFound();
     // return;
   }
+
+  const { reloadKey } = useTaskReload();
 
   const [currentDate, setCurrentDate] = useState(new Date());
   const prevDay = () => setCurrentDate((d) => addDays(d, -1));
@@ -88,7 +92,7 @@ export default function TaskListPage() {
     };
 
     fetchTaskLists();
-  }, [groupId, dateKey]);
+  }, [groupId, dateKey, reloadKey]);
 
   useEffect(() => {
     const loadTasksForList = async (taskList: TaskList) => {
@@ -232,11 +236,15 @@ export default function TaskListPage() {
             )}
 
             <SlideWrapper isOpen={detailopen} onClose={() => setDetailOpen(false)}>
-              {selectedTodo && (
+              {selectedTodo && selectedTaskList && (
                 <DetailPost
+                  groupId={groupId}
+                  tasklistid={selectedTaskList.id}
+                  taskid={selectedTodo.id}
                   title={selectedTodo.title}
                   showComplete={false}
                   onClose={() => setDetailOpen(false)}
+                  time={selectedTodo.time}
                 />
               )}
             </SlideWrapper>
@@ -261,6 +269,7 @@ export default function TaskListPage() {
         onClose={() => setTodoModalOpen(false)}
         onSubmit={handleCreateTodo}
         disabled={!selectedTaskList?.id || isLoading}
+        taskListId={selectedTaskList?.id}
       />
 
       <Modal

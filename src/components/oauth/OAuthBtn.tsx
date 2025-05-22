@@ -5,17 +5,21 @@ import { useEffect } from 'react';
 
 declare global {
   interface Window {
-    Kakao: any;
+    Kakao: {
+      init: (key: string) => void;
+      isInitialized: () => boolean;
+      Auth: {
+        authorize: (options: { redirectUri: string }) => void;
+      };
+    };
   }
 }
 
 export default function OAuthButtonGroup() {
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      if (window.Kakao) {
-        if (!window.Kakao.isInitialized()) {
-          window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY);
-        }
+      if (window.Kakao && !window.Kakao.isInitialized()) {
+        window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY!);
       }
     }
   }, []);
@@ -28,7 +32,7 @@ export default function OAuthButtonGroup() {
       }
 
       window.Kakao.Auth.authorize({
-        redirectUri: process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI,
+        redirectUri: process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI!,
       });
     } else if (provider === 'google') {
       alert('구글 로그인은 지원하지 않습니다.');

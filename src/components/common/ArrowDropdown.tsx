@@ -57,7 +57,7 @@ export default function ArrowDropdown({
             <div
               key={option}
               className={clsx(
-                'text-gray100 h-[40px] cursor-pointer rounded-md px-2 py-[13px] hover:bg-[#0F172A] sm:px-[14px] sm:py-[11.5px]'
+                'text-gray100 hover:bg-primary-hover h-[40px] cursor-pointer rounded-md px-2 py-[13px] sm:px-[14px] sm:py-[11.5px]'
               )}
               onClick={() => handleSelect(option)}
             >
