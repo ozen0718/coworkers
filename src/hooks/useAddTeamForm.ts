@@ -82,7 +82,7 @@ export function useAddTeamForm() {
 
       const { id: teamId } = await createTeam(name, imageUrl);
 
-      // ✅ 생성된 팀을 selectedTeam 상태에 저장
+      //생성된 팀을 selectedTeam 상태에 저장
       setSelectedTeam({ id: teamId, name, image: imageUrl ?? null });
 
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.user.me });

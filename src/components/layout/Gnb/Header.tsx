@@ -40,7 +40,7 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
         teams: userData.teams,
       });
 
-      // ✅ 여기에서 teams 존재 여부를 먼저 확인해줘야 함
+      //여기에서 teams 존재 여부를 먼저 확인해줘야 함
       if (!selectedTeam && Array.isArray(userData.teams) && userData.teams.length > 0) {
         setSelectedTeam(userData.teams[0]);
       }
