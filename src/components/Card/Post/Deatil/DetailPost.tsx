@@ -8,7 +8,7 @@ import IconCheck from '@/assets/icons/IconCheck';
 import { DateInfo } from './DateInfo';
 import { TodoCardReplyInput } from '@/components/common/Inputs';
 import BoardComment from '@/components/Card/Comment/BoardComment';
-import { createComment } from '@/api/detailPost';
+import { createComment, deleteTask } from '@/api/detailPost';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
@@ -19,7 +19,8 @@ import { CommentDetail } from '../../CardType';
 import PostDropdown from '../PostDropdown';
 import clsx from 'clsx';
 import { fetchTask } from '@/api/detailPost';
-import { useEffect } from 'react';
+import { useTaskReload } from '@/context/TaskReloadContext';
+import { useRouter } from 'next/navigation';
 
 type DetailPostProps = {
   groupId?: number;
@@ -28,7 +29,6 @@ type DetailPostProps = {
   title?: string;
   onClose: () => void;
   showComplete: boolean;
-  date?: string;
   time?: string;
 };
 
@@ -37,7 +37,6 @@ export default function DetailPost({
   tasklistid,
   taskid,
   title,
-  date,
   time,
   onClose,
   showComplete,
@@ -45,16 +44,16 @@ export default function DetailPost({
   const [isComplete, setIsComplete] = useState(showComplete);
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
 
+  const { triggerReload } = useTaskReload();
+
   const queryClient = useQueryClient();
 
-  if (!taskid) {
-    console.log('아이디 없음');
+  if (!taskid || !groupId || !tasklistid) {
+    console.log('필수값 없음');
     return;
   }
 
-  useEffect(() => {
-    console.log('데이터', taskData);
-  });
+  const router = useRouter();
 
   /* 할일 내용 */
   const { data: taskData } = useQuery({
@@ -116,8 +115,20 @@ export default function DetailPost({
 
   /* 할 일 삭제 */
   const handleDelete = async () => {
-    console.log('할 일 삭제');
+    deleteMutation.mutate();
   };
+
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteTask(groupId, tasklistid, taskid),
+    onSuccess: () => {
+      console.log('할 일 삭제 성공');
+      triggerReload(); // context 사용해서 task 리스트 불러오기
+      onClose();
+    },
+    onError: (err: AxiosError) => {
+      console.error('할 일 삭제 실패:', err.response?.data);
+    },
+  });
 
   return (
     <div

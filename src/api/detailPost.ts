@@ -5,6 +5,11 @@ export const fetchTask = (groupId: number, tasklistid: number, taskid: number) =
   return axiosInstance.get(`/groups/${groupId}/task-lists/${tasklistid}/tasks/${taskid}`);
 };
 
+/* 상세 카드 - 할 일 삭제 */
+export const deleteTask = (groupId: number, tasklistid: number, taskid: number) => {
+  return axiosInstance.delete(`/groups/${groupId}/task-lists/${tasklistid}/tasks/${taskid}`);
+};
+
 /* 상세 카드 - 댓글 내용 */
 export const fetchComment = (taskid: number) => {
   return axiosInstance.get(`/tasks/${taskid}/comments?limit=30`);
@@ -28,5 +33,3 @@ export const editDetailComment = (
 ) => {
   return axiosInstance.patch(`/tasks/${taskid}/comments/${commentId}`, payload);
 };
-
-/* 상세 카드 - 할일 삭제 */
