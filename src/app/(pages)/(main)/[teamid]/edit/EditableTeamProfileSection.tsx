@@ -1,7 +1,7 @@
 import { EditableTeamProfile } from '@/components/common/Profiles';
 
 export interface EditableTeamProfileSectionProps {
-  teamProfileUrl: string;
+  teamProfileUrl: string | null;
 }
 
 export default function EditableTeamProfileSection({

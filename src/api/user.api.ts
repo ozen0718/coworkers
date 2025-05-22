@@ -22,3 +22,12 @@ export const fetchUser = async (): Promise<User> => {
   const { data } = await axiosInstance.get('/user');
   return data;
 };
+
+export const getUserGroupList = async (): Promise<{ id: number }[]> => {
+  const res = await axiosInstance.get('/user/memberships');
+  const memberships: Membership[] = res.data;
+
+  return memberships.map((m) => ({
+    id: m.group.id,
+  }));
+};
