@@ -127,7 +127,7 @@ export default function Report({ total, completed, newestTasks: newestTasks = []
             <NewestTasksReportColumn tasks={newestTasks} />
           </div>
         ) : (
-          <div className="bg-bg200 border-bg100 flex w-full items-center justify-center gap-4 rounded-xl border-4 border-dashed">
+          <div className="bg-bg200 border-bg100 hidden w-full items-center justify-center gap-4 rounded-xl border-4 border-dashed sm:flex">
             <p className="text-md-regular text-gray500">새로운 할 일이 없습니다.</p>
           </div>
         )}
