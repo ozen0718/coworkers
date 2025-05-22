@@ -182,6 +182,8 @@ export default function TeamPage() {
     return null;
   }
 
+  if (!futureDate || !groupId) return null;
+
   return (
     <div className="py-6">
       <TeamHeader title={teamName} showGear={isClient && isAdmin} />
@@ -228,6 +230,8 @@ export default function TeamPage() {
               completed={completed}
               total={total}
               tasksTitle={list.name}
+              taskListId={list.id}
+              groupId={groupId}
               onClick={() => {
                 router.push(`/${groupId}/tasklist?listId=${list.id}`);
               }}

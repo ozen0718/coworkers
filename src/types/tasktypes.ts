@@ -18,6 +18,8 @@ export interface TaskListsItemProp {
   completed: number;
   total: number;
   onClick?: () => void;
+  taskListId: number;
+  groupId: number;
 }
 
 export interface Task {
