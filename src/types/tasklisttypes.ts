@@ -8,4 +8,5 @@ export interface TaskList {
   createdAt: string;
   updatedAt: string;
   tasks: Task[];
+  taskListId: [];
 }
