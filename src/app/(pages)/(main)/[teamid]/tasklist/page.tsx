@@ -210,7 +210,7 @@ export default function TaskListPage() {
                   )}
                   onClick={() => setSelectedTaskList(taskList)}
                 >
-                  {taskList.name} {taskList.id}
+                  {taskList.name}
                 </button>
               ))}
             </nav>
