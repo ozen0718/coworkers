@@ -31,6 +31,11 @@ const STATIC_HEADER_CONFIG: Record<string, HeaderVisibilityConfig> = {
     showFreeBoardLink: true,
     showProfile: true,
   },
+  '/myhistory': {
+    showTeamSelector: true,
+    showFreeBoardLink: true,
+    showProfile: true,
+  },
   '/': {
     showTeamSelector: true,
     showFreeBoardLink: true,
