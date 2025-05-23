@@ -14,6 +14,7 @@ import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/constants/queryKeys';
 import { getUserInfo } from '@/api/user';
 import { useEffect } from 'react';
+import { TemplateContext } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 
 interface HeaderProps {
   onOpenSideMenu: () => void;
@@ -44,7 +45,7 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
 
   //teams 배열이 바뀔 때마다 selectedTeam 유효성 검사
   useEffect(() => {
-    if (teams.length > 0) {
+    if (teams && teams.length > 0) {
       const stillExists = teams.find((team) => team.id === selectedTeam?.id);
       if (!stillExists) {
         setSelectedTeam(teams[0]); // 현재 선택된 팀이 삭제된 경우, 첫 번째 팀으로 설정
