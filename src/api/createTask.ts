@@ -10,12 +10,18 @@ export interface CreateRecurringTaskBody {
   done?: boolean;
 }
 
+/* 할일 수정 */
+export interface EditTaskBody {
+  name: string;
+  description: string;
+  done: boolean;
+}
+
 /* 할일 생성 */
 export const createRecurringTask = (
   groupId: number,
   taskListId: number,
   body: CreateRecurringTaskBody
 ) => {
-  console.log('API 요청 body:', JSON.stringify(body, null, 2));
   return axiosInstance.post(`/groups/${groupId}/task-lists/${taskListId}/recurring`, body);
 };
