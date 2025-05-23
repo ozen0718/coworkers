@@ -250,7 +250,7 @@ export default function TaskListPage() {
   const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
   const [detailopen, setDetailOpen] = useState(false);
 
-  const [isDragging, setIsDragging] = useState(false);
+  //const [isDragging, setIsDragging] = useState(false);
   const [pendingOrderUpdate, setPendingOrderUpdate] = useState<{
     taskListId: number;
     displayIndex: number;
@@ -355,15 +355,15 @@ export default function TaskListPage() {
   }) => {
     if (!date) return;
     const formatted = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
-    const newTodo: Todo = {
-      id: Date.now(),
-      title,
-      date: formatted,
-      time,
-      recurring: repeat !== '반복 안함',
-      comments: 0,
-      completed: false,
-    };
+    // const newTodo: Todo = {
+    //   id: Date.now(),
+    //   title,
+    //   date: formatted,
+    //   time,
+    //   recurring: repeat !== '반복 안함',
+    //   comments: 0,
+    //   completed: false,
+    // };
 
     setTodoModalOpen(false);
   };
