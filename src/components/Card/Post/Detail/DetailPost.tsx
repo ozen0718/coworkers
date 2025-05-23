@@ -23,6 +23,7 @@ import { deleteRecurringTask } from '@/api/detailPost';
 import { completeTask } from '@/api/detailPost';
 import { useEffect } from 'react';
 import TodoEditModal from '@/app/(pages)/(main)/[teamid]/tasklist/components/TodoFullCreateModal/TodoEditModal';
+import { QUERY_KEYS } from '@/constants/queryKeys';
 
 type DetailPostProps = {
   groupId?: number;
@@ -163,6 +164,7 @@ export default function DetailPost({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['task', groupId, tasklistid, taskid] });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.user.history });
       setIsComplete((prev) => !prev);
       triggerReload();
     },
