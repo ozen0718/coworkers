@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { addDays, format } from 'date-fns';
 import { ko } from 'date-fns/locale';
@@ -86,13 +86,121 @@ const DraggableTaskList: React.FC<DraggableTaskListProps> = ({
         drag(drop(node));
       }}
       className={clsx(
-        'cursor-move pb-1 text-sm font-medium',
+        'cursor-move pb-1 text-xs font-medium sm:text-sm',
         isSelected ? 'border-b-2 border-white text-white' : 'text-gray400',
         isDragging ? 'opacity-50' : ''
       )}
       onClick={() => onSelect(taskList)}
     >
       {taskList.name}
+    </div>
+  );
+};
+
+const TaskListDropdown: React.FC<{
+  taskLists: TaskList[];
+  selectedTaskList: TaskList | null;
+  onSelect: (taskList: TaskList) => void;
+  isOpen: boolean;
+  onToggle: () => void;
+  isMobile?: boolean;
+}> = ({ taskLists, selectedTaskList, onSelect, isOpen, onToggle, isMobile }) => {
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const visibleCount = isMobile ? 3 : 10;
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        onToggle();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen, onToggle]);
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <button
+        onClick={onToggle}
+        className="text-gray400 rounded-lg px-3 py-1 text-sm font-medium transition hover:bg-gray-700 focus:outline-none"
+      >
+        {isMobile ? '+ 더보기' : `+${taskLists.length - visibleCount}개 더보기`}
+      </button>
+      {isOpen && (
+        <>
+          {/* Desktop Dropdown */}
+          <div className="hidden sm:absolute sm:top-full sm:right-0 sm:z-50 sm:mt-2 sm:block sm:w-48 sm:rounded-lg sm:bg-gray-800 sm:py-2 sm:shadow-lg">
+            <div className="grid grid-cols-1 gap-2">
+              {taskLists.slice(visibleCount).map((taskList) => (
+                <button
+                  key={taskList.id}
+                  className={clsx(
+                    'w-full px-4 py-2 text-left text-sm',
+                    taskList.id === selectedTaskList?.id
+                      ? 'bg-gray-700 text-white'
+                      : 'text-gray-300 hover:bg-gray-700'
+                  )}
+                  onClick={() => {
+                    onSelect(taskList);
+                    onToggle();
+                  }}
+                >
+                  {taskList.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Mobile Bottom Sheet */}
+          <div className="fixed inset-0 z-50 sm:hidden">
+            {/* Backdrop */}
+            <div className="fixed inset-0 bg-black/50" onClick={onToggle} />
+            {/* Bottom Sheet */}
+            <div className="fixed right-0 bottom-0 left-0 max-h-[80vh] overflow-y-auto rounded-t-2xl bg-gray-800 p-4">
+              <div className="mb-4 flex items-center justify-between">
+                <h3 className="text-lg font-medium text-white">목록 선택</h3>
+                <button
+                  onClick={onToggle}
+                  className="rounded-lg p-2 text-gray-400 hover:bg-gray-700"
+                >
+                  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div className="space-y-2">
+                {taskLists.slice(visibleCount).map((taskList) => (
+                  <button
+                    key={taskList.id}
+                    className={clsx(
+                      'w-full rounded-lg px-4 py-3 text-left text-sm',
+                      taskList.id === selectedTaskList?.id
+                        ? 'bg-gray-700 text-white'
+                        : 'text-gray-300 hover:bg-gray-700'
+                    )}
+                    onClick={() => {
+                      onSelect(taskList);
+                      onToggle();
+                    }}
+                  >
+                    {taskList.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
@@ -149,6 +257,19 @@ export default function TaskListPage() {
   } | null>(null);
 
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768); // 768px is the md breakpoint in Tailwind
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   useEffect(() => {
     const fetchTaskLists = async () => {
@@ -297,7 +418,7 @@ export default function TaskListPage() {
                   <Image src="/icons/type=left.svg" alt="이전" width={16} height={16} />
                 </button>
                 <button
-                  className="rounded px-2 py-1 text-white transition hover:bg-gray-700 focus:outline-none"
+                  className="rounded-lg px-3 py-1 text-white transition hover:bg-gray-700 focus:outline-none"
                   onClick={() => setIsCalendarOpen(!isCalendarOpen)}
                   type="button"
                   aria-label="날짜 선택"
@@ -308,7 +429,7 @@ export default function TaskListPage() {
                   <Image src="/icons/type=right.svg" alt="다음" width={16} height={16} />
                 </button>
                 <button
-                  className="ml-2 rounded p-1 transition hover:bg-gray-700 focus:outline-none"
+                  className="ml-2 rounded-lg p-1 transition hover:bg-gray-700 focus:outline-none"
                   onClick={() => setIsCalendarOpen(!isCalendarOpen)}
                   type="button"
                   aria-label="달력 열기"
@@ -316,24 +437,70 @@ export default function TaskListPage() {
                   <Image src="/icons/icon_calendar.svg" alt="캘린더" width={16} height={16} />
                 </button>
                 {isCalendarOpen && (
-                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 sm:absolute sm:inset-auto sm:top-full sm:left-0 sm:mt-2 sm:flex-none sm:bg-transparent">
-                    <div className="w-full max-w-[320px] rounded-lg bg-gray-800 p-4 sm:w-auto">
-                      <DatePickerCalendar
-                        dateTime={currentDate}
-                        setDate={(date) => {
-                          if (date) {
-                            setCurrentDate(date);
-                            router.push(`?date=${format(date, 'yyyy-MM-dd')}`);
-                            setIsCalendarOpen(false);
-                          }
-                        }}
-                      />
+                  <>
+                    {/* Desktop Calendar */}
+                    <div className="hidden sm:relative sm:block">
+                      <div className="absolute top-full left-0 z-50 mt-2 w-[320px] rounded-lg bg-gray-800 p-4">
+                        <DatePickerCalendar
+                          dateTime={currentDate}
+                          setDate={(date) => {
+                            if (date) {
+                              setCurrentDate(date);
+                              router.push(`?date=${format(date, 'yyyy-MM-dd')}`);
+                              setIsCalendarOpen(false);
+                            }
+                          }}
+                        />
+                      </div>
                     </div>
-                  </div>
+
+                    {/* Mobile Calendar Bottom Sheet */}
+                    <div className="fixed inset-0 z-50 sm:hidden">
+                      {/* Backdrop */}
+                      <div
+                        className="fixed inset-0 bg-black/50"
+                        onClick={() => setIsCalendarOpen(false)}
+                      />
+                      {/* Bottom Sheet */}
+                      <div className="fixed right-0 bottom-0 left-0 max-h-[80vh] overflow-y-auto rounded-t-2xl bg-gray-800 p-4">
+                        <div className="mb-4 flex items-center justify-between">
+                          <h3 className="text-lg font-medium text-white">날짜 선택</h3>
+                          <button
+                            onClick={() => setIsCalendarOpen(false)}
+                            className="rounded-lg p-2 text-gray-400 hover:bg-gray-700"
+                          >
+                            <svg
+                              className="h-6 w-6"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                        <DatePickerCalendar
+                          dateTime={currentDate}
+                          setDate={(date) => {
+                            if (date) {
+                              setCurrentDate(date);
+                              router.push(`?date=${format(date, 'yyyy-MM-dd')}`);
+                              setIsCalendarOpen(false);
+                            }
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </>
                 )}
               </div>
               <button
-                className="text-primary text-sm font-medium hover:underline"
+                className="text-primary rounded-lg px-3 py-1 text-sm font-medium transition hover:bg-gray-700 focus:outline-none"
                 onClick={() => setListModalOpen(true)}
               >
                 + 새로운 목록 추가하기
@@ -343,19 +510,31 @@ export default function TaskListPage() {
 
           {taskLists.length > 0 && (
             <nav
-              className="flex flex-wrap space-x-6 border-b border-slate-700 pb-2"
+              className="flex flex-wrap items-center gap-x-6 border-b border-slate-700 pb-2"
               onDragEnd={handleDragEnd}
             >
-              {taskLists.map((taskList, index) => (
-                <DraggableTaskList
-                  key={taskList.id}
-                  taskList={taskList}
-                  index={index}
-                  moveTaskList={moveTaskList}
-                  isSelected={taskList.id === selectedTaskList?.id}
+              <div className="flex flex-wrap items-center gap-x-6">
+                {taskLists.slice(0, isMobile ? 3 : 10).map((taskList, index) => (
+                  <DraggableTaskList
+                    key={taskList.id}
+                    taskList={taskList}
+                    index={index}
+                    moveTaskList={moveTaskList}
+                    isSelected={taskList.id === selectedTaskList?.id}
+                    onSelect={setSelectedTaskList}
+                  />
+                ))}
+              </div>
+              {((isMobile && taskLists.length > 3) || (!isMobile && taskLists.length > 10)) && (
+                <TaskListDropdown
+                  taskLists={taskLists}
+                  selectedTaskList={selectedTaskList}
                   onSelect={setSelectedTaskList}
+                  isOpen={isDropdownOpen}
+                  onToggle={() => setDropdownOpen(!isDropdownOpen)}
+                  isMobile={isMobile}
                 />
-              ))}
+              )}
             </nav>
           )}
 
