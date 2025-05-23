@@ -26,21 +26,23 @@ export default function ActionMenu({
             menuPosition === 'right' ? 'right-0' : 'left-0'
           }`}
         >
-          <div
-            onClick={() => {
-              onEdit();
-              setIsOpen(false);
-            }}
-            className="hover:bg-primary-hover h-10 w-full px-4 py-[11.5px] text-left"
-          >
-            수정하기
-          </div>
+          {onEdit && (
+            <div
+              onClick={() => {
+                onEdit();
+                setIsOpen(false);
+              }}
+              className="hover:bg-primary-hover h-10 w-full cursor-pointer px-4 py-[11.5px] text-left"
+            >
+              수정하기
+            </div>
+          )}
           <div
             onClick={() => {
               onDelete();
               setIsOpen(false);
             }}
-            className="hover:bg-primary-hover h-10 w-full px-4 py-[11.5px] text-left"
+            className="hover:bg-danger h-10 w-full cursor-pointer px-4 py-[11.5px] text-left"
           >
             삭제하기
           </div>

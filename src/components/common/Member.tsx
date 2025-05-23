@@ -1,11 +1,39 @@
 'use client';
 
+import { useState } from 'react';
+import Image from 'next/image';
+import { useParams } from 'next/navigation';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
+import { deleteMember } from '@/api/group.api';
+import ActionMenu from '@/components/common/ActionMenu';
+import DeleteConfirmModal from '@/components/common/Modal/DeleteConfirmModal';
 import { Profile } from '@/components/common/Profiles';
 import { MemberProps } from '@/types/teampagetypes';
-import Image from 'next/image';
-import ActionMenu from '@/components/common/ActionMenu';
 
-export default function Member({ profileUrl, name, email, onClick }: MemberProps) {
+export default function Member({
+  profileUrl,
+  name,
+  email,
+  onClick,
+  userId,
+  hideMenu,
+}: MemberProps) {
+  const { teamid } = useParams() as { teamid: string };
+  const queryClient = useQueryClient();
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+
+  const mutation = useMutation({
+    mutationFn: () => deleteMember(Number(teamid), userId),
+    onSuccess: () => {
+      toast.success('멤버가 삭제되었습니다.');
+      queryClient.invalidateQueries({ queryKey: ['groupDetail', Number(teamid)] });
+    },
+    onError: () => {
+      toast.error('삭제에 실패했습니다.');
+    },
+  });
+
   return (
     <div className="bg-bg200 flex h-18 w-full items-center justify-between gap-1.5 rounded-2xl pr-6">
       <button className="w-full pl-6" onClick={onClick}>
@@ -21,10 +49,25 @@ export default function Member({ profileUrl, name, email, onClick }: MemberProps
           </p>
         </div>
       </button>
-      <ActionMenu
-        trigger={<Image src="/icons/kebab.svg" alt="멤버 메뉴" width={16} height={16}></Image>}
-        onEdit={() => console.log('수정하기')}
-        onDelete={() => console.log('삭제하기')}
+
+      {!hideMenu ? (
+        <ActionMenu
+          trigger={<Image src="/icons/kebab.svg" alt="멤버 메뉴" width={16} height={16} />}
+          onDelete={() => setDeleteModalOpen(true)}
+        />
+      ) : (
+        <Image src="/icons/crown.svg" alt="관리자" width={16} height={16} className="" />
+      )}
+
+      <DeleteConfirmModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        onConfirm={() => {
+          mutation.mutate();
+          setDeleteModalOpen(false);
+        }}
+        title="멤버를 삭제하시겠어요?"
+        description="이 멤버는 현재 팀에서 제외됩니다."
       />
     </div>
   );

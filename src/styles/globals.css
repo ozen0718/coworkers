@@ -16,6 +16,12 @@
   display: none;
 }
 
+/* 자동완성으로 인한 input 스타일 깨짐 보완 */
+input:-webkit-autofill {
+  box-shadow: 0 0 0 1000px #1e293b inset;
+  -webkit-text-fill-color: #f8fafc;
+}
+
 @theme {
   --color-primary: #10b981;
   --color-secondary: #34d399;
@@ -207,4 +213,12 @@
     line-height: 14px;
     font-weight: 400;
   }
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none; /* IE, Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }

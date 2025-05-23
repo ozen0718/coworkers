@@ -5,11 +5,11 @@ export interface BaseProfileProps {
 }
 
 export type ProfileProps = {
-  profileUrl?: string;
+  profileUrl?: string | null;
   width: number;
 };
 
 export type TeamProfileProps = {
-  teamProfileUrl?: string;
+  teamProfileUrl?: string | null;
   width: number;
 };

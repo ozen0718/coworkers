@@ -34,7 +34,7 @@ export default function ArrowDropdown({
           'text-md-regular flex items-center justify-between rounded-xl p-2 sm:px-[14px] sm:py-2.5',
           size === 'sm' && 'text-gray100 h-[40px] w-[94px]',
           size === 'md' && 'text-gray500 h-[44px] w-[109px]',
-          size === 'lg' && 'text-gray100 h-[44px] w-[120px]',
+          size === 'lg' && 'text-gray100 text-xs-regular white-space: nowrap; h-[44px] w-[120px]',
           isOpen ? 'bg-bg100' : size === 'md' ? 'bg-bg500' : 'bg-bg200'
         )}
       >
@@ -57,7 +57,7 @@ export default function ArrowDropdown({
             <div
               key={option}
               className={clsx(
-                'text-gray100 h-[40px] cursor-pointer rounded-md px-2 py-[13px] hover:bg-[#0F172A] sm:px-[14px] sm:py-[11.5px]'
+                'text-gray100 hover:bg-primary-hover h-[40px] cursor-pointer rounded-md px-2 py-[13px] sm:px-[14px] sm:py-[11.5px]'
               )}
               onClick={() => handleSelect(option)}
             >

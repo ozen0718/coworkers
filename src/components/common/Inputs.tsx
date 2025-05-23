@@ -17,9 +17,9 @@ import Image from 'next/image';
 import clsx from 'clsx';
 
 const BaseInputStyle =
-  'w-full sm:h-12 h-11 bg-bg200 border border-gray100/10 rounded-xl px-4 focus:border-primary hover:border-primary-hover';
+  'w-full sm:h-12 h-11 bg-bg200 border border-gray100/10 rounded-xl px-4 focus:border-primary hover:border-primary-hover caret-white';
 
-const EmailInputStyle = `${BaseInputStyle} focus:outline-none placeholder:text-gray500 sm:text-4 sm:text-lg-regular text-md-regular text-3.5`;
+const EmailInputStyle = `${BaseInputStyle} focus:outline-none placeholder:text-gray500 sm:text-4 sm:text-lg-regular text-md-regular text-3.5 text-gray100`;
 
 const PasswordInputStyle =
   'w-full focus:outline-none sm:text-4 sm:text-lg-regular text-md-regular text-3.5 placeholder:text-gray500';
@@ -58,6 +58,7 @@ export function NameInput({ id, placeholder }: InputProps) {
 
 export function EmailInput({
   id,
+  name,
   placeholder,
   value = '',
   onChange = () => {},
@@ -74,6 +75,7 @@ export function EmailInput({
         className={`${EmailInputStyle} peer ${isInvalid ? 'border-red-500' : ''}`}
         placeholder={placeholder}
         id={id}
+        name={name}
         value={value}
         onChange={onChange}
         required
@@ -89,6 +91,7 @@ export function EmailInput({
 
 export function PasswordInput({
   id,
+  name,
   placeholder,
   value = '',
   onChange = () => {},
@@ -101,14 +104,13 @@ export function PasswordInput({
 
   return (
     <div>
-      <div
-        className={`${BaseInputStyle} flex items-center justify-between gap-3 ${isInvalid ? 'border-red-500' : ''}`}
-      >
+      <div className="relative flex w-full items-center">
         <input
           type={showPassword ? 'text' : 'password'}
-          className={PasswordInputStyle}
+          className={`${BaseInputStyle} ${PasswordInputStyle} ${isInvalid ? 'border-red-500' : ''} pr-13`}
           placeholder={placeholder}
           id={id}
+          name={name}
           value={value}
           onChange={onChange}
           required
@@ -118,30 +120,32 @@ export function PasswordInput({
           alt="비밀번호 보기"
           width={24}
           height={24}
-          className="cursor-pointer"
+          className="absolute right-4 cursor-pointer"
           onClick={() => setShowPassword(!showPassword)}
         />
       </div>
       {isInvalid && (
         <p className={InvalidMessageStyle}>
-          비밀번호는 영문과 숫자를 포함한 4~12자로 입력해주세요.
+          비밀번호는 영문과 숫자를 포함한 8~12자로 입력해주세요.
         </p>
       )}
     </div>
   );
 }
 
-export function CurrentName({ name }: CurrentNameProp) {
+export function CurrentName({ name, onClick }: CurrentNameProp) {
   return (
     <div className={`${CurrentValueStyle} flex items-center justify-between`}>
       <div>{name}</div>
-      <Button size="small">변경하기</Button>
+      <Button size="small" onClick={onClick}>
+        변경하기
+      </Button>
     </div>
   );
 }
 
 export function CurrentEmail({ email }: CurrentEmailProp) {
-  return <div className={`${CurrentValueStyle} flex items-center`}>{email}</div>;
+  return <div className={`${CurrentValueStyle} flex items-center`}>{email ?? '이메일 없음'}</div>;
 }
 
 export function CurrentPassword({ onClick }: CurrentPasswordProp) {
@@ -201,9 +205,19 @@ export function ToggleInput({ options, onSelect }: ToggleInputProps) {
   );
 }
 
-export function TodoCardReplyInput() {
+interface TodoCardReplyInputProps {
+  onSubmit: (content: string) => void;
+}
+
+export function TodoCardReplyInput({ onSubmit }: TodoCardReplyInputProps) {
   const [value, setValue] = useState('');
   const isEmpty = value.trim() === '';
+
+  const handleClick = () => {
+    if (isEmpty) return;
+    onSubmit(value);
+    setValue('');
+  };
 
   return (
     <div className="border-y-gray100/10 text-3.5 flex w-full items-center gap-3 border border-x-0 py-3.25">
@@ -220,6 +234,7 @@ export function TodoCardReplyInput() {
         }}
       />
       <button
+        onClick={handleClick}
         disabled={isEmpty}
         className={`flex h-6 w-6 items-center justify-center rounded-full ${
           isEmpty ? 'bg-gray500 cursor-not-allowed' : 'bg-primary hover:bg-primary-hover'

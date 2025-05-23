@@ -1,28 +1,48 @@
 'use client';
 
-import Image from 'next/image';
+import OAuthButton from './OAuthButton';
+import { useEffect } from 'react';
+
+declare global {
+  interface Window {
+    Kakao: {
+      init: (key: string) => void;
+      isInitialized: () => boolean;
+      Auth: {
+        authorize: (options: { redirectUri: string }) => void;
+      };
+    };
+  }
+}
 
 export default function OAuthButtonGroup() {
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if (window.Kakao && !window.Kakao.isInitialized()) {
+        window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_JAVASCRIPT_KEY!);
+      }
+    }
+  }, []);
+
   const handleOAuthLogin = (provider: 'google' | 'kakao') => {
-    console.log(`${provider} 로그인 시도`);
-    // TODO: API 연동
+    if (provider === 'kakao') {
+      if (!window.Kakao || !window.Kakao.Auth) {
+        alert('카카오 로그인을 사용할 수 없습니다. 페이지를 새로고침 해주세요.');
+        return;
+      }
+
+      window.Kakao.Auth.authorize({
+        redirectUri: process.env.NEXT_PUBLIC_KAKAO_REDIRECT_URI!,
+      });
+    } else if (provider === 'google') {
+      alert('구글 로그인은 지원하지 않습니다.');
+    }
   };
 
   return (
     <div className="flex gap-3">
-      <button
-        onClick={() => handleOAuthLogin('google')}
-        className="flex h-[42px] w-[42px] items-center justify-center"
-      >
-        <Image src="/icons/google.svg" alt="구글 로그인" width={42} height={42} />
-      </button>
-
-      <button
-        onClick={() => handleOAuthLogin('kakao')}
-        className="flex h-[42px] w-[42px] items-center justify-center"
-      >
-        <Image src="/icons/kakaotalk.svg" alt="카카오 로그인" width={42} height={42} />
-      </button>
+      <OAuthButton provider="google" onClick={handleOAuthLogin} />
+      <OAuthButton provider="kakao" onClick={handleOAuthLogin} />
     </div>
   );
 }

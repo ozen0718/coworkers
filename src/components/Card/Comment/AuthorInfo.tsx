@@ -1,24 +1,53 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
 import IconHeart from '@/assets/icons/IconHeart';
 import { AuthorInfoProps } from '../CardType';
+import { AxiosError } from 'axios';
+import { useAuthStore } from '@/stores/useAuthStore';
+import { addLike, deleteLike } from '@/api/articles';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function AuthorInfo({
   type,
   showDivider = true,
   showLike = true,
   showDate = true,
-  authorName = '우지은',
-  date = '2024.07.25',
+  authorName = '안혜나',
+  date = '2025-05-10',
   showKebab = false,
   showComment = false,
+  likeCount,
+  commentCount,
+  articleId,
+  isLiked,
+  onLikeChanged,
 }: AuthorInfoProps) {
-  const [isLiked, setIsLiked] = useState(false);
+  const dateOnly = date.split('T')[0];
 
-  const toggleLike = () => {
-    setIsLiked(!isLiked);
+  const token = useAuthStore((state) => state.accessToken);
+  const queryClient = useQueryClient();
+
+  /* 좋아요 */
+  const handleLike = async () => {
+    if (!token) {
+      console.warn('토큰이 없습니다.');
+      return;
+    }
+
+    try {
+      if (isLiked) {
+        await deleteLike(Number(articleId));
+      } else {
+        await addLike(Number(articleId));
+      }
+      onLikeChanged?.();
+      queryClient.invalidateQueries({ queryKey: ['bestPosts'] });
+      queryClient.invalidateQueries({ queryKey: ['generalPosts'] });
+    } catch (err) {
+      const error = err as AxiosError;
+      console.error('좋아요 요청 실패:', error);
+    }
   };
 
   // 상세 카드 일때만
@@ -50,7 +79,7 @@ export default function AuthorInfo({
       {/* 날짜 */}
       {showDate && (
         <span className={`text-gray400 whitespace-nowrap ${showDivider ? 'ml-[10px]' : 'ml-auto'}`}>
-          {date}
+          {dateOnly}
         </span>
       )}
 
@@ -65,19 +94,19 @@ export default function AuthorInfo({
               width={16}
               height={16}
             />
-            <p className="text-gray400">3</p>
+            <p className="text-gray400">{commentCount}</p>
           </div>
         )}
 
         {showLike && (
           <div className="flex items-center">
             <IconHeart
+              onClick={handleLike}
               className="mr-1.5 cursor-pointer"
               fillColor={isLiked ? 'var(--color-danger)' : 'none'}
               strokeColor={isLiked ? 'var(--color-danger)' : 'var(--color-gray500)'}
-              onClick={toggleLike}
             />
-            <span className="text-gray400">9999+</span>
+            <span className="text-gray400">{likeCount}</span>
           </div>
         )}
 

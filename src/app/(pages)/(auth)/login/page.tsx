@@ -6,19 +6,35 @@ import OAuth from '@/components/oauth/index';
 import Button from '@/components/common/Button/Button';
 import Link from 'next/link';
 import { PageTitleStyle } from '@/styles/pageStyle';
-import { login } from '@/app/api/auth';
+import { login } from '@/api/auth';
 import { toast } from 'react-toastify';
 import { AxiosError } from 'axios';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/stores/useAuthStore';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const router = useRouter();
+  const [form, setForm] = useState({
+    email: '',
+    password: '',
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleLogin = async () => {
     try {
-      const teamId = '13-4';
-      await login({ teamId, email, password });
+      const response = await login({
+        email: form.email,
+        password: form.password,
+      });
+
+      useAuthStore.getState().setAccessToken(response.accessToken);
+
       toast.success('로그인 성공!');
+      router.push('/');
     } catch (error) {
       const err = error as AxiosError<{ message?: string }>;
       toast.error(err.response?.data?.message || '로그인 실패');
@@ -36,10 +52,11 @@ export default function LoginPage() {
               이메일
             </label>
             <EmailInput
-              placeholder="이메일을 입력해주세요."
               id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              name="email"
+              placeholder="이메일을 입력해주세요."
+              value={form.email}
+              onChange={handleChange}
             />
           </div>
 
@@ -48,14 +65,15 @@ export default function LoginPage() {
               비밀번호
             </label>
             <PasswordInput
-              placeholder="비밀번호를 입력해주세요."
               id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              name="password"
+              placeholder="비밀번호를 입력해주세요."
+              value={form.password}
+              onChange={handleChange}
             />
             <div className="flex justify-end">
               <Link
-                href="/resetpassword"
+                href="/reset-password"
                 className="text-primary text-md-medium underline hover:opacity-80"
               >
                 비밀번호를 잊으셨나요?

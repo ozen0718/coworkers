@@ -1,6 +1,24 @@
-function IconDone() {
+interface IconDoneProps {
+  width?: number | string;
+  height?: number | string;
+  gradientStartColor?: string;
+  gradientEndColor?: string;
+}
+
+function IconDone({
+  width = 24,
+  height = 24,
+  gradientStartColor = '#10B981',
+  gradientEndColor = '#A3E635',
+}: IconDoneProps) {
   return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      width={width}
+      height={height}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         fillRule="evenodd"
         clipRule="evenodd"
@@ -16,8 +34,8 @@ function IconDone() {
           y2="12.2016"
           gradientUnits="userSpaceOnUse"
         >
-          <stop stopColor="#10B981" />
-          <stop offset="1" stopColor="#A3E635" />
+          <stop stopColor={gradientStartColor} />
+          <stop offset="1" stopColor={gradientEndColor} />
         </linearGradient>
       </defs>
     </svg>

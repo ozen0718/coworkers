@@ -10,6 +10,7 @@ type PostDropdownProps = {
   isOpen: boolean;
   toggleDropdown: () => void;
   toppercent: string;
+  onClick?: React.MouseEventHandler<HTMLDivElement>;
 };
 
 export default function PostDropdown({
@@ -19,9 +20,11 @@ export default function PostDropdown({
   isOpen,
   toggleDropdown,
   toppercent,
+  onClick,
 }: PostDropdownProps) {
   return (
     <div
+      onClick={onClick}
       className={clsx(
         'bg-bg200 border-bg100 absolute z-100 rounded-lg border-1',
         textJustify === 'center' && 'text-center',
@@ -40,7 +43,7 @@ export default function PostDropdown({
           {options.map((option, idx) => (
             <div
               key={idx}
-              className="hover:bg-bg100 cursor-pointer rounded-lg p-2"
+              className="hover:bg-primary-hover cursor-pointer rounded-lg p-2"
               onClick={() => {
                 option.action();
                 toggleDropdown();

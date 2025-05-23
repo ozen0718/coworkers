@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
 
@@ -21,17 +21,21 @@ export default function TodoItem({
   comments,
   completed,
 }: TodoItemProps) {
-  const [isChecked, setIsChecked] = useState(completed);
-  const toggleChecked = () => setIsChecked((prev) => !prev);
-
   return (
-    <div className="flex flex-col space-y-2 rounded-lg bg-slate-800 p-3">
+    <div className="flex cursor-pointer flex-col space-y-2 rounded-lg bg-slate-800 p-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <button onClick={toggleChecked} aria-pressed={isChecked} className="cursor-pointer p-1">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              //toggleChecked();
+            }}
+            aria-pressed={completed}
+            className="cursor-pointer p-1"
+          >
             <Image
-              src={isChecked ? '/icons/checkbox_done.svg' : '/icons/checkbox_default.svg'}
-              alt={isChecked ? '완료' : '미완료'}
+              src={completed ? '/icons/checkbox_done.svg' : '/icons/checkbox_default.svg'}
+              alt={completed ? '완료' : '미완료'}
               width={24}
               height={24}
             />
@@ -39,8 +43,8 @@ export default function TodoItem({
 
           <span
             className={clsx('truncate text-sm font-medium', {
-              'text-gray-400 line-through': isChecked,
-              'text-white': !isChecked,
+              'text-gray-400 line-through': completed,
+              'text-white': !completed,
             })}
           >
             {title}
@@ -58,7 +62,11 @@ export default function TodoItem({
           </button>
         </div>
 
-        <button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
           <Image
             src="/icons/kebab.svg"
             alt="더보기"
