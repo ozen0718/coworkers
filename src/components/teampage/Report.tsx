@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Alert from '@/assets/icons/Alert';
 import ReportProgress from '@/components/teampage/ReportProgress';
@@ -69,7 +70,19 @@ function TaskReportColumn({ total, completed }: ReportProps) {
 }
 
 function NewestTask({ title, startDate }: NewestTaskProps) {
-  const elapsedTime = startDate ? formatElapsedTime(startDate) : '알 수 없음';
+  const [elapsedTime, setElapsedTime] = useState(() =>
+    startDate ? formatElapsedTime(startDate) : '알 수 없음'
+  );
+
+  useEffect(() => {
+    if (!startDate) return;
+
+    const interval = setInterval(() => {
+      setElapsedTime(formatElapsedTime(startDate));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [startDate]);
 
   return (
     <div
@@ -85,7 +98,17 @@ function NewestTask({ title, startDate }: NewestTaskProps) {
 }
 
 function NewestTaskForMobile({ title, startDate }: NewestTaskProps) {
-  const elapsedTime = startDate ? formatElapsedTime(startDate) : '알 수 없음';
+  const [elapsedTime, setElapsedTime] = useState(() =>
+    startDate ? formatElapsedTime(startDate) : '알 수 없음'
+  );
+
+  useEffect(() => {
+    if (!startDate) return;
+    const interval = setInterval(() => {
+      setElapsedTime(formatElapsedTime(startDate));
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [startDate]);
 
   return (
     <div className="bg-bg200 right-[28%] flex h-14 w-full items-center justify-start gap-4 rounded-xl pr-2">
