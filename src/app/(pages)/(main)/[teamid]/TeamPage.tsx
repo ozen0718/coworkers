@@ -37,6 +37,8 @@ export default function TeamPage() {
     profileUrl?: string | null;
   } | null>(null);
   const [isClient, setIsClient] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 5;
 
   useEffect(() => setIsClient(true), []);
 
@@ -120,6 +122,14 @@ export default function TeamPage() {
   const todayTaskList = todayTasks.flatMap((entry) => entry.data ?? []);
   const totalTodayTasks = todayTaskList.length;
   const completedTodayTasks = todayTaskList.filter((task) => task.doneAt !== null).length;
+
+  const paginatedTaskLists = useMemo(() => {
+    if (!groupDetail?.taskLists) return [];
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return groupDetail.taskLists.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [groupDetail?.taskLists, currentPage]);
+
+  const totalPages = Math.ceil((groupDetail?.taskLists?.length ?? 0) / ITEMS_PER_PAGE);
 
   useEffect(() => {
     setFutureDate(getFutureDateString(100));
@@ -218,7 +228,7 @@ export default function TeamPage() {
           </Modal>
         </header>
 
-        {groupDetail?.taskLists.map((list) => {
+        {paginatedTaskLists.map((list) => {
           const taskData = futureTasks.find((entry) => entry.taskListId === list.id)?.data ?? [];
           const total = taskData.length;
           const completed = taskData.filter((task) => task.doneAt !== null).length;
@@ -238,6 +248,25 @@ export default function TeamPage() {
             />
           );
         })}
+
+        {totalPages > 1 && (
+          <div className="flex gap-2">
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+              disabled={currentPage === 1}
+              className="border-gray100/10 hover:bg-bg200 disabled:hover:bg-bg300 rounded border px-2 py-1 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              ◀
+            </button>
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              className="border-gray100/10 hover:bg-bg200 disabled:hover:bg-bg300 rounded border px-2 py-1 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              ▶
+            </button>
+          </div>
+        )}
       </section>
 
       <section className={sectionStyle}>
