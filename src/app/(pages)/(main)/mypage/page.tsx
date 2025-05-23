@@ -17,7 +17,7 @@ export default function MyPage() {
     <div className="mx-auto flex max-w-[792px] flex-col gap-6 py-10">
       <h2 className="text-2lg-bold">계정 설정</h2>
 
-      <EditableProfileSection width={64} />
+      <EditableProfileSection />
 
       <div className="flex flex-col gap-4">
         <EditableNameSection name={user.nickname} />
