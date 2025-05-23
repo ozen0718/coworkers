@@ -38,6 +38,12 @@ export default function TeamPage() {
   } | null>(null);
   const [isClient, setIsClient] = useState(false);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 5;
+
+  const [memberPage, setMemberPage] = useState(1);
+  const MEMBERS_PER_PAGE = 6;
+
   useEffect(() => setIsClient(true), []);
 
   const { open, close, isOpen } = useModalGroup<'invite' | 'createList' | 'memberProfile'>();
@@ -54,7 +60,6 @@ export default function TeamPage() {
 
       await queryClient.invalidateQueries({ queryKey: ['groupDetail', groupId] });
 
-      toast.success('새로운 목록이 생성되었습니다.');
       close();
       setNewListName('');
     } catch (error) {
@@ -121,6 +126,22 @@ export default function TeamPage() {
   const todayTaskList = todayTasks.flatMap((entry) => entry.data ?? []);
   const totalTodayTasks = todayTaskList.length;
   const completedTodayTasks = todayTaskList.filter((task) => task.doneAt !== null).length;
+
+  const paginatedTaskLists = useMemo(() => {
+    if (!groupDetail?.taskLists) return [];
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return groupDetail.taskLists.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [groupDetail?.taskLists, currentPage]);
+
+  const totalPages = Math.ceil((groupDetail?.taskLists?.length ?? 0) / ITEMS_PER_PAGE);
+
+  const paginatedMembers = useMemo(() => {
+    if (!groupDetail?.members) return [];
+    const startIndex = (memberPage - 1) * MEMBERS_PER_PAGE;
+    return groupDetail.members.slice(startIndex, startIndex + MEMBERS_PER_PAGE);
+  }, [groupDetail?.members, memberPage]);
+
+  const totalMemberPages = Math.ceil((groupDetail?.members?.length ?? 0) / MEMBERS_PER_PAGE);
 
   useEffect(() => {
     setFutureDate(getFutureDateString(100));
@@ -213,12 +234,13 @@ export default function TeamPage() {
                 placeholder="목록 명을 입력해주세요."
                 value={newListName}
                 onChange={(e) => setNewListName(e.target.value)}
+                maxLength={10}
               />
             </div>
           </Modal>
         </header>
 
-        {groupDetail?.taskLists.map((list) => {
+        {paginatedTaskLists.map((list) => {
           const taskData = futureTasks.find((entry) => entry.taskListId === list.id)?.data ?? [];
           const total = taskData.length;
           const completed = taskData.filter((task) => task.doneAt !== null).length;
@@ -238,6 +260,25 @@ export default function TeamPage() {
             />
           );
         })}
+
+        {totalPages > 1 && (
+          <div className="flex gap-2">
+            <button
+              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+              disabled={currentPage === 1}
+              className="border-gray100/10 hover:bg-bg200 disabled:hover:bg-bg300 rounded border px-2 py-1 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              ◀
+            </button>
+            <button
+              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+              disabled={currentPage === totalPages}
+              className="border-gray100/10 hover:bg-bg200 disabled:hover:bg-bg300 rounded border px-2 py-1 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              ▶
+            </button>
+          </div>
+        )}
       </section>
 
       <section className={sectionStyle}>
@@ -277,14 +318,14 @@ export default function TeamPage() {
           </div>
         </header>
         <div className="grid-rows-auto grid w-full grid-cols-[1fr_1fr] gap-4 sm:grid-cols-[1fr_1fr_1fr]">
-          {groupDetail?.members.map((member, index) => (
+          {paginatedMembers.map((member) => (
             <Member
               key={member.userId}
               name={member.userName}
               email={member.userEmail}
               profileUrl={member.userImage}
               userId={member.userId}
-              hideMenu={index === 0}
+              hideMenu={member.userId === groupDetail?.members[0]?.userId}
               onClick={() =>
                 handleOpenProfile({
                   name: member.userName,
@@ -295,6 +336,25 @@ export default function TeamPage() {
             />
           ))}
         </div>
+
+        {totalMemberPages > 1 && (
+          <div className="flex gap-2">
+            <button
+              onClick={() => setMemberPage((p) => Math.max(p - 1, 1))}
+              disabled={memberPage === 1}
+              className="border-gray100/10 hover:bg-bg200 disabled:hover:bg-bg300 rounded border px-2 py-1 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              ◀
+            </button>
+            <button
+              onClick={() => setMemberPage((p) => Math.min(p + 1, totalMemberPages))}
+              disabled={memberPage === totalMemberPages}
+              className="border-gray100/10 hover:bg-bg200 disabled:hover:bg-bg300 rounded border px-2 py-1 text-sm disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              ▶
+            </button>
+          </div>
+        )}
 
         <Modal
           isOpen={isOpen('memberProfile')}
