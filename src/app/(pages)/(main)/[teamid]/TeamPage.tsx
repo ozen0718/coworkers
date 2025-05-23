@@ -213,6 +213,7 @@ export default function TeamPage() {
                 placeholder="목록 명을 입력해주세요."
                 value={newListName}
                 onChange={(e) => setNewListName(e.target.value)}
+                maxLength={10}
               />
             </div>
           </Modal>
