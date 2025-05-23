@@ -267,7 +267,7 @@ export default function DetailPost({
           groupid={groupId!}
           taskListid={tasklistid}
           taskid={taskid!}
-          onSubmit={(newTodo) => {
+          onSubmit={() => {
             setEditModalOpen(false);
           }}
         />
