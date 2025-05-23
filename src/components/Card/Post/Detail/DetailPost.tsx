@@ -19,13 +19,17 @@ import PostDropdown from '../PostDropdown';
 import clsx from 'clsx';
 import { fetchTask } from '@/api/detailPost';
 import { useTaskReload } from '@/context/TaskReloadContext';
+import { deleteRecurringTask } from '@/api/detailPost';
+import { completeTask } from '@/api/detailPost';
+import { useEffect } from 'react';
+import TodoEditModal from '@/app/(pages)/(main)/[teamid]/tasklist/components/TodoFullCreateModal/TodoEditModal';
 
 type DetailPostProps = {
   groupId?: number;
   tasklistid?: number;
   taskid?: number;
   title?: string;
-  onClose: () => void;
+  onCloseAction: () => void;
   showComplete: boolean;
   time?: string;
 };
@@ -34,27 +38,13 @@ export default function DetailPost({
   groupId,
   tasklistid,
   taskid,
-  title,
-  time,
-  onClose,
-  showComplete,
+  onCloseAction,
 }: DetailPostProps) {
-  const [isComplete, setIsComplete] = useState(showComplete);
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
 
   const { triggerReload } = useTaskReload();
 
   const queryClient = useQueryClient();
-
-  /* 할일 내용 */
-  const { data: taskData } = useQuery({
-    queryKey: ['task', groupId, tasklistid, taskid],
-    queryFn: () => {
-      if (!groupId || !tasklistid || !taskid) throw new Error('필수값 없음');
-      return fetchTask(groupId, tasklistid, taskid);
-    },
-    enabled: !!groupId && !!tasklistid && !!taskid,
-  });
 
   /* 댓글 내용 */
   const { data: commentData } = useQuery({
@@ -87,48 +77,99 @@ export default function DetailPost({
       return;
     }
     if (!content.trim()) {
-      console.log('내용 없음');
       toast.error('댓글 내용이 없습니다');
       return;
     }
     mutation.mutate(content);
   };
 
-  /* 케밥 드롭다운 */
-  const handleToggleComplete = () => {
-    setIsComplete((prev) => !prev);
-  };
-
   const toggleDropdown = () => {
     setIsDropDownOpen((prev) => !prev);
   };
 
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+
   /* 할 일 수정 */
   const handleEdit = async () => {
-    console.log('할일 수정');
+    setEditModalOpen(true);
   };
 
-  /* 할 일 삭제 */
+  /* 할일 내용 */
+  const { data: taskData } = useQuery({
+    queryKey: ['task', groupId, tasklistid, taskid],
+    queryFn: () => {
+      if (!groupId || !tasklistid || !taskid) throw new Error('필수값 없음');
+      return fetchTask(groupId, tasklistid, taskid);
+    },
+    enabled: !!groupId && !!tasklistid && !!taskid,
+  });
+
+  /* 할일 삭제 */
   const deleteMutation = useMutation({
-    mutationFn: () => {
+    mutationFn: async () => {
       if (!groupId || !tasklistid || !taskid) throw new Error('필수 값 없음');
-      return deleteTask(groupId, tasklistid, taskid);
+
+      if (taskData?.data.frequency === 'ONCE') {
+        // 단일 할일 삭제
+        return deleteTask(groupId, tasklistid, taskid);
+      }
+
+      const recurringId = taskData?.data.recurringId;
+      if (!recurringId) throw new Error('recurringId이 없습니다.');
+
+      // 반복 할일 전체 삭제
+      return deleteRecurringTask(groupId, tasklistid, taskid, recurringId);
     },
     onSuccess: () => {
       triggerReload();
-      onClose();
+      onCloseAction();
     },
     onError: () => {
       toast.error('할일 삭제 실패');
     },
   });
-  const handleDelete = async () => {
+
+  const handleDelete = () => {
     deleteMutation.mutate();
   };
 
-  if (!taskid || !groupId || !tasklistid) {
-    return <div>필수 데이터가 없습니다.</div>;
-  }
+  const [isComplete, setIsComplete] = useState<boolean>(!!taskData?.data?.doneAt);
+
+  /* 케밥 드롭다운 */
+  const handleToggleComplete = () => {
+    CompleteTaskmutation.mutate();
+  };
+
+  useEffect(() => {
+    setIsComplete(!!taskData?.data?.doneAt);
+  }, [taskData?.data?.doneAt]);
+
+  /* 할일 완료 */
+  const CompleteTaskmutation = useMutation({
+    mutationFn: () => {
+      if (!groupId || !tasklistid || !taskid || !taskData?.data) {
+        throw new Error('필수 데이터 없음');
+      }
+
+      const toggledDone = !isComplete;
+
+      const payload = {
+        name: taskData.data.name,
+        description: taskData.data.description,
+        done: toggledDone,
+      };
+
+      return completeTask(groupId, tasklistid, taskid, payload);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['task', groupId, tasklistid, taskid] });
+      setIsComplete((prev) => !prev);
+      triggerReload();
+    },
+    onError: () => {
+      toast.error('완료 처리 실패');
+    },
+  });
 
   return (
     <div
@@ -136,7 +177,7 @@ export default function DetailPost({
       className="bg-bg200 relative flex h-full min-h-[698px] w-full flex-col gap-[10px] overflow-x-hidden p-5"
     >
       <div className="text-lg-regular mt-5 flex w-full items-start justify-between">
-        <IconDelete className="cursor-pointer" onClick={onClose} />
+        <IconDelete className="cursor-pointer" onClick={onCloseAction} />
       </div>
 
       <div className="flex flex-col">
@@ -147,7 +188,9 @@ export default function DetailPost({
           </div>
         )}
         <div className="mt-2 flex items-center md:w-[747px]">
-          <span className={clsx('text-xl-bold', isComplete && 'line-through')}>{title}</span>
+          <span className={clsx('text-xl-bold', isComplete && 'line-through')}>
+            {taskData?.data.name}
+          </span>
           <Image
             className="ml-auto flex h-[24px] min-h-[21px] max-w-[699px] cursor-pointer"
             src="/icons/kebab.svg"
@@ -185,8 +228,8 @@ export default function DetailPost({
       {!isComplete && (
         <div className="mt-2">
           <DateInfo
-            date={taskData?.data.date.split('T')[0]}
-            time={time}
+            date={taskData?.data.recurring.startDate.split('T')[0]}
+            time={taskData?.data.recurring.startDate.slice(11, 16)}
             repeatinfo={taskData?.data.frequency}
           />
         </div>
@@ -216,6 +259,19 @@ export default function DetailPost({
           />
         ))}
       </div>
+
+      {isEditModalOpen && (
+        <TodoEditModal
+          isOpen={isEditModalOpen}
+          onCloseAction={() => setEditModalOpen(false)}
+          groupid={groupId!}
+          taskListid={tasklistid}
+          taskid={taskid!}
+          onSubmit={(newTodo) => {
+            setEditModalOpen(false);
+          }}
+        />
+      )}
 
       <Button
         variant={isComplete ? 'cancel' : 'complete'}

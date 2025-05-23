@@ -9,9 +9,16 @@ import { useDateTimePicker } from './useDateTimePicker';
 import DatePickerCalendar from './DatePickerCalender';
 import DatePickerTime from './DatePickerTime';
 
+import { AxiosError } from 'axios';
+import { createRecurringTask } from '@/api/createTask';
+import { useMutation } from '@tanstack/react-query';
+import { CreateRecurringTaskBody } from '@/api/createTask';
+import { useTaskReload } from '@/context/TaskReloadContext';
+import { DateTime } from 'luxon';
+
 export interface TodoFullCreateModalProps {
   isOpen: boolean;
-  onClose: () => void;
+  onCloseAction: () => void;
   taskListId?: number;
   groupId?: number;
   onSubmit: (newTodo: {
@@ -30,21 +37,61 @@ const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
 
 export default function TodoFullCreateModal({
   isOpen,
-  onClose,
-  onSubmit,
+  onCloseAction,
   taskListId,
   disabled = false,
+  groupId,
 }: TodoFullCreateModalProps) {
   const [title, setTitle] = useState('');
   const [repeat, setRepeat] = useState(todoRepeatOptions[0]);
   const [repeatDays, setRepeatDays] = useState<string[]>([]);
   const [memo, setMemo] = useState('');
 
-  const { dateTime, setDate, setTime, timeString } = useDateTimePicker();
+  const { dateTime, setDate, setTime } = useDateTimePicker();
 
-  const handleCreate = () => {
-    onSubmit({ title, date: dateTime, time: timeString, repeat, repeatDays, memo });
+  const { triggerReload } = useTaskReload();
+
+  /* 반복 */
+  const repeatToFrequency: Record<
+    (typeof todoRepeatOptions)[number],
+    'ONCE' | 'DAILY' | 'WEEKLY' | 'MONTHLY'
+  > = {
+    '반복 안함': 'ONCE',
+    '한 번': 'ONCE',
+    매일: 'DAILY',
+    '주 반복': 'WEEKLY',
+    '월 반복': 'MONTHLY',
   };
+
+  /* 할 일 생성 */
+  const handleCreate = () => {
+    const frequencyType = repeatToFrequency[repeat];
+
+    const startDate =
+      DateTime.fromJSDate(dateTime ?? new Date())
+        .setZone('Asia/Seoul')
+        .toISO() ?? new Date().toISOString();
+
+    const body: CreateRecurringTaskBody = {
+      name: title,
+      description: memo,
+      startDate: startDate,
+      frequencyType,
+    };
+
+    mutation.mutate(body);
+  };
+
+  const mutation = useMutation({
+    mutationFn: (body: CreateRecurringTaskBody) => createRecurringTask(groupId!, taskListId!, body),
+    onSuccess: () => {
+      console.log('할일 생성 성공');
+      triggerReload();
+    },
+    onError: (error: AxiosError) => {
+      console.error('할일 생성 실패', error.message);
+    },
+  });
 
   return (
     <Modal
@@ -56,7 +103,7 @@ export default function TodoFullCreateModal({
       }}
       submitButton={{ label: '할 일 만들기' }}
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={onCloseAction}
       onSubmit={handleCreate}
       disabled={disabled}
     >

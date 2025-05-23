@@ -324,6 +324,7 @@ export default function TaskListPage() {
       try {
         const tasks = await getTasksByTaskList(groupId, taskList.id, dateKey);
         const todos = tasks.map(convertTaskToTodo);
+        console.log('convertTaskToTodo', convertTaskToTodo);
 
         console.log('todos', todos);
         setTodoList(todos);
@@ -336,7 +337,7 @@ export default function TaskListPage() {
     if (selectedTaskList) {
       loadTasksForList(selectedTaskList);
     }
-  }, [selectedTaskList, groupId, dateKey]);
+  }, [selectedTaskList, groupId, dateKey, reloadKey]);
 
   const handleAddList = async () => {
     const name = newListName.trim().slice(0, MAX_LIST_NAME_LENGTH);
@@ -371,24 +372,7 @@ export default function TaskListPage() {
     }
   };
 
-  const handleCreateTodo: TodoFullCreateModalProps['onSubmit'] = ({
-    title,
-    date,
-    time,
-    repeat,
-  }) => {
-    if (!date) return;
-    const formatted = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
-    const newTodo: Todo = {
-      id: Date.now(),
-      title,
-      date: formatted,
-      time,
-      recurring: repeat !== '반복 안함',
-      comments: 0,
-      completed: false,
-    };
-
+  const handleCreateTodo: TodoFullCreateModalProps['onSubmit'] = ({}) => {
     setTodoModalOpen(false);
   };
 
@@ -579,7 +563,7 @@ export default function TaskListPage() {
               </div>
             )}
 
-            <SlideWrapper isOpen={detailopen} onClose={() => setDetailOpen(false)}>
+            <SlideWrapper isOpen={detailopen} onCloseAction={() => setDetailOpen(false)}>
               {selectedTodo && selectedTaskList && (
                 <DetailPost
                   groupId={groupId}
@@ -587,7 +571,7 @@ export default function TaskListPage() {
                   taskid={selectedTodo.id}
                   title={selectedTodo.title}
                   showComplete={false}
-                  onClose={() => setDetailOpen(false)}
+                  onCloseAction={() => setDetailOpen(false)}
                   time={selectedTodo.time}
                 />
               )}
@@ -610,7 +594,7 @@ export default function TaskListPage() {
       <TodoFullCreateModal
         key={isTodoModalOpen ? 'todo-open' : 'todo-closed'}
         isOpen={isTodoModalOpen}
-        onClose={() => setTodoModalOpen(false)}
+        onCloseAction={() => setTodoModalOpen(false)}
         onSubmit={handleCreateTodo}
         disabled={!selectedTaskList?.id || isLoading}
         taskListId={selectedTaskList?.id}
