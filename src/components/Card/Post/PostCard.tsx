@@ -85,7 +85,6 @@ export default function PostCard({
   const { mutate: deleteMutate } = useMutation({
     mutationFn: () => deleteArticle(Number(id)),
     onSuccess: () => {
-      console.log('게시글 삭제 성공');
       queryClient.invalidateQueries({ queryKey: ['generalPosts'] });
     },
     onError: (err: AxiosError) => {

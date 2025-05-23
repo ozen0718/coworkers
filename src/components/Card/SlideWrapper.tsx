@@ -2,15 +2,15 @@
 import { motion } from 'framer-motion';
 type SlideWrapperProps = {
   isOpen: boolean; // 열림 여부
-  onClose: () => void; // 닫힘 여부
+  onCloseAction: () => void; // 닫힘 여부
   children: React.ReactNode; // 내용
 };
 
-export default function SlideWrapper({ isOpen, onClose, children }: SlideWrapperProps) {
+export default function SlideWrapper({ isOpen, onCloseAction, children }: SlideWrapperProps) {
   return (
     <>
       {/* 배경*/}
-      {isOpen && <div className="fixed inset-0 z-40 bg-black/30" onClick={onClose} />}
+      {isOpen && <div className="fixed inset-0 z-40 bg-black/30" onClick={onCloseAction} />}
 
       {/* 카드 */}
       <motion.div

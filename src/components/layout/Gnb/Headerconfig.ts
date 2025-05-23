@@ -56,8 +56,9 @@ export function getHeaderConfig(pathname: string, isLoggedIn: boolean): HeaderVi
   const isEditPage = /^\/\d+\/edit$/.test(pathname);
   const isBoardDetailPage = /^\/boards\/\d+$/.test(pathname);
   const isBoardsEditPage = /^\/boards\/\d+\/edit$/.test(pathname);
+  const isTaskListPage = /^\/\d+\/tasklist$/.test(pathname);
 
-  if (isEditPage || isBoardDetailPage || isBoardsEditPage) {
+  if (isEditPage || isBoardDetailPage || isBoardsEditPage || isTaskListPage) {
     return isLoggedIn
       ? {
           showTeamSelector: true,
