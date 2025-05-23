@@ -25,6 +25,7 @@ import { useTaskReload } from '@/context/TaskReloadContext';
 import DatePickerCalendar from './components/TodoFullCreateModal/DatePickerCalender';
 
 const MAX_LIST_NAME_LENGTH = 10;
+const MAX_TASK_LISTS = 15;
 const KOREAN_CONSONANT_VOWEL_REGEX = /^[ㄱ-ㅎㅏ-ㅣ]+$/;
 
 interface Todo {
@@ -53,6 +54,7 @@ interface DraggableTaskListProps {
   moveTaskList: (dragIndex: number, hoverIndex: number) => void;
   isSelected: boolean;
   onSelect: (taskList: TaskList) => void;
+  isInDropdown?: boolean;
 }
 
 const DraggableTaskList: React.FC<DraggableTaskListProps> = ({
@@ -61,6 +63,7 @@ const DraggableTaskList: React.FC<DraggableTaskListProps> = ({
   moveTaskList,
   isSelected,
   onSelect,
+  isInDropdown = false,
 }) => {
   const [{ isDragging }, drag] = useDrag({
     type: 'TASKLIST',
@@ -70,7 +73,7 @@ const DraggableTaskList: React.FC<DraggableTaskListProps> = ({
     }),
   });
 
-  const [, drop] = useDrop({
+  const [{ isOver }, drop] = useDrop({
     accept: 'TASKLIST',
     hover: (draggedItem: { index: number }) => {
       if (draggedItem.index !== index) {
@@ -78,7 +81,29 @@ const DraggableTaskList: React.FC<DraggableTaskListProps> = ({
         draggedItem.index = index;
       }
     },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
   });
+
+  if (isInDropdown) {
+    return (
+      <div
+        ref={(node) => {
+          drag(drop(node));
+        }}
+        className={clsx(
+          'w-full px-4 py-2 text-left text-sm transition-all duration-200',
+          isSelected ? 'bg-gray-700 text-white' : 'text-gray-300 hover:bg-gray-700',
+          isDragging ? 'scale-95 opacity-50' : '',
+          isOver ? 'bg-gray-600' : ''
+        )}
+        onClick={() => onSelect(taskList)}
+      >
+        {taskList.name}
+      </div>
+    );
+  }
 
   return (
     <div
@@ -86,9 +111,10 @@ const DraggableTaskList: React.FC<DraggableTaskListProps> = ({
         drag(drop(node));
       }}
       className={clsx(
-        'cursor-move pb-1 text-xs font-medium sm:text-sm',
+        'cursor-pointer pb-1 text-xs font-medium transition-all duration-200 sm:text-sm',
         isSelected ? 'border-b-2 border-white text-white' : 'text-gray400',
-        isDragging ? 'opacity-50' : ''
+        isDragging ? 'scale-95 opacity-50' : '',
+        isOver ? 'border-b-2 border-gray-500' : ''
       )}
       onClick={() => onSelect(taskList)}
     >
@@ -104,7 +130,8 @@ const TaskListDropdown: React.FC<{
   isOpen: boolean;
   onToggle: () => void;
   isMobile?: boolean;
-}> = ({ taskLists, selectedTaskList, onSelect, isOpen, onToggle, isMobile }) => {
+  moveTaskList: (dragIndex: number, hoverIndex: number) => void;
+}> = ({ taskLists, selectedTaskList, onSelect, isOpen, onToggle, isMobile, moveTaskList }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const visibleCount = isMobile ? 3 : 10;
 
@@ -136,32 +163,24 @@ const TaskListDropdown: React.FC<{
           {/* Desktop Dropdown */}
           <div className="hidden sm:absolute sm:top-full sm:right-0 sm:z-50 sm:mt-2 sm:block sm:w-48 sm:rounded-lg sm:bg-gray-800 sm:py-2 sm:shadow-lg">
             <div className="grid grid-cols-1 gap-2">
-              {taskLists.slice(visibleCount).map((taskList) => (
-                <button
+              {taskLists.slice(visibleCount).map((taskList, index) => (
+                <DraggableTaskList
                   key={taskList.id}
-                  className={clsx(
-                    'w-full px-4 py-2 text-left text-sm',
-                    taskList.id === selectedTaskList?.id
-                      ? 'bg-gray-700 text-white'
-                      : 'text-gray-300 hover:bg-gray-700'
-                  )}
-                  onClick={() => {
-                    onSelect(taskList);
-                    onToggle();
-                  }}
-                >
-                  {taskList.name}
-                </button>
+                  taskList={taskList}
+                  index={index + visibleCount}
+                  moveTaskList={moveTaskList}
+                  isSelected={taskList.id === selectedTaskList?.id}
+                  onSelect={onSelect}
+                  isInDropdown={true}
+                />
               ))}
             </div>
           </div>
 
-          {/* Mobile Bottom Sheet */}
           <div className="fixed inset-0 z-50 sm:hidden">
-            {/* Backdrop */}
             <div className="fixed inset-0 bg-black/50" onClick={onToggle} />
-            {/* Bottom Sheet */}
-            <div className="fixed right-0 bottom-0 left-0 max-h-[80vh] overflow-y-auto rounded-t-2xl bg-gray-800 p-4">
+
+            <div className="fixed right-0 bottom-0 left-0 max-h-[50vh] overflow-y-auto rounded-t-2xl bg-gray-800 p-4">
               <div className="mb-4 flex items-center justify-between">
                 <h3 className="text-lg font-medium text-white">목록 선택</h3>
                 <button
@@ -250,7 +269,8 @@ export default function TaskListPage() {
   const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
   const [detailopen, setDetailOpen] = useState(false);
 
-  //const [isDragging, setIsDragging] = useState(false);
+  // const [isDragging, setIsDragging] = useState(false);
+  // 미사용 함수 주석
   const [pendingOrderUpdate, setPendingOrderUpdate] = useState<{
     taskListId: number;
     displayIndex: number;
@@ -263,7 +283,7 @@ export default function TaskListPage() {
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768); // 768px is the md breakpoint in Tailwind
+      setIsMobile(window.innerWidth < 768);
     };
 
     checkMobile();
@@ -325,6 +345,10 @@ export default function TaskListPage() {
       toast.error('자음이나 모음만으로는 목록을 생성할 수 없습니다.');
       return;
     }
+    if (taskLists.length >= MAX_TASK_LISTS) {
+      toast.error('최대 15개의 목록만 생성할 수 있습니다.');
+      return;
+    }
     const formattedName = name;
 
     setIsLoading(true);
@@ -355,15 +379,15 @@ export default function TaskListPage() {
   }) => {
     if (!date) return;
     const formatted = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
-    // const newTodo: Todo = {
-    //   id: Date.now(),
-    //   title,
-    //   date: formatted,
-    //   time,
-    //   recurring: repeat !== '반복 안함',
-    //   comments: 0,
-    //   completed: false,
-    // };
+    const newTodo: Todo = {
+      id: Date.now(),
+      title,
+      date: formatted,
+      time,
+      recurring: repeat !== '반복 안함',
+      comments: 0,
+      completed: false,
+    };
 
     setTodoModalOpen(false);
   };
@@ -399,7 +423,6 @@ export default function TaskListPage() {
       } catch (error) {
         console.error('Failed to update task list order:', error);
         toast.error('목록 순서 변경에 실패했습니다.');
-        // Revert the order if the API call fails
         setTaskLists(taskLists);
       }
     }
@@ -454,14 +477,12 @@ export default function TaskListPage() {
                       </div>
                     </div>
 
-                    {/* Mobile Calendar Bottom Sheet */}
                     <div className="fixed inset-0 z-50 sm:hidden">
-                      {/* Backdrop */}
                       <div
                         className="fixed inset-0 bg-black/50"
                         onClick={() => setIsCalendarOpen(false)}
                       />
-                      {/* Bottom Sheet */}
+
                       <div className="fixed right-0 bottom-0 left-0 max-h-[80vh] overflow-y-auto rounded-t-2xl bg-gray-800 p-4">
                         <div className="mb-4 flex items-center justify-between">
                           <h3 className="text-lg font-medium text-white">날짜 선택</h3>
@@ -510,10 +531,10 @@ export default function TaskListPage() {
 
           {taskLists.length > 0 && (
             <nav
-              className="flex flex-wrap items-center gap-x-6 border-b border-slate-700 pb-2"
+              className="flex items-center border-b border-slate-700 pb-2"
               onDragEnd={handleDragEnd}
             >
-              <div className="flex flex-wrap items-center gap-x-6">
+              <div className="flex flex-1 items-center gap-x-6 overflow-x-auto">
                 {taskLists.slice(0, isMobile ? 3 : 10).map((taskList, index) => (
                   <DraggableTaskList
                     key={taskList.id}
@@ -526,14 +547,17 @@ export default function TaskListPage() {
                 ))}
               </div>
               {((isMobile && taskLists.length > 3) || (!isMobile && taskLists.length > 10)) && (
-                <TaskListDropdown
-                  taskLists={taskLists}
-                  selectedTaskList={selectedTaskList}
-                  onSelect={setSelectedTaskList}
-                  isOpen={isDropdownOpen}
-                  onToggle={() => setDropdownOpen(!isDropdownOpen)}
-                  isMobile={isMobile}
-                />
+                <div className="ml-4 flex-shrink-0">
+                  <TaskListDropdown
+                    taskLists={taskLists}
+                    selectedTaskList={selectedTaskList}
+                    onSelect={setSelectedTaskList}
+                    isOpen={isDropdownOpen}
+                    onToggle={() => setDropdownOpen(!isDropdownOpen)}
+                    isMobile={isMobile}
+                    moveTaskList={moveTaskList}
+                  />
+                </div>
               )}
             </nav>
           )}
