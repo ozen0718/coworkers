@@ -40,7 +40,7 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
               {team.name}
             </div>
           ))}
-          <Link href="/articles" className="text-primary text-md-medium px-2 py-1">
+          <Link href="/boards" className="text-primary text-md-medium px-2 py-1">
             자유게시판
           </Link>
         </div>
