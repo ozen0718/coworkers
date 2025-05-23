@@ -139,24 +139,7 @@ export default function TaskListPage() {
     }
   };
 
-  const handleCreateTodo: TodoFullCreateModalProps['onSubmit'] = ({
-    title,
-    date,
-    time,
-    repeat,
-  }) => {
-    if (!date) return;
-    const formatted = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
-    const newTodo: Todo = {
-      id: Date.now(),
-      title,
-      date: formatted,
-      time,
-      recurring: repeat !== '반복 안함',
-      comments: 0,
-      completed: false,
-    };
-
+  const handleCreateTodo: TodoFullCreateModalProps['onSubmit'] = ({}) => {
     setTodoModalOpen(false);
   };
 
