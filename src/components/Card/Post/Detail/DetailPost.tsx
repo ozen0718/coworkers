@@ -19,6 +19,7 @@ import PostDropdown from '../PostDropdown';
 import clsx from 'clsx';
 import { fetchTask } from '@/api/detailPost';
 import { useTaskReload } from '@/context/TaskReloadContext';
+import { deleteRecurringTask } from '@/api/detailPost';
 
 type DetailPostProps = {
   groupId?: number;
@@ -45,16 +46,6 @@ export default function DetailPost({
   const { triggerReload } = useTaskReload();
 
   const queryClient = useQueryClient();
-
-  /* 할일 내용 */
-  const { data: taskData } = useQuery({
-    queryKey: ['task', groupId, tasklistid, taskid],
-    queryFn: () => {
-      if (!groupId || !tasklistid || !taskid) throw new Error('필수값 없음');
-      return fetchTask(groupId, tasklistid, taskid);
-    },
-    enabled: !!groupId && !!tasklistid && !!taskid,
-  });
 
   /* 댓글 내용 */
   const { data: commentData } = useQuery({
@@ -108,11 +99,39 @@ export default function DetailPost({
     console.log('할일 수정');
   };
 
+  /* 할일 내용 */
+  const { data: taskData } = useQuery({
+    queryKey: ['task', groupId, tasklistid, taskid],
+    queryFn: () => {
+      if (!groupId || !tasklistid || !taskid) throw new Error('필수값 없음');
+      return fetchTask(groupId, tasklistid, taskid);
+    },
+    enabled: !!groupId && !!tasklistid && !!taskid,
+  });
+
   /* 할 일 삭제 */
   const deleteMutation = useMutation({
-    mutationFn: () => {
+    mutationFn: async () => {
       if (!groupId || !tasklistid || !taskid) throw new Error('필수 값 없음');
-      return deleteTask(groupId, tasklistid, taskid);
+
+      console.log('삭제 요청할 task 정보:', {
+        groupId,
+        tasklistid,
+        taskid,
+        frequency: taskData?.data.frequency,
+        recurringId: taskData?.data.recurringId,
+      });
+
+      if (taskData?.data.frequency === 'ONCE') {
+        // 단일 할일 삭제
+        return deleteTask(groupId, tasklistid, taskid);
+      }
+
+      const recurringId = taskData?.data.recurringId;
+      if (!recurringId) throw new Error('recurringId이 없습니다.');
+
+      // 반복 할일 전체 삭제
+      return deleteRecurringTask(groupId, tasklistid, taskid, recurringId);
     },
     onSuccess: () => {
       triggerReload();
@@ -122,7 +141,8 @@ export default function DetailPost({
       toast.error('할일 삭제 실패');
     },
   });
-  const handleDelete = async () => {
+
+  const handleDelete = () => {
     deleteMutation.mutate();
   };
 
@@ -185,8 +205,8 @@ export default function DetailPost({
       {!isComplete && (
         <div className="mt-2">
           <DateInfo
-            date={taskData?.data.date.split('T')[0]}
-            time={time}
+            date={taskData?.data.recurring.startDate.split('T')[0]}
+            time={taskData?.data.recurring.startDate.slice(11, 16)}
             repeatinfo={taskData?.data.frequency}
           />
         </div>
