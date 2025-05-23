@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense } from 'react';
-import ResetPasswordHandler from './resetPasswordHandler';
+import ResetPasswordHandler from './passwordHandler';
 
 export default function ResetPasswordPage() {
   return (
