@@ -82,7 +82,6 @@ export function TaskListsItem({
   const updateMutation = useMutation({
     mutationFn: () => updateTaskList(groupId, taskListId, editName),
     onSuccess: () => {
-      toast.success('이름이 수정되었습니다.');
       queryClient.invalidateQueries({ queryKey: ['groupDetail', groupId] });
     },
     onError: () => toast.error('수정에 실패했습니다.'),
