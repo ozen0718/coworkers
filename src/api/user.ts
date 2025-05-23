@@ -48,6 +48,10 @@ export const getUserInfo = async (): Promise<ParsedUser & { teams: Team[] }> => 
   };
 };
 
+export const updateUserImage = async (image: string) => {
+  await axiosInstance.patch('/user', { image });
+};
+
 export const updateUserName = async (name: string) => {
   await axiosInstance.patch('/user', { nickname: name });
 };
