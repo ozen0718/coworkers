@@ -182,6 +182,8 @@ export default function TeamPage() {
     return null;
   }
 
+  if (!futureDate || !groupId) return null;
+
   return (
     <div className="py-6">
       <TeamHeader title={teamName} showGear={isClient && isAdmin} />
@@ -228,6 +230,8 @@ export default function TeamPage() {
               completed={completed}
               total={total}
               tasksTitle={list.name}
+              taskListId={list.id}
+              groupId={groupId}
               onClick={() => {
                 router.push(`/${groupId}/tasklist?listId=${list.id}`);
               }}
@@ -273,12 +277,14 @@ export default function TeamPage() {
           </div>
         </header>
         <div className="grid-rows-auto grid w-full grid-cols-[1fr_1fr] gap-4 sm:grid-cols-[1fr_1fr_1fr]">
-          {groupDetail?.members.map((member) => (
+          {groupDetail?.members.map((member, index) => (
             <Member
               key={member.userId}
               name={member.userName}
               email={member.userEmail}
               profileUrl={member.userImage}
+              userId={member.userId}
+              hideMenu={index === 0}
               onClick={() =>
                 handleOpenProfile({
                   name: member.userName,
