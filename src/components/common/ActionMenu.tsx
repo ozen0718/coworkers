@@ -4,12 +4,7 @@ import { useRef, useState } from 'react';
 import useClickOutside from '@/hooks/useClickOutside';
 import { ActionMenuProps } from '@/types/actionmenutypes';
 
-export default function ActionMenu({
-  trigger,
-  onEdit,
-  onDelete,
-  menuPosition = 'right',
-}: ActionMenuProps) {
+export default function ActionMenu({ trigger, onDelete, menuPosition = 'right' }: ActionMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   useClickOutside(ref, () => setIsOpen(false));
@@ -26,15 +21,6 @@ export default function ActionMenu({
             menuPosition === 'right' ? 'right-0' : 'left-0'
           }`}
         >
-          <div
-            onClick={() => {
-              onEdit();
-              setIsOpen(false);
-            }}
-            className="hover:bg-primary-hover h-10 w-full cursor-pointer px-4 py-[11.5px] text-left"
-          >
-            수정하기
-          </div>
           <div
             onClick={() => {
               onDelete();
