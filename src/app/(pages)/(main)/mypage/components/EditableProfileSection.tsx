@@ -1,10 +1,23 @@
-import { EditableProfile } from '@/components/common/Profiles';
-import { ProfileProps } from '@/types/profiletypes';
+'use client';
 
-export default function EditableProfileSection({ width }: ProfileProps) {
+import Button from '@/components/common/Button/Button';
+import ProfileUploader from '@/components/ProfileUploader';
+import { useEditProfileImage } from '@/hooks/useEditProfileImage';
+import { useEffect } from 'react';
+import { toast } from 'react-toastify';
+
+export default function EditableProfileSection() {
+  const { previewUrl, fileError, submitError, onFileChange, } =
+    useEditProfileImage();
+
+  useEffect(() => {
+    if (submitError) {
+      toast.error(submitError);
+    }
+  }, [submitError]);
   return (
-    <button className="w-fit">
-      <EditableProfile width={width} />
-    </button>
+    <div className="flex w-fit flex-col items-center gap-3">
+      <ProfileUploader fileUrl={previewUrl} error={fileError} onChange={onFileChange} />
+    </div>
   );
 }
