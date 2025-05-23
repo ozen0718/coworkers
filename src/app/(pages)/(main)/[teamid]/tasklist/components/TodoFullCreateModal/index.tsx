@@ -80,7 +80,7 @@ export default function TodoFullCreateModal({
     const body: CreateRecurringTaskBody = {
       name: title,
       description: memo,
-      date: startDate,
+      startDate: startDate,
       frequencyType,
     };
 
