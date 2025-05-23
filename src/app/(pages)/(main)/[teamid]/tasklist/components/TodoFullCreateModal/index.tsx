@@ -38,7 +38,6 @@ const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
 export default function TodoFullCreateModal({
   isOpen,
   onClose,
-  onSubmit,
   taskListId,
   disabled = false,
   groupId,
@@ -48,13 +47,8 @@ export default function TodoFullCreateModal({
   const [repeatDays, setRepeatDays] = useState<string[]>([]);
   const [memo, setMemo] = useState('');
 
-  const { dateTime, setDate, setTime, timeString } = useDateTimePicker();
+  const { dateTime, setDate, setTime } = useDateTimePicker();
 
-  /*
-  const handleCreate = () => {
-    onSubmit({ title, date: dateTime, time: timeString, repeat, repeatDays, memo });
-  };
-  */
   const { triggerReload } = useTaskReload();
 
   /* 반복 */

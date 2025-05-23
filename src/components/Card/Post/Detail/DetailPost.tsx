@@ -38,9 +38,7 @@ export default function DetailPost({
   tasklistid,
   taskid,
   title,
-  time,
   onClose,
-  showComplete,
 }: DetailPostProps) {
   //const [isComplete, setIsComplete] = useState(taskData?.data.doneAt);
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);

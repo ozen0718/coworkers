@@ -139,16 +139,6 @@ export default function TaskListPage() {
     }
   };
 
-  useEffect(() => {
-    console.log(
-      'g할일',
-      todoList.map((todo) => ({
-        id: todo.id,
-        completed: todo.completed,
-      }))
-    );
-  }, [todoList]);
-
   const handleCreateTodo: TodoFullCreateModalProps['onSubmit'] = ({
     title,
     date,
@@ -157,6 +147,7 @@ export default function TaskListPage() {
   }) => {
     if (!date) return;
     const formatted = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
+    /*
     const newTodo: Todo = {
       id: Date.now(),
       title,
@@ -166,6 +157,7 @@ export default function TaskListPage() {
       comments: 0,
       completed: false,
     };
+    */
 
     setTodoModalOpen(false);
   };
