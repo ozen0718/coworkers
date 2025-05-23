@@ -28,7 +28,7 @@ type DetailPostProps = {
   tasklistid?: number;
   taskid?: number;
   title?: string;
-  onClose: () => void;
+  onCloseAction: () => void;
   showComplete: boolean;
   time?: string;
 };
@@ -38,9 +38,8 @@ export default function DetailPost({
   tasklistid,
   taskid,
   title,
-  onClose,
+  onCloseAction,
 }: DetailPostProps) {
-  //const [isComplete, setIsComplete] = useState(taskData?.data.doneAt);
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
 
   const { triggerReload } = useTaskReload();
@@ -109,14 +108,6 @@ export default function DetailPost({
     mutationFn: async () => {
       if (!groupId || !tasklistid || !taskid) throw new Error('필수 값 없음');
 
-      console.log('삭제 요청할 task 정보:', {
-        groupId,
-        tasklistid,
-        taskid,
-        frequency: taskData?.data.frequency,
-        recurringId: taskData?.data.recurringId,
-      });
-
       if (taskData?.data.frequency === 'ONCE') {
         // 단일 할일 삭제
         return deleteTask(groupId, tasklistid, taskid);
@@ -130,7 +121,7 @@ export default function DetailPost({
     },
     onSuccess: () => {
       triggerReload();
-      onClose();
+      onCloseAction();
     },
     onError: () => {
       toast.error('할일 삭제 실패');
@@ -141,7 +132,7 @@ export default function DetailPost({
     deleteMutation.mutate();
   };
 
-  const [isComplete, setIsComplete] = useState(taskData?.data?.doneAt !== null);
+  const [isComplete, setIsComplete] = useState<boolean>(!!taskData?.data?.doneAt);
 
   /* 케밥 드롭다운 */
   const handleToggleComplete = () => {
@@ -149,8 +140,8 @@ export default function DetailPost({
   };
 
   useEffect(() => {
-    console.log('isComplete', isComplete);
-  });
+    setIsComplete(!!taskData?.data?.doneAt);
+  }, [taskData?.data?.doneAt]);
 
   /* 할일 완료 */
   const CompleteTaskmutation = useMutation({
@@ -186,7 +177,7 @@ export default function DetailPost({
       className="bg-bg200 relative flex h-full min-h-[698px] w-full flex-col gap-[10px] overflow-x-hidden p-5"
     >
       <div className="text-lg-regular mt-5 flex w-full items-start justify-between">
-        <IconDelete className="cursor-pointer" onClick={onClose} />
+        <IconDelete className="cursor-pointer" onClick={onCloseAction} />
       </div>
 
       <div className="flex flex-col">

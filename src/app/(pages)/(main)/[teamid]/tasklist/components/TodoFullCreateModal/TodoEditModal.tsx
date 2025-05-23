@@ -101,7 +101,7 @@ export default function TodoFullCreateModal({
         description: `할 일은 실제로 행동 가능한 작업 중심으로
         작성해주시면 좋습니다.`,
       }}
-      submitButton={{ label: '할 일 만들기' }}
+      submitButton={{ label: '수정하기' }}
       isOpen={isOpen}
       onClose={onCloseAction}
       onSubmit={handleCreate}

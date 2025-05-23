@@ -147,7 +147,6 @@ export default function TaskListPage() {
   }) => {
     if (!date) return;
     const formatted = `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
-    /*
     const newTodo: Todo = {
       id: Date.now(),
       title,
@@ -157,7 +156,6 @@ export default function TaskListPage() {
       comments: 0,
       completed: false,
     };
-    */
 
     setTodoModalOpen(false);
   };
@@ -238,7 +236,7 @@ export default function TaskListPage() {
               </div>
             )}
 
-            <SlideWrapper isOpen={detailopen} onClose={() => setDetailOpen(false)}>
+            <SlideWrapper isOpen={detailopen} onCloseAction={() => setDetailOpen(false)}>
               {selectedTodo && selectedTaskList && (
                 <DetailPost
                   groupId={groupId}
@@ -246,7 +244,7 @@ export default function TaskListPage() {
                   taskid={selectedTodo.id}
                   title={selectedTodo.title}
                   showComplete={false}
-                  onClose={() => setDetailOpen(false)}
+                  onCloseAction={() => setDetailOpen(false)}
                   time={selectedTodo.time}
                 />
               )}
@@ -269,7 +267,7 @@ export default function TaskListPage() {
       <TodoFullCreateModal
         key={isTodoModalOpen ? 'todo-open' : 'todo-closed'}
         isOpen={isTodoModalOpen}
-        onClose={() => setTodoModalOpen(false)}
+        onCloseAction={() => setTodoModalOpen(false)}
         onSubmit={handleCreateTodo}
         disabled={!selectedTaskList?.id || isLoading}
         taskListId={selectedTaskList?.id}
