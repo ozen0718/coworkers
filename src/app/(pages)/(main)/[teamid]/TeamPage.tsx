@@ -54,7 +54,6 @@ export default function TeamPage() {
 
       await queryClient.invalidateQueries({ queryKey: ['groupDetail', groupId] });
 
-      toast.success('새로운 목록이 생성되었습니다.');
       close();
       setNewListName('');
     } catch (error) {
