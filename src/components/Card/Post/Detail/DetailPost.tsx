@@ -20,6 +20,8 @@ import clsx from 'clsx';
 import { fetchTask } from '@/api/detailPost';
 import { useTaskReload } from '@/context/TaskReloadContext';
 import { deleteRecurringTask } from '@/api/detailPost';
+import { completeTask } from '@/api/detailPost';
+import { useEffect } from 'react';
 
 type DetailPostProps = {
   groupId?: number;
@@ -40,7 +42,7 @@ export default function DetailPost({
   onClose,
   showComplete,
 }: DetailPostProps) {
-  const [isComplete, setIsComplete] = useState(showComplete);
+  //const [isComplete, setIsComplete] = useState(taskData?.data.doneAt);
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
 
   const { triggerReload } = useTaskReload();
@@ -85,11 +87,6 @@ export default function DetailPost({
     mutation.mutate(content);
   };
 
-  /* 케밥 드롭다운 */
-  const handleToggleComplete = () => {
-    setIsComplete((prev) => !prev);
-  };
-
   const toggleDropdown = () => {
     setIsDropDownOpen((prev) => !prev);
   };
@@ -109,7 +106,7 @@ export default function DetailPost({
     enabled: !!groupId && !!tasklistid && !!taskid,
   });
 
-  /* 할 일 삭제 */
+  /* 할일 삭제 */
   const deleteMutation = useMutation({
     mutationFn: async () => {
       if (!groupId || !tasklistid || !taskid) throw new Error('필수 값 없음');
@@ -146,9 +143,44 @@ export default function DetailPost({
     deleteMutation.mutate();
   };
 
-  if (!taskid || !groupId || !tasklistid) {
-    return <div>필수 데이터가 없습니다.</div>;
-  }
+  const [isComplete, setIsComplete] = useState(taskData?.data?.doneAt !== null);
+
+  /* 케밥 드롭다운 */
+  const handleToggleComplete = () => {
+    CompleteTaskmutation.mutate();
+  };
+
+  useEffect(() => {
+    console.log('isComplete', isComplete);
+  });
+
+  /* 할일 완료 */
+  const CompleteTaskmutation = useMutation({
+    mutationFn: () => {
+      if (!groupId || !tasklistid || !taskid || !taskData?.data) {
+        throw new Error('필수 데이터 없음');
+      }
+
+      const toggledDone = !isComplete;
+
+      const payload = {
+        name: taskData.data.name,
+        description: taskData.data.description,
+        done: toggledDone,
+      };
+
+      return completeTask(groupId, tasklistid, taskid, payload);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['task', groupId, tasklistid, taskid] });
+      setIsComplete((prev) => !prev);
+      triggerReload();
+      //window.location.reload();
+    },
+    onError: () => {
+      toast.error('완료 처리 실패');
+    },
+  });
 
   return (
     <div

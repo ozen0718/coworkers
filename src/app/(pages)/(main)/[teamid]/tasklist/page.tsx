@@ -99,6 +99,7 @@ export default function TaskListPage() {
       try {
         const tasks = await getTasksByTaskList(groupId, taskList.id, dateKey);
         const todos = tasks.map(convertTaskToTodo);
+        console.log('convertTaskToTodo', convertTaskToTodo);
 
         console.log('todos', todos);
         setTodoList(todos);
@@ -111,7 +112,7 @@ export default function TaskListPage() {
     if (selectedTaskList) {
       loadTasksForList(selectedTaskList);
     }
-  }, [selectedTaskList, groupId, dateKey]);
+  }, [selectedTaskList, groupId, dateKey, reloadKey]);
 
   const handleAddList = async () => {
     const name = newListName.trim().slice(0, MAX_LIST_NAME_LENGTH);
@@ -137,6 +138,16 @@ export default function TaskListPage() {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    console.log(
+      'g할일',
+      todoList.map((todo) => ({
+        id: todo.id,
+        completed: todo.completed,
+      }))
+    );
+  }, [todoList]);
 
   const handleCreateTodo: TodoFullCreateModalProps['onSubmit'] = ({
     title,

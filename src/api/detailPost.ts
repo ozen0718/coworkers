@@ -45,3 +45,16 @@ export const editDetailComment = (
 ) => {
   return axiosInstance.patch(`/tasks/${taskid}/comments/${commentId}`, payload);
 };
+
+/* 완료하기 */
+export const completeTask = (
+  groupId: number,
+  tasklistid: number,
+  taskid: number,
+  payload: { name: string; description: string; done: boolean }
+) => {
+  return axiosInstance.patch(
+    `/groups/${groupId}/task-lists/${tasklistid}/tasks/${taskid}`,
+    payload
+  );
+};
