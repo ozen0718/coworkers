@@ -14,7 +14,7 @@ export default function TeamSelector() {
   const { teamid } = useParams() as { teamid: string };
   const [value, setValue] = useState<string>(selectedTeam?.name ?? '팀 없음');
 
-  // ✅ URL의 teamid와 현재 선택된 팀이 다르면 강제 동기화
+  //URL의 teamid와 현재 선택된 팀이 다르면 강제 동기화
   useEffect(() => {
     if (teams.length > 0 && teamid) {
       const matchedTeam = teams.find((t) => t.id === teamid);

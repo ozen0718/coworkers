@@ -45,7 +45,7 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
     }
   }, [userData, setUserInfo]);
 
-  // ✅ 새로고침 시 URL의 teamid로 selectedTeam 복원
+  // 새로고침 시 URL의 teamid로 selectedTeam 복원
   useEffect(() => {
     if (!selectedTeam && teams.length > 0 && teamid) {
       const matchedTeam = teams.find((t) => t.id === teamid);
@@ -55,7 +55,7 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
     }
   }, [selectedTeam, teams, teamid, setSelectedTeam]);
 
-  // ✅ 선택된 팀이 삭제되었거나 유효하지 않으면 fallback
+  // 선택된 팀이 삭제되었거나 유효하지 않으면 fallback
   useEffect(() => {
     if (teams && teams.length > 0) {
       const stillExists = teams.find((team) => team.id === selectedTeam?.id);
