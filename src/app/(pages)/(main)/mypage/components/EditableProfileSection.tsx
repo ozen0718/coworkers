@@ -1,14 +1,12 @@
 'use client';
 
-import Button from '@/components/common/Button/Button';
-import ProfileUploader from '@/components/ProfileUploader';
-import { useEditProfileImage } from '@/hooks/useEditProfileImage';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
+import ProfileUploader from '@/components/ProfileUploader';
+import { useEditProfileImage } from '@/hooks/useEditProfileImage';
 
-export default function EditableProfileSection() {
-  const { previewUrl, fileError, submitError, onFileChange, } =
-    useEditProfileImage();
+export default function EditableProfileSection({}) {
+  const { previewUrl, fileError, submitError, onFileChange } = useEditProfileImage();
 
   useEffect(() => {
     if (submitError) {
