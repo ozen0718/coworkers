@@ -5,6 +5,7 @@ import { patchGroup } from '@/api/group.api';
 import { useQueryClient } from '@tanstack/react-query';
 import { getUserInfo } from '@/api/user';
 import { useUserStore } from '@/stores/useUserStore';
+import { toast } from 'react-toastify';
 
 interface EditButtonProps {
   name: string;
@@ -35,13 +36,15 @@ export default function EditButton({ name }: EditButtonProps) {
       await queryClient.invalidateQueries({ queryKey: ['groupPageInfo', teamid] });
       await queryClient.invalidateQueries({ queryKey: ['groupDetail', Number(teamid)] });
 
+      toast.success('팀 이름이 수정되었습니다.');
+
       setTimeout(() => {
         router.push(`/${teamid}`);
       }, 100);
     },
 
     onError: () => {
-      alert('수정에 실패했습니다.');
+      toast.error('수정에 실패했습니다.');
     },
   });
 

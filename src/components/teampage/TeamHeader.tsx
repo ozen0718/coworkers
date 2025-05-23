@@ -23,14 +23,13 @@ export default function TeamHeader({ title, showGear }: TeamHeaderProps) {
   const setUserInfo = useUserStore((s) => s.setUserInfo);
   const setSelectedTeam = useSelectedTeamStore((s) => s.setSelectedTeam);
 
-  const queryClient = useQueryClient(); // react-query 클라이언트 사용
+  const queryClient = useQueryClient();
 
   const deleteMutation = useMutation({
     mutationFn: () => deleteGroup(groupId),
     onSuccess: async () => {
       toast.success('그룹이 삭제되었습니다.');
 
-      //유저 정보 캐시 무효화 → useQuery로 자동 refetch됨
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.user.me });
 
       const updatedUserInfo = await getUserInfo();

@@ -65,3 +65,15 @@ export const createTask = async ({
   });
   return response.data;
 };
+
+export const deleteTaskList = async (groupId: number, taskListId: number): Promise<void> => {
+  await axiosInstance.delete(`/groups/${groupId}/task-lists/${taskListId}`);
+};
+
+export const updateTaskList = async (
+  groupId: number,
+  taskListId: number,
+  name: string
+): Promise<void> => {
+  await axiosInstance.patch(`/groups/${groupId}/task-lists/${taskListId}`, { name });
+};

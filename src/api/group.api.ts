@@ -35,3 +35,7 @@ export const patchGroup = async (
 ): Promise<void> => {
   await axiosInstance.patch(`/groups/${groupId}`, body);
 };
+
+export const deleteMember = async (groupId: number, memberUserId: number) => {
+  return axiosInstance.delete(`/groups/${groupId}/member/${memberUserId}`);
+};

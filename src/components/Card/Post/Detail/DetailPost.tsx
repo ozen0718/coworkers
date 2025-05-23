@@ -11,7 +11,6 @@ import BoardComment from '@/components/Card/Comment/BoardComment';
 import { createComment, deleteTask } from '@/api/detailPost';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import { AxiosError } from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { fetchComment } from '@/api/detailPost';
 import { useQueryClient } from '@tanstack/react-query';
@@ -20,7 +19,6 @@ import PostDropdown from '../PostDropdown';
 import clsx from 'clsx';
 import { fetchTask } from '@/api/detailPost';
 import { useTaskReload } from '@/context/TaskReloadContext';
-import { useRouter } from 'next/navigation';
 
 type DetailPostProps = {
   groupId?: number;
@@ -48,31 +46,41 @@ export default function DetailPost({
 
   const queryClient = useQueryClient();
 
-  if (!taskid || !groupId || !tasklistid) {
-    console.log('필수값 없음');
-    return;
-  }
-
-  const router = useRouter();
-
   /* 할일 내용 */
   const { data: taskData } = useQuery({
     queryKey: ['task', groupId, tasklistid, taskid],
     queryFn: () => {
-      if (!groupId || !tasklistid || !taskid) {
-        throw new Error('필수 값이 없습니다');
-      }
+      if (!groupId || !tasklistid || !taskid) throw new Error('필수값 없음');
       return fetchTask(groupId, tasklistid, taskid);
     },
+    enabled: !!groupId && !!tasklistid && !!taskid,
   });
 
   /* 댓글 내용 */
   const { data: commentData } = useQuery({
     queryKey: ['comments', taskid],
-    queryFn: () => fetchComment(taskid),
+    queryFn: () => {
+      if (!taskid) throw new Error('필수값 없음');
+      return fetchComment(taskid);
+    },
+    enabled: !!taskid,
   });
 
   /* 댓글 작성 */
+  const mutation = useMutation({
+    mutationFn: (content: string) => {
+      if (!taskid) throw new Error('taskid 없음');
+      return createComment(taskid, { content });
+    },
+    onSuccess: () => {
+      toast.success('댓글이 작성되었습니다');
+      if (taskid) queryClient.invalidateQueries({ queryKey: ['comments', taskid] });
+    },
+    onError: () => {
+      toast.error('댓글 작성 실패');
+    },
+  });
+
   const handleSubmit = (content: string) => {
     if (!taskid) {
       console.log('아이디 없음');
@@ -86,19 +94,6 @@ export default function DetailPost({
     mutation.mutate(content);
   };
 
-  const mutation = useMutation({
-    mutationFn: (content: string) => createComment(taskid, { content }),
-    onSuccess: () => {
-      console.log('댓글 작성 성공');
-      toast.success('댓글이 작성되었습니다');
-      queryClient.invalidateQueries({ queryKey: ['comments', taskid] });
-    },
-    onError: (error: AxiosError) => {
-      console.error('댓글 작성 실패', error.message);
-      toast.error('댓글 작성에 실패했습니다');
-    },
-  });
-
   /* 케밥 드롭다운 */
   const handleToggleComplete = () => {
     setIsComplete((prev) => !prev);
@@ -110,25 +105,30 @@ export default function DetailPost({
 
   /* 할 일 수정 */
   const handleEdit = async () => {
-    console.log('할 일 수정');
+    console.log('할일 수정');
   };
 
   /* 할 일 삭제 */
+  const deleteMutation = useMutation({
+    mutationFn: () => {
+      if (!groupId || !tasklistid || !taskid) throw new Error('필수 값 없음');
+      return deleteTask(groupId, tasklistid, taskid);
+    },
+    onSuccess: () => {
+      triggerReload();
+      onClose();
+    },
+    onError: () => {
+      toast.error('할일 삭제 실패');
+    },
+  });
   const handleDelete = async () => {
     deleteMutation.mutate();
   };
 
-  const deleteMutation = useMutation({
-    mutationFn: () => deleteTask(groupId, tasklistid, taskid),
-    onSuccess: () => {
-      console.log('할 일 삭제 성공');
-      triggerReload(); // context 사용해서 task 리스트 불러오기
-      onClose();
-    },
-    onError: (err: AxiosError) => {
-      console.error('할 일 삭제 실패:', err.response?.data);
-    },
-  });
+  if (!taskid || !groupId || !tasklistid) {
+    return <div>필수 데이터가 없습니다.</div>;
+  }
 
   return (
     <div

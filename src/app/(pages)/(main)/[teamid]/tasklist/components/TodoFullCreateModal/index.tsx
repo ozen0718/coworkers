@@ -13,6 +13,7 @@ export interface TodoFullCreateModalProps {
   isOpen: boolean;
   onClose: () => void;
   taskListId?: number;
+  groupId?: number;
   onSubmit: (newTodo: {
     title: string;
     date: Date | null;
