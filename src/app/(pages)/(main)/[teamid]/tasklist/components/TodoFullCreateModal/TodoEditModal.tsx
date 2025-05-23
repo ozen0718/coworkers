@@ -89,7 +89,6 @@ export default function TodoEditModal({
     mutationFn: (body: { name: string; description: string; done: boolean }) =>
       completeTask(groupid!, taskListid!, taskid!, body),
     onSuccess: () => {
-      console.log('할일 생성 성공');
       queryClient.invalidateQueries({
         queryKey: ['task', groupid, taskListid, taskid],
       });

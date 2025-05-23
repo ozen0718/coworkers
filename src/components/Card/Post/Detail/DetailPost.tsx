@@ -77,7 +77,6 @@ export default function DetailPost({
       return;
     }
     if (!content.trim()) {
-      console.log('내용 없음');
       toast.error('댓글 내용이 없습니다');
       return;
     }
@@ -166,7 +165,6 @@ export default function DetailPost({
       queryClient.invalidateQueries({ queryKey: ['task', groupId, tasklistid, taskid] });
       setIsComplete((prev) => !prev);
       triggerReload();
-      //window.location.reload();
     },
     onError: () => {
       toast.error('완료 처리 실패');
@@ -270,7 +268,6 @@ export default function DetailPost({
           taskListid={tasklistid}
           taskid={taskid!}
           onSubmit={(newTodo) => {
-            console.log('수정 완료', newTodo);
             setEditModalOpen(false);
           }}
         />
