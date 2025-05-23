@@ -3,12 +3,11 @@ import axiosInstance from './axiosInstance';
 export interface CreateRecurringTaskBody {
   name: string;
   description: string;
-  //createdAt: string; // 처음 생성 날짜
-  startDate: string; // 할일 날짜
-  //time: string;
-  frequencyType: string;
+  startDate?: string; // 할일 날짜
+  frequencyType?: string;
   weekDays?: string[]; // weekly인 경우
   monthDay?: number; // monthly인 경우
+  done?: boolean;
 }
 
 /* 할일 생성 */

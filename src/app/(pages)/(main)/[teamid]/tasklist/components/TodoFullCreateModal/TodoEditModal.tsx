@@ -12,15 +12,21 @@ import DatePickerTime from './DatePickerTime';
 import { AxiosError } from 'axios';
 import { createRecurringTask } from '@/api/createTask';
 import { useMutation } from '@tanstack/react-query';
-import { CreateRecurringTaskBody } from '@/api/createTask';
+import { EditTaskBody } from '@/api/createTask';
 import { useTaskReload } from '@/context/TaskReloadContext';
 import { DateTime } from 'luxon';
+import { completeTask } from '@/api/detailPost';
+import { useQuery } from '@tanstack/react-query';
+import { fetchTask } from '@/api/detailPost';
+import { useEffect } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 
-export interface TodoFullCreateModalProps {
+export interface TodoEditModalProps {
+  groupid: number;
+  taskListid?: number;
+  taskid: number;
   isOpen: boolean;
   onCloseAction: () => void;
-  taskListId?: number;
-  groupId?: number;
   onSubmit: (newTodo: {
     title: string;
     date: Date | null;
@@ -32,60 +38,65 @@ export interface TodoFullCreateModalProps {
   disabled?: boolean;
 }
 
-const todoRepeatOptions = ['반복 안함', '한 번', '매일', '주 반복', '월 반복'];
-const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
-
-export default function TodoFullCreateModal({
+export default function TodoEditModal({
   isOpen,
   onCloseAction,
-  taskListId,
+  taskid,
+  taskListid,
   disabled = false,
-  groupId,
-}: TodoFullCreateModalProps) {
+  groupid,
+}: TodoEditModalProps) {
   const [title, setTitle] = useState('');
-  const [repeat, setRepeat] = useState(todoRepeatOptions[0]);
-  const [repeatDays, setRepeatDays] = useState<string[]>([]);
   const [memo, setMemo] = useState('');
 
-  const { dateTime, setDate, setTime } = useDateTimePicker();
+  const queryClient = useQueryClient();
+
+  const frequencyLabelMap: Record<string, string> = {
+    ONCE: '한 번',
+    DAILY: '매일',
+    WEEKLY: '주 반복',
+    MONTHLY: '월 반복',
+  };
 
   const { triggerReload } = useTaskReload();
 
-  /* 반복 */
-  const repeatToFrequency: Record<
-    (typeof todoRepeatOptions)[number],
-    'ONCE' | 'DAILY' | 'WEEKLY' | 'MONTHLY'
-  > = {
-    '반복 안함': 'ONCE',
-    '한 번': 'ONCE',
-    매일: 'DAILY',
-    '주 반복': 'WEEKLY',
-    '월 반복': 'MONTHLY',
-  };
+  /* 상세 조회 */
+  const { data: taskData } = useQuery({
+    queryKey: ['task', groupid, taskListid, taskid],
+    queryFn: () => {
+      if (!groupid || !taskListid || !taskid) throw new Error('필수값 없음');
+      return fetchTask(groupid, taskListid, taskid);
+    },
+    enabled: !!groupid && !!taskListid && !!taskid,
+  });
 
-  /* 할 일 생성 */
-  const handleCreate = () => {
-    const frequencyType = repeatToFrequency[repeat];
+  useEffect(() => {
+    if (taskData?.data?.name) {
+      setTitle(taskData.data.name);
+    }
+    if (taskData?.data?.description) {
+      setMemo(taskData.data.description);
+    }
+  }, [taskData?.data?.name]);
 
-    const startDate =
-      DateTime.fromJSDate(dateTime ?? new Date())
-        .setZone('Asia/Seoul')
-        .toISO() ?? new Date().toISOString();
-
-    const body: CreateRecurringTaskBody = {
+  /* 할 일 수정 */
+  const handleEdit = () => {
+    const body: EditTaskBody = {
       name: title,
       description: memo,
-      startDate: startDate,
-      frequencyType,
+      done: !!taskData?.data?.doneAt,
     };
-
     mutation.mutate(body);
   };
 
   const mutation = useMutation({
-    mutationFn: (body: CreateRecurringTaskBody) => createRecurringTask(groupId!, taskListId!, body),
+    mutationFn: (body: { name: string; description: string; done: boolean }) =>
+      completeTask(groupid!, taskListid!, taskid!, body),
     onSuccess: () => {
       console.log('할일 생성 성공');
+      queryClient.invalidateQueries({
+        queryKey: ['task', groupid, taskListid, taskid],
+      });
       triggerReload();
     },
     onError: (error: AxiosError) => {
@@ -97,21 +108,20 @@ export default function TodoFullCreateModal({
     <Modal
       padding="todo"
       header={{
-        title: '할 일 만들기',
-        description: `할 일은 실제로 행동 가능한 작업 중심으로
-        작성해주시면 좋습니다.`,
+        title: '할 일 수정하기',
+        description: `날짜, 시간, 반복설정은 변경 할 수 없습니다.`,
       }}
       submitButton={{ label: '수정하기' }}
       isOpen={isOpen}
       onClose={onCloseAction}
-      onSubmit={handleCreate}
+      onSubmit={handleEdit}
       disabled={disabled}
     >
       <div className="scrollbar-hide mt-6 mb-2 flex max-h-[70vh] flex-col gap-6 overflow-y-auto">
         {/* 제목 */}
         <div className="flex flex-col gap-4">
           <label htmlFor="todo-title" className="text-lg-medium">
-            할 일 제목 {taskListId}
+            할 일 제목
           </label>
           <TextInput
             id="todo-title"
@@ -125,11 +135,17 @@ export default function TodoFullCreateModal({
         <div className="flex flex-col gap-4">
           <h2 className="text-lg-medium">시작 날짜 및 시간</h2>
           <div className="flex gap-2">
-            <div className="flex-1">
-              <DatePickerCalendar dateTime={dateTime} setDate={setDate} />
+            <div className="pointer-events-none flex-1">
+              <DatePickerCalendar
+                dateTime={new Date(taskData?.data?.recurring?.startDate ?? '')}
+                setDate={() => {}}
+              />
             </div>
-            <div className="flex-1">
-              <DatePickerTime dateTime={dateTime} setTime={setTime} />
+            <div className="pointer-events-none flex-1">
+              <DatePickerTime
+                dateTime={new Date(taskData?.data?.recurring?.startDate ?? '')}
+                setTime={() => {}}
+              />
             </div>
           </div>
         </div>
@@ -139,36 +155,11 @@ export default function TodoFullCreateModal({
           <h2 className="text-lg-medium">반복 설정</h2>
           <ArrowDropdown
             size="md"
-            options={todoRepeatOptions}
-            selected={repeat}
-            onSelect={(value) => setRepeat(value)}
-            className="w-[109px]"
+            selected={frequencyLabelMap[taskData?.data?.frequency ?? 'ONCE']}
+            options={Object.values(frequencyLabelMap)}
+            onSelect={() => {}}
+            className="pointer-events-none w-[109px] opacity-70"
           />
-          {repeat === '주 반복' && (
-            <div className="flex flex-col gap-3">
-              <h2 className="text-lg-medium">반복 요일</h2>
-              <div className="grid grid-cols-7 gap-1">
-                {weekDays.map((day, idx) => {
-                  const key = String(idx);
-                  const active = repeatDays.includes(key);
-                  return (
-                    <button
-                      key={day}
-                      type="button"
-                      className={`bg-bg500 text-md-medium h-12 rounded-xl p-2 ${active ? 'bg-primary' : ''}`}
-                      onClick={() =>
-                        setRepeatDays((prev) =>
-                          prev.includes(key) ? prev.filter((d) => d !== key) : [...prev, key]
-                        )
-                      }
-                    >
-                      {day}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-          )}
         </div>
 
         {/* 메모 */}

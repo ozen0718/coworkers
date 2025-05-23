@@ -22,6 +22,7 @@ import { useTaskReload } from '@/context/TaskReloadContext';
 import { deleteRecurringTask } from '@/api/detailPost';
 import { completeTask } from '@/api/detailPost';
 import { useEffect } from 'react';
+import TodoEditModal from '@/app/(pages)/(main)/[teamid]/tasklist/components/TodoFullCreateModal/TodoEditModal';
 
 type DetailPostProps = {
   groupId?: number;
@@ -37,7 +38,6 @@ export default function DetailPost({
   groupId,
   tasklistid,
   taskid,
-  title,
   onCloseAction,
 }: DetailPostProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
@@ -88,9 +88,11 @@ export default function DetailPost({
     setIsDropDownOpen((prev) => !prev);
   };
 
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+
   /* 할 일 수정 */
   const handleEdit = async () => {
-    console.log('할일 수정');
+    setEditModalOpen(true);
   };
 
   /* 할일 내용 */
@@ -188,7 +190,9 @@ export default function DetailPost({
           </div>
         )}
         <div className="mt-2 flex items-center md:w-[747px]">
-          <span className={clsx('text-xl-bold', isComplete && 'line-through')}>{title}</span>
+          <span className={clsx('text-xl-bold', isComplete && 'line-through')}>
+            {taskData?.data.name}
+          </span>
           <Image
             className="ml-auto flex h-[24px] min-h-[21px] max-w-[699px] cursor-pointer"
             src="/icons/kebab.svg"
@@ -257,6 +261,20 @@ export default function DetailPost({
           />
         ))}
       </div>
+
+      {isEditModalOpen && (
+        <TodoEditModal
+          isOpen={isEditModalOpen}
+          onCloseAction={() => setEditModalOpen(false)}
+          groupid={groupId!}
+          taskListid={tasklistid}
+          taskid={taskid!}
+          onSubmit={(newTodo) => {
+            console.log('수정 완료', newTodo);
+            setEditModalOpen(false);
+          }}
+        />
+      )}
 
       <Button
         variant={isComplete ? 'cancel' : 'complete'}
