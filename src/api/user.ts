@@ -23,6 +23,11 @@ export const fetchUser = async () => {
   return data;
 };
 
+export const fetchUserHistory = async () => {
+  const { data } = await axiosInstance.get('/user/history');
+  return data;
+};
+
 // teams를 포함해서 반환하는 함수
 export const getUserInfo = async (): Promise<ParsedUser & { teams: Team[] }> => {
   const { data } = await axiosInstance.get<RawUserResponse>('/user');

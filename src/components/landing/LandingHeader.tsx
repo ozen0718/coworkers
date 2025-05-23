@@ -6,6 +6,7 @@ import Repair from '@/assets/icons/Repair';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { useUserStore } from '@/stores/useUserStore';
 
 interface LandingHeaderProps {
   topImageSrc: string;
@@ -14,14 +15,17 @@ interface LandingHeaderProps {
 export default function LandingHeader({ topImageSrc }: LandingHeaderProps) {
   const router = useRouter();
   const { isLoggedIn, initializeAuth } = useAuthStore();
+  const { teams } = useUserStore();
 
   useEffect(() => {
     initializeAuth();
   }, []);
 
   const handleStartClick = () => {
+    const teamId = teams.length > 0 ? teams[0].id : null;
+
     if (isLoggedIn) {
-      router.push('/team');
+      router.push(`/${teamId}`);
     } else {
       router.push('/login');
     }
