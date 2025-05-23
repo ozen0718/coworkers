@@ -43,7 +43,12 @@ export default function PostDropdown({
           {options.map((option, idx) => (
             <div
               key={idx}
-              className="hover:bg-primary-hover cursor-pointer rounded-lg p-2"
+              className={clsx(
+                'cursor-pointer rounded-lg p-2',
+                option.label === '삭제하기'
+                  ? 'hover:bg-danger text-white'
+                  : 'hover:bg-primary-hover'
+              )}
               onClick={() => {
                 option.action();
                 toggleDropdown();

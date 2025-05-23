@@ -579,7 +579,7 @@ export default function TaskListPage() {
           </section>
 
           <button
-            disabled={taskLists.length === 0}
+            //disabled={taskLists.length === 0}
             onClick={() => setTodoModalOpen(true)}
             className={clsx(
               'bg-primary absolute right-6 bottom-6 rounded-full px-4 py-2 text-white shadow-lg',
