@@ -24,7 +24,8 @@ import { getGroupDetail } from '@/api/group.api';
 import { useTaskReload } from '@/context/TaskReloadContext';
 import DatePickerCalendar from './components/TodoFullCreateModal/DatePickerCalender';
 
-const MAX_LIST_NAME_LENGTH = 15;
+const MAX_LIST_NAME_LENGTH = 10;
+const KOREAN_CONSONANT_VOWEL_REGEX = /^[ㄱ-ㅎㅏ-ㅣ]+$/;
 
 interface Todo {
   id: number;
@@ -199,6 +200,10 @@ export default function TaskListPage() {
   const handleAddList = async () => {
     const name = newListName.trim().slice(0, MAX_LIST_NAME_LENGTH);
     if (!name) return;
+    if (KOREAN_CONSONANT_VOWEL_REGEX.test(name)) {
+      toast.error('자음이나 모음만으로는 목록을 생성할 수 없습니다.');
+      return;
+    }
     const formattedName = name;
 
     setIsLoading(true);
@@ -286,52 +291,54 @@ export default function TaskListPage() {
         <div className="relative mx-auto mt-6 max-w-[1200px] space-y-6 px-4 sm:px-6 md:px-8 lg:mt-10">
           <header className="space-y-4">
             <h1 className="text-2xl-medium text-white">할 일</h1>
-            <div className="text-gray300 relative flex items-center space-x-3 text-base">
-              <button onClick={prevDay}>
-                <Image src="/icons/type=left.svg" alt="이전" width={16} height={16} />
-              </button>
-              <button
-                className="rounded px-2 py-1 text-white transition hover:bg-gray-700 focus:outline-none"
-                onClick={() => setIsCalendarOpen(!isCalendarOpen)}
-                type="button"
-                aria-label="날짜 선택"
-              >
-                {format(currentDate, 'M월 d일 (eee)', { locale: ko })}
-              </button>
-              <button onClick={nextDay}>
-                <Image src="/icons/type=right.svg" alt="다음" width={16} height={16} />
-              </button>
-              <button
-                className="ml-2 rounded p-1 transition hover:bg-gray-700 focus:outline-none"
-                onClick={() => setIsCalendarOpen(!isCalendarOpen)}
-                type="button"
-                aria-label="달력 열기"
-              >
-                <Image src="/icons/icon_calendar.svg" alt="캘린더" width={16} height={16} />
-              </button>
-              {isCalendarOpen && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 sm:absolute sm:inset-auto sm:top-full sm:left-0 sm:mt-2 sm:flex-none sm:bg-transparent">
-                  <div className="w-full max-w-[320px] rounded-lg bg-gray-800 p-4 sm:w-auto">
-                    <DatePickerCalendar
-                      dateTime={currentDate}
-                      setDate={(date) => {
-                        if (date) {
-                          setCurrentDate(date);
-                          router.push(`?date=${format(date, 'yyyy-MM-dd')}`);
-                          setIsCalendarOpen(false);
-                        }
-                      }}
-                    />
+            <div className="text-gray300 flex items-center justify-between">
+              <div className="flex items-center space-x-3 text-base">
+                <button onClick={prevDay}>
+                  <Image src="/icons/type=left.svg" alt="이전" width={16} height={16} />
+                </button>
+                <button
+                  className="rounded px-2 py-1 text-white transition hover:bg-gray-700 focus:outline-none"
+                  onClick={() => setIsCalendarOpen(!isCalendarOpen)}
+                  type="button"
+                  aria-label="날짜 선택"
+                >
+                  {format(currentDate, 'M월 d일 (eee)', { locale: ko })}
+                </button>
+                <button onClick={nextDay}>
+                  <Image src="/icons/type=right.svg" alt="다음" width={16} height={16} />
+                </button>
+                <button
+                  className="ml-2 rounded p-1 transition hover:bg-gray-700 focus:outline-none"
+                  onClick={() => setIsCalendarOpen(!isCalendarOpen)}
+                  type="button"
+                  aria-label="달력 열기"
+                >
+                  <Image src="/icons/icon_calendar.svg" alt="캘린더" width={16} height={16} />
+                </button>
+                {isCalendarOpen && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 sm:absolute sm:inset-auto sm:top-full sm:left-0 sm:mt-2 sm:flex-none sm:bg-transparent">
+                    <div className="w-full max-w-[320px] rounded-lg bg-gray-800 p-4 sm:w-auto">
+                      <DatePickerCalendar
+                        dateTime={currentDate}
+                        setDate={(date) => {
+                          if (date) {
+                            setCurrentDate(date);
+                            router.push(`?date=${format(date, 'yyyy-MM-dd')}`);
+                            setIsCalendarOpen(false);
+                          }
+                        }}
+                      />
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
+              <button
+                className="text-primary text-sm font-medium hover:underline"
+                onClick={() => setListModalOpen(true)}
+              >
+                + 새로운 목록 추가하기
+              </button>
             </div>
-            <button
-              className="text-primary text-sm font-medium hover:underline"
-              onClick={() => setListModalOpen(true)}
-            >
-              + 새로운 목록 추가하기
-            </button>
           </header>
 
           {taskLists.length > 0 && (
@@ -364,10 +371,8 @@ export default function TaskListPage() {
                 ))}
               </ul>
             ) : (
-              <div className="pointer-events-none inset-0 flex items-center justify-center">
-                <p className="text-gray500 pointer-events-auto text-center">
-                  아직 할 일 목록이 없습니다.
-                </p>
+              <div className="flex h-[calc(100vh-24rem)] items-center justify-center">
+                <p className="text-gray500 text-center">아직 할 일 목록이 없습니다.</p>
               </div>
             )}
 
@@ -431,6 +436,7 @@ export default function TaskListPage() {
             placeholder="목록 이름을 입력해주세요."
             className="w-full text-gray-300 placeholder-gray-500"
             disabled={isLoading}
+            maxLength={MAX_LIST_NAME_LENGTH}
           />
         </div>
       </Modal>
