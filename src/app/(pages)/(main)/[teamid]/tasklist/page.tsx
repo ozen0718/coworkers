@@ -144,9 +144,11 @@ const TaskListDropdown: React.FC<{
 
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
+      document.body.style.overflow = 'hidden';
     }
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.body.style.overflow = 'auto';
     };
   }, [isOpen, onToggle]);
 
@@ -180,41 +182,45 @@ const TaskListDropdown: React.FC<{
           <div className="fixed inset-0 z-50 sm:hidden">
             <div className="fixed inset-0 bg-black/50" onClick={onToggle} />
 
-            <div className="fixed right-0 bottom-0 left-0 max-h-[50vh] overflow-y-auto rounded-t-2xl bg-gray-800 p-4">
-              <div className="mb-4 flex items-center justify-between">
-                <h3 className="text-lg font-medium text-white">목록 선택</h3>
-                <button
-                  onClick={onToggle}
-                  className="rounded-lg p-2 text-gray-400 hover:bg-gray-700"
-                >
-                  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div className="space-y-2">
-                {taskLists.slice(visibleCount).map((taskList) => (
+            <div className="fixed right-0 bottom-0 left-0 max-h-[50vh] rounded-t-2xl bg-gray-800">
+              <div className="sticky top-0 z-10 rounded-lg bg-gray-800 p-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="p-4 text-lg font-medium text-white">목록 선택</h3>
                   <button
-                    key={taskList.id}
-                    className={clsx(
-                      'w-full rounded-lg px-4 py-3 text-left text-sm',
-                      taskList.id === selectedTaskList?.id
-                        ? 'bg-gray-700 text-white'
-                        : 'text-gray-300 hover:bg-gray-700'
-                    )}
-                    onClick={() => {
-                      onSelect(taskList);
-                      onToggle();
-                    }}
+                    onClick={onToggle}
+                    className="rounded-lg p-2 text-gray-400 hover:bg-gray-700"
                   >
-                    {taskList.name}
+                    <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
                   </button>
-                ))}
+                </div>
+              </div>
+              <div className="h-[calc(50vh-80px)] overflow-y-auto px-4 pb-4">
+                <div className="space-y-2">
+                  {taskLists.slice(visibleCount).map((taskList) => (
+                    <button
+                      key={taskList.id}
+                      className={clsx(
+                        'w-full rounded-lg px-4 py-3 text-left text-sm',
+                        taskList.id === selectedTaskList?.id
+                          ? 'bg-gray-700 text-white'
+                          : 'text-gray-300 hover:bg-gray-700'
+                      )}
+                      onClick={() => {
+                        onSelect(taskList);
+                        onToggle();
+                      }}
+                    >
+                      {taskList.name}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
