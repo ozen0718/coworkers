@@ -8,6 +8,7 @@ import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { createArticle } from '@/api/articles';
 import { useQueryClient } from '@tanstack/react-query';
+import { useEffect } from 'react';
 
 export default function CreateBoard() {
   const router = useRouter();
@@ -16,6 +17,10 @@ export default function CreateBoard() {
   const [title, setTitle] = useState<string>('');
   const [content, setContent] = useState<string>('');
   const [image, setImage] = useState<string>('');
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleSubmit = async () => {
     try {
