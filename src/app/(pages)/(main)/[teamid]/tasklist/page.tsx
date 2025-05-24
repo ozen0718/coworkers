@@ -242,16 +242,31 @@ export default function TaskListPage() {
     return dateParam ? new Date(dateParam) : new Date();
   });
 
+  // URL의 date 파라미터 변경을 감지하여 페이지 날짜 업데이트
+  useEffect(() => {
+    const dateParam = searchParams.get('date');
+    if (dateParam) {
+      const newDate = new Date(dateParam);
+      if (newDate.toString() !== 'Invalid Date') {
+        setCurrentDate(newDate);
+      }
+    }
+  }, [searchParams]);
+
   const prevDay = () => {
     const newDate = addDays(currentDate, -1);
     setCurrentDate(newDate);
-    router.push(`?date=${format(newDate, 'yyyy-MM-dd')}`);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('date', format(newDate, 'yyyy-MM-dd'));
+    router.push(`/${teamId}/tasklist?${params.toString()}`);
   };
 
   const nextDay = () => {
-    const newDate = addDays(currentDate, +1);
+    const newDate = addDays(currentDate, 1);
     setCurrentDate(newDate);
-    router.push(`?date=${format(newDate, 'yyyy-MM-dd')}`);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('date', format(newDate, 'yyyy-MM-dd'));
+    router.push(`/${teamId}/tasklist?${params.toString()}`);
   };
 
   const dateKey = format(currentDate, 'yyyy-MM-dd');
@@ -359,7 +374,6 @@ export default function TaskListPage() {
       });
 
       setTaskLists((prev) => [...prev, newTaskList]);
-
       setNewListName('');
       setListModalOpen(false);
       toast.success('새로운 목록이 생성되었습니다.');
@@ -452,7 +466,9 @@ export default function TaskListPage() {
                           setDate={(date) => {
                             if (date) {
                               setCurrentDate(date);
-                              router.push(`?date=${format(date, 'yyyy-MM-dd')}`);
+                              const params = new URLSearchParams(searchParams.toString());
+                              params.set('date', format(date, 'yyyy-MM-dd'));
+                              router.push(`/${teamId}/tasklist?${params.toString()}`);
                               setIsCalendarOpen(false);
                             }
                           }}
@@ -493,7 +509,9 @@ export default function TaskListPage() {
                           setDate={(date) => {
                             if (date) {
                               setCurrentDate(date);
-                              router.push(`?date=${format(date, 'yyyy-MM-dd')}`);
+                              const params = new URLSearchParams(searchParams.toString());
+                              params.set('date', format(date, 'yyyy-MM-dd'));
+                              router.push(`/${teamId}/tasklist?${params.toString()}`);
                               setIsCalendarOpen(false);
                             }
                           }}
