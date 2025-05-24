@@ -63,9 +63,15 @@ export default function DetailPost({
       if (!taskid) throw new Error('taskid 없음');
       return createComment(taskid, { content });
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('댓글이 작성되었습니다');
-      if (taskid) queryClient.invalidateQueries({ queryKey: ['comments', taskid] });
+      console.log('Invalidate task 쿼리 실행');
+      console.log('groupId', groupId);
+      console.log('tasklistid', tasklistid);
+      console.log('taskid', taskid);
+      queryClient.invalidateQueries({ queryKey: ['comments', taskid] });
+      await refetchTask();
+      await queryClient.invalidateQueries({ queryKey: ['task', groupId, tasklistid, taskid] });
     },
     onError: () => {
       toast.error('댓글 작성 실패');
@@ -82,6 +88,7 @@ export default function DetailPost({
       return;
     }
     mutation.mutate(content);
+    //triggerReload();
   };
 
   const toggleDropdown = () => {
@@ -96,13 +103,14 @@ export default function DetailPost({
   };
 
   /* 할일 내용 */
-  const { data: taskData } = useQuery({
+  const { data: taskData, refetch: refetchTask } = useQuery({
     queryKey: ['task', groupId, tasklistid, taskid],
     queryFn: () => {
       if (!groupId || !tasklistid || !taskid) throw new Error('필수값 없음');
       return fetchTask(groupId, tasklistid, taskid);
     },
     enabled: !!groupId && !!tasklistid && !!taskid,
+    staleTime: 0,
   });
 
   /* 할일 삭제 */
@@ -191,7 +199,7 @@ export default function DetailPost({
         )}
         <div className="mt-2 flex items-center md:w-[747px]">
           <span className={clsx('text-xl-bold', isComplete && 'line-through')}>
-            {taskData?.data.name}
+            {taskData?.data.name} 댓글{taskData?.data.commentCount}
           </span>
           <Image
             className="ml-auto flex h-[24px] min-h-[21px] max-w-[699px] cursor-pointer"

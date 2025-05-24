@@ -62,17 +62,18 @@ export default function TodoItem({
     console.log('수정 눌렀따');
     setIsDropDownOpen(false);
     setEditModalOpen(true);
-    //triggerReload();
+    refetchTask();
   };
 
   /* 할일 내용 */
-  const { data: taskData } = useQuery({
+  const { data: taskData, refetch: refetchTask } = useQuery({
     queryKey: ['task', groupId, tasklistid, taskid],
     queryFn: () => {
       if (!groupId || !tasklistid || !taskid) throw new Error('필수값 없음');
       return fetchTask(groupId, tasklistid, taskid);
     },
     enabled: !!groupId && !!tasklistid && !!taskid,
+    staleTime: 0,
   });
 
   /* 할일 삭제 */
