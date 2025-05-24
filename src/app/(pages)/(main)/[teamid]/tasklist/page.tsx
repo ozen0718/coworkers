@@ -375,7 +375,6 @@ export default function TaskListPage() {
       });
 
       setTaskLists((prev) => [...prev, newTaskList]);
-
       setNewListName('');
       setListModalOpen(false);
       toast.success('새로운 목록이 생성되었습니다.');
