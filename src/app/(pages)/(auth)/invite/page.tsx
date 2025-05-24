@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense } from 'react';
-import InvitePageContent from './InvitePageContent';
+import InvitePageContent from '@/app/(pages)/(auth)/invite/InvitePageContent';
 
 export default function InvitePage() {
   return (

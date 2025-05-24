@@ -242,16 +242,31 @@ export default function TaskListPage() {
     return dateParam ? new Date(dateParam) : new Date();
   });
 
+  // URL의 date 파라미터 변경을 감지하여 페이지 날짜 업데이트
+  useEffect(() => {
+    const dateParam = searchParams.get('date');
+    if (dateParam) {
+      const newDate = new Date(dateParam);
+      if (newDate.toString() !== 'Invalid Date') {
+        setCurrentDate(newDate);
+      }
+    }
+  }, [searchParams]);
+
   const prevDay = () => {
     const newDate = addDays(currentDate, -1);
     setCurrentDate(newDate);
-    router.push(`?date=${format(newDate, 'yyyy-MM-dd')}`);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('date', format(newDate, 'yyyy-MM-dd'));
+    router.push(`/${teamId}/tasklist?${params.toString()}`);
   };
 
   const nextDay = () => {
-    const newDate = addDays(currentDate, +1);
+    const newDate = addDays(currentDate, 1);
     setCurrentDate(newDate);
-    router.push(`?date=${format(newDate, 'yyyy-MM-dd')}`);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('date', format(newDate, 'yyyy-MM-dd'));
+    router.push(`/${teamId}/tasklist?${params.toString()}`);
   };
 
   const dateKey = format(currentDate, 'yyyy-MM-dd');
@@ -324,7 +339,6 @@ export default function TaskListPage() {
       try {
         const tasks = await getTasksByTaskList(groupId, taskList.id, dateKey);
         const todos = tasks.map(convertTaskToTodo);
-        console.log('convertTaskToTodo', convertTaskToTodo);
 
         console.log('todos', todos);
         setTodoList(todos);
@@ -360,7 +374,6 @@ export default function TaskListPage() {
       });
 
       setTaskLists((prev) => [...prev, newTaskList]);
-
       setNewListName('');
       setListModalOpen(false);
       toast.success('새로운 목록이 생성되었습니다.');
@@ -453,7 +466,9 @@ export default function TaskListPage() {
                           setDate={(date) => {
                             if (date) {
                               setCurrentDate(date);
-                              router.push(`?date=${format(date, 'yyyy-MM-dd')}`);
+                              const params = new URLSearchParams(searchParams.toString());
+                              params.set('date', format(date, 'yyyy-MM-dd'));
+                              router.push(`/${teamId}/tasklist?${params.toString()}`);
                               setIsCalendarOpen(false);
                             }
                           }}
@@ -494,7 +509,9 @@ export default function TaskListPage() {
                           setDate={(date) => {
                             if (date) {
                               setCurrentDate(date);
-                              router.push(`?date=${format(date, 'yyyy-MM-dd')}`);
+                              const params = new URLSearchParams(searchParams.toString());
+                              params.set('date', format(date, 'yyyy-MM-dd'));
+                              router.push(`/${teamId}/tasklist?${params.toString()}`);
                               setIsCalendarOpen(false);
                             }
                           }}
@@ -547,12 +564,12 @@ export default function TaskListPage() {
           )}
 
           <section className="min-h-[calc(100vh-16rem)]">
-            {todoList.length > 0 ? (
+            {selectedTaskList && todoList.length > 0 ? (
               <ul className="space-y-4">
                 {todoList.map((todo) => (
                   <li key={todo.id}>
                     <div onClick={() => handleOpenDetail(todo)}>
-                      <TodoItem {...todo} />
+                      <TodoItem tasklistid={selectedTaskList.id} taskid={todo.id} {...todo} />
                     </div>
                   </li>
                 ))}
@@ -579,7 +596,7 @@ export default function TaskListPage() {
           </section>
 
           <button
-            disabled={taskLists.length === 0}
+            //disabled={taskLists.length === 0}
             onClick={() => setTodoModalOpen(true)}
             className={clsx(
               'bg-primary absolute right-6 bottom-6 rounded-full px-4 py-2 text-white shadow-lg',

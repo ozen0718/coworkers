@@ -15,6 +15,8 @@ import { useMutation } from '@tanstack/react-query';
 import { CreateRecurringTaskBody } from '@/api/createTask';
 import { useTaskReload } from '@/context/TaskReloadContext';
 import { DateTime } from 'luxon';
+import { toast } from 'react-hot-toast';
+import { format } from 'date-fns';
 
 export interface TodoFullCreateModalProps {
   isOpen: boolean;
@@ -63,10 +65,37 @@ export default function TodoFullCreateModal({
     '월 반복': 'MONTHLY',
   };
 
-  /* 할 일 생성 */
-  const handleCreate = () => {
-    const frequencyType = repeatToFrequency[repeat];
+  const dayToNumber: Record<string, number> = {
+    일: 0,
+    월: 1,
+    화: 2,
+    수: 3,
+    목: 4,
+    금: 5,
+    토: 6,
+  };
 
+  /* 할 일 생성 */
+  const handleCreate = async () => {
+    if (!title.trim()) {
+      toast.error('할 일 제목을 입력해주세요.');
+      return;
+    }
+
+    if (!dateTime) {
+      toast.error('날짜를 선택해주세요.');
+      return;
+    }
+
+    const selectedDate = format(dateTime, 'yyyy-MM-dd');
+    const taskListDate = format(new Date(), 'yyyy-MM-dd');
+
+    if (selectedDate !== taskListDate) {
+      toast.error('선택한 날짜에 해당하는 목록이 없습니다.');
+      return;
+    }
+
+    const frequencyType = repeatToFrequency[repeat];
     const startDate =
       DateTime.fromJSDate(dateTime ?? new Date())
         .setZone('Asia/Seoul')
@@ -79,13 +108,33 @@ export default function TodoFullCreateModal({
       frequencyType,
     };
 
-    mutation.mutate(body);
+    // 주 반복인 경우 요일 설정
+    if (frequencyType === 'WEEKLY') {
+      if (repeatDays.length === 0) {
+        toast.error('반복할 요일을 선택해주세요.');
+        return;
+      }
+      body.weekDays = repeatDays.map((day) => dayToNumber[day]);
+    }
+
+    // 월 반복인 경우 일자 설정
+    if (frequencyType === 'MONTHLY') {
+      body.monthDay = dateTime.getDate();
+    }
+
+    try {
+      await mutation.mutateAsync(body);
+      toast.success('할일이 생성되었습니다.');
+      onCloseAction();
+    } catch (error) {
+      console.error('할일 생성 실패', error);
+      toast.error('할일 생성에 실패했습니다.');
+    }
   };
 
   const mutation = useMutation({
     mutationFn: (body: CreateRecurringTaskBody) => createRecurringTask(groupId!, taskListId!, body),
     onSuccess: () => {
-      console.log('할일 생성 성공');
       triggerReload();
     },
     onError: (error: AxiosError) => {
@@ -105,13 +154,13 @@ export default function TodoFullCreateModal({
       isOpen={isOpen}
       onClose={onCloseAction}
       onSubmit={handleCreate}
-      disabled={disabled}
+      disabled={disabled || title.trim() === ''}
     >
       <div className="scrollbar-hide mt-6 mb-2 flex max-h-[70vh] flex-col gap-6 overflow-y-auto">
         {/* 제목 */}
         <div className="flex flex-col gap-4">
           <label htmlFor="todo-title" className="text-lg-medium">
-            할 일 제목 {taskListId}
+            <span className="text-primary">*</span> 할 일 제목 {taskListId}
           </label>
           <TextInput
             id="todo-title"
@@ -123,7 +172,9 @@ export default function TodoFullCreateModal({
 
         {/* 날짜 + 시간 */}
         <div className="flex flex-col gap-4">
-          <h2 className="text-lg-medium">시작 날짜 및 시간</h2>
+          <h2 className="text-lg-medium">
+            <span className="text-primary">*</span> 시작 날짜 및 시간
+          </h2>
           <div className="flex gap-2">
             <div className="flex-1">
               <DatePickerCalendar dateTime={dateTime} setDate={setDate} />
@@ -136,7 +187,9 @@ export default function TodoFullCreateModal({
 
         {/* 반복 설정 */}
         <div className="flex flex-col gap-4">
-          <h2 className="text-lg-medium">반복 설정</h2>
+          <h2 className="text-lg-medium">
+            <span className="text-primary">*</span> 반복 설정
+          </h2>
           <ArrowDropdown
             size="md"
             options={todoRepeatOptions}
@@ -148,9 +201,8 @@ export default function TodoFullCreateModal({
             <div className="flex flex-col gap-3">
               <h2 className="text-lg-medium">반복 요일</h2>
               <div className="grid grid-cols-7 gap-1">
-                {weekDays.map((day, idx) => {
-                  const key = String(idx);
-                  const active = repeatDays.includes(key);
+                {weekDays.map((day) => {
+                  const active = repeatDays.includes(day);
                   return (
                     <button
                       key={day}
@@ -158,7 +210,7 @@ export default function TodoFullCreateModal({
                       className={`bg-bg500 text-md-medium h-12 rounded-xl p-2 ${active ? 'bg-primary' : ''}`}
                       onClick={() =>
                         setRepeatDays((prev) =>
-                          prev.includes(key) ? prev.filter((d) => d !== key) : [...prev, key]
+                          prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
                         )
                       }
                     >
