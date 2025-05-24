@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useUserStore } from '@/stores/useUserStore';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 
 interface SideMenuProps {
   isOpen: boolean;
@@ -14,6 +14,7 @@ interface SideMenuProps {
 export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
   const { teams } = useUserStore();
   const router = useRouter();
+  const pathname = usePathname();
 
   if (!isOpen) return null;
 
@@ -21,6 +22,8 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
     router.push(`/${teamId}`);
     onClose();
   };
+
+  const isFreeBoardSelected = pathname === '/boards';
 
   return (
     <>
@@ -31,16 +34,26 @@ export default function SideMenu({ isOpen, onClose }: SideMenuProps) {
         </button>
 
         <div className="flex flex-col gap-6">
-          {teams.map((team) => (
-            <div
-              key={team.id}
-              className="text-md-medium hover:bg-bg300 cursor-pointer rounded px-2 py-1"
-              onClick={() => handleTeamClick(team.id)}
-            >
-              {team.name}
-            </div>
-          ))}
-          <Link href="/articles" className="text-primary text-md-medium px-2 py-1">
+          {teams.map((team) => {
+            const isSelected = pathname === `/${team.id}`;
+            return (
+              <div
+                key={team.id}
+                className={`text-md-medium cursor-pointer rounded px-2 py-1 ${isSelected ? 'text-primary font-bold' : 'hover:bg-bg300 text-white'} `}
+                onClick={() => handleTeamClick(team.id)}
+              >
+                {team.name}
+              </div>
+            );
+          })}
+
+          <Link
+            href="/boards"
+            className={`text-md-medium rounded px-2 py-1 ${
+              isFreeBoardSelected ? 'text-primary font-bold' : 'hover:bg-bg300 text-white'
+            }`}
+            onClick={onClose}
+          >
             자유게시판
           </Link>
         </div>
