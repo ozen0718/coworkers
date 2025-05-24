@@ -5,7 +5,7 @@ export interface CreateRecurringTaskBody {
   description: string;
   startDate?: string; // 할일 날짜
   frequencyType?: string;
-  weekDays?: string[]; // weekly인 경우
+  weekDays?: number[]; // weekly인 경우
   monthDay?: number; // monthly인 경우
   done?: boolean;
 }
