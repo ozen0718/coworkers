@@ -1,14 +1,21 @@
+// src/hooks/useJoinTeamForm.ts
 'use client';
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import { joinTeam } from '@/api/TeamCreate';
 import { acceptGroupInvitation } from '@/api/group.api';
 import { useInvitedUserInfo } from '@/hooks/useInvitePageInfo';
+import { getUserInfo } from '@/api/user';
+import { useUserStore } from '@/stores/useUserStore';
+import { QUERY_KEYS } from '@/constants/queryKeys';
 
 export function useJoinTeamForm() {
   const router = useRouter();
+  const qc = useQueryClient();
   const { email } = useInvitedUserInfo();
+  const setUserInfo = useUserStore((s) => s.setUserInfo);
 
   const [link, setLink] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -21,14 +28,10 @@ export function useJoinTeamForm() {
     setSubmitError(null);
   };
 
-  const extractTokenFromLink = (link: string) => {
+  const extractTokenFromLink = (link: string): string | null => {
     try {
       const url = new URL(link);
-      const token = url.searchParams.get('token');
-      if (!token) {
-        throw new Error('No token found');
-      }
-      return token;
+      return url.searchParams.get('token');
     } catch {
       return null;
     }
@@ -42,20 +45,34 @@ export function useJoinTeamForm() {
 
     setIsLoading(true);
     try {
-      // Check if the link is an invitation link
       const token = extractTokenFromLink(link);
+      let targetId: string;
+
       if (token) {
         if (!email) {
           setSubmitError('이메일 정보를 가져오지 못했습니다.');
           return;
         }
         const { groupId } = await acceptGroupInvitation({ email, token });
-        router.push(`/${groupId}`);
+        targetId = String(groupId);
       } else {
-        // Handle regular team join link
         const { id } = await joinTeam(link);
-        router.push(`/main/${id}`);
+        targetId = String(id);
       }
+
+      // 1) 최신 유저 정보 받아와 Zustand 스토어에 업데이트
+      const fresh = await getUserInfo();
+      setUserInfo({
+        nickname: fresh.nickname,
+        profileImage: fresh.profileImage,
+        teams: fresh.teams,
+      });
+
+      // 2) React Query 캐시 무효화 → Header 쪽 useQuery가 즉시 refetch
+      await qc.invalidateQueries({ queryKey: QUERY_KEYS.user.me });
+
+      // 3) 올바른 경로로 이동
+      router.push(`/${targetId}`);
     } catch (err: unknown) {
       if (err instanceof Error) {
         if (err.message === 'NOT_FOUND') {
