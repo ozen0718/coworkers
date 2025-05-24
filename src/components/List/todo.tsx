@@ -140,7 +140,7 @@ export default function TodoItem({
               height={16}
               className="text-gray-300"
             />
-            <span className="text-xs text-gray-300">{comments}</span>
+            <span className="text-xs text-gray-300">{taskData?.data.commentCount}</span>
           </button>
         </div>
 
