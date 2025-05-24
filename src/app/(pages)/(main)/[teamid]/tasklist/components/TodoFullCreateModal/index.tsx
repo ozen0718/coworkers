@@ -11,18 +11,20 @@ import DatePickerTime from './DatePickerTime';
 
 import { AxiosError } from 'axios';
 import { createRecurringTask } from '@/api/createTask';
+import { createTaskList } from '@/api/tasklist.api';
 import { useMutation } from '@tanstack/react-query';
 import { CreateRecurringTaskBody } from '@/api/createTask';
 import { useTaskReload } from '@/context/TaskReloadContext';
 import { DateTime } from 'luxon';
 import { toast } from 'react-hot-toast';
-import { format } from 'date-fns';
+import { format, addDays } from 'date-fns';
 
 export interface TodoFullCreateModalProps {
   isOpen: boolean;
   onCloseAction: () => void;
   taskListId?: number;
   groupId?: number;
+  selectedTaskList?: { id: number; name: string };
   onSubmit: (newTodo: {
     title: string;
     date: Date | null;
@@ -43,6 +45,7 @@ export default function TodoFullCreateModal({
   taskListId,
   disabled = false,
   groupId,
+  selectedTaskList,
 }: TodoFullCreateModalProps) {
   const [title, setTitle] = useState('');
   const [repeat, setRepeat] = useState(todoRepeatOptions[0]);
@@ -87,19 +90,16 @@ export default function TodoFullCreateModal({
       return;
     }
 
-    const selectedDate = format(dateTime, 'yyyy-MM-dd');
-    const taskListDate = format(new Date(), 'yyyy-MM-dd');
-
-    if (selectedDate !== taskListDate) {
-      toast.error('선택한 날짜에 해당하는 목록이 없습니다.');
-      return;
-    }
-
     const frequencyType = repeatToFrequency[repeat];
-    const startDate =
-      DateTime.fromJSDate(dateTime ?? new Date())
-        .setZone('Asia/Seoul')
-        .toISO() ?? new Date().toISOString();
+    // 서울 시간 기준으로 날짜 설정
+    const startDate = new Date(
+      dateTime.getFullYear(),
+      dateTime.getMonth(),
+      dateTime.getDate(),
+      0,
+      0,
+      0
+    ).toISOString();
 
     const body: CreateRecurringTaskBody = {
       name: title,
@@ -123,6 +123,7 @@ export default function TodoFullCreateModal({
     }
 
     try {
+      // 반복 할일 생성
       await mutation.mutateAsync(body);
       toast.success('할일이 생성되었습니다.');
       onCloseAction();

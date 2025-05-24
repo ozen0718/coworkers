@@ -235,7 +235,7 @@ export default function TaskListPage() {
     // return;
   }
 
-  const { reloadKey } = useTaskReload();
+  const { reloadKey, triggerReload } = useTaskReload();
 
   const [currentDate, setCurrentDate] = useState(() => {
     const dateParam = searchParams.get('date');
@@ -310,16 +310,12 @@ export default function TaskListPage() {
     const fetchTaskLists = async () => {
       setIsLoading(true);
       try {
+        // 모든 목록을 가져옴 (날짜 필터링 없음)
         const { taskLists } = await getGroupDetail(groupId);
-        const filteredTaskLists = taskLists.filter((taskList) => {
-          const taskListDate = format(new Date(taskList.createdAt), 'yyyy-MM-dd');
-          return taskListDate === dateKey;
-        });
+        setTaskLists(taskLists);
 
-        setTaskLists(filteredTaskLists);
-
-        if (filteredTaskLists.length > 0) {
-          setSelectedTaskList(filteredTaskLists[0]);
+        if (taskLists.length > 0) {
+          setSelectedTaskList(taskLists[0]);
         } else {
           setSelectedTaskList(null);
         }
@@ -332,15 +328,24 @@ export default function TaskListPage() {
     };
 
     fetchTaskLists();
-  }, [groupId, dateKey, reloadKey]);
+  }, [groupId, reloadKey]);
 
   useEffect(() => {
     const loadTasksForList = async (taskList: TaskList) => {
       try {
-        const tasks = await getTasksByTaskList(groupId, taskList.id, dateKey);
-        const todos = tasks.map(convertTaskToTodo);
+        // 현재 날짜의 ISO 문자열 생성 (서울 시간 기준)
+        const isoDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate(),
+          0,
+          0,
+          0
+        ).toISOString();
 
-        console.log('todos', todos);
+        // date 파라미터로 해당 날짜의 할일 조회 (반복 할일 포함)
+        const tasks = await getTasksByTaskList(groupId, taskList.id, isoDate);
+        const todos = tasks.map(convertTaskToTodo);
         setTodoList(todos);
       } catch (error) {
         console.error(`Failed to load tasks for list ${taskList.name}:`, error);
@@ -351,7 +356,20 @@ export default function TaskListPage() {
     if (selectedTaskList) {
       loadTasksForList(selectedTaskList);
     }
-  }, [selectedTaskList, groupId, dateKey, reloadKey]);
+  }, [selectedTaskList, groupId, currentDate, reloadKey]);
+
+  // 자정에 자동으로 데이터 갱신
+  useEffect(() => {
+    const now = new Date();
+    const nextMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
+    const msUntilMidnight = nextMidnight.getTime() - now.getTime();
+
+    const timer = setTimeout(() => {
+      triggerReload();
+    }, msUntilMidnight);
+
+    return () => clearTimeout(timer);
+  }, [triggerReload]);
 
   const handleAddList = async () => {
     const name = newListName.trim().slice(0, MAX_LIST_NAME_LENGTH);
@@ -368,6 +386,7 @@ export default function TaskListPage() {
 
     setIsLoading(true);
     try {
+      // 현재 날짜의 목록만 생성
       const newTaskList = await createTaskList({
         groupId,
         name: formattedName,
@@ -616,6 +635,9 @@ export default function TaskListPage() {
         disabled={!selectedTaskList?.id || isLoading}
         taskListId={selectedTaskList?.id}
         groupId={groupId}
+        selectedTaskList={
+          selectedTaskList ? { id: selectedTaskList.id, name: selectedTaskList.name } : undefined
+        }
       />
 
       <Modal
