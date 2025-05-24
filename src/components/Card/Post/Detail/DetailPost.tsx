@@ -91,7 +91,7 @@ export default function DetailPost({
   const [isEditModalOpen, setEditModalOpen] = useState(false);
 
   /* 할 일 수정 */
-  const handleEdit = async () => {
+  const handleEdit: () => void = () => {
     setEditModalOpen(true);
   };
 

@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 import { useMutation } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
 import { fetchTask, deleteTask, deleteRecurringTask } from '@/api/detailPost';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface TodoItemProps {
   tasklistid?: number;
@@ -39,20 +40,7 @@ export default function TodoItem({
 
   const { triggerReload } = useTaskReload();
 
-  /* 할 일 수정 */
-  const handleEdit = async () => {
-    setEditModalOpen(true);
-  };
-
-  /* 할 일 삭제 */
-  /*
-  const handleDelete = () => {
-    console.log('삭제');
-    console.log('tasklistid', tasklistid);
-    console.log('taskid', taskid);
-    setIsDropDownOpen(false);
-  };
-  */
+  const queryClient = useQueryClient();
 
   const toggleDropdown = () => {
     setIsDropDownOpen((prev) => !prev);
@@ -61,6 +49,14 @@ export default function TodoItem({
   /* 그룹 아이디 */
   const pathname = window.location.pathname;
   const groupId = Number(pathname.split('/')[1]);
+
+  /* 할 일 수정 */
+  const handleEdit: () => void = () => {
+    console.log('수정 눌렀따');
+    setIsDropDownOpen(false);
+    setEditModalOpen(true);
+    //triggerReload();
+  };
 
   /* 할일 내용 */
   const { data: taskData } = useQuery({
@@ -72,6 +68,7 @@ export default function TodoItem({
     enabled: !!groupId && !!tasklistid && !!taskid,
   });
 
+  /* 할일 삭제 */
   const deleteMutation = useMutation({
     mutationFn: async () => {
       if (!groupId || !tasklistid || !taskid) throw new Error('필수 값 없음');
@@ -181,11 +178,11 @@ export default function TodoItem({
             height={12}
             className="h-3 w-3"
           />
-          <span>{date}</span>
+          <span>{taskData?.data.recurring.createdAt.slice(0, 10)}</span>
         </div>
         <div className="flex items-center space-x-1">
           <Image src="/icons/icon_time.svg" alt="시간" width={12} height={12} className="h-3 w-3" />
-          <span>{time}</span>
+          <span>{taskData?.data.recurring.createdAt.slice(11, 16)}</span>
         </div>
         <div className="flex items-center space-x-1">
           <Image
@@ -201,15 +198,20 @@ export default function TodoItem({
         </div>
       </div>
 
-      {isEditModalOpen && (
+      {tasklistid !== undefined && taskid !== undefined && isEditModalOpen && (
         <TodoEditModal
           isOpen={isEditModalOpen}
           onCloseAction={() => setEditModalOpen(false)}
           groupid={groupId!}
-          taskListid={4047}
-          taskid={23511}
+          taskListid={tasklistid}
+          taskid={taskid}
           onSubmit={() => {
             setEditModalOpen(false);
+            if (groupId && tasklistid && taskid) {
+              queryClient.invalidateQueries({
+                queryKey: ['task', groupId, tasklistid, taskid],
+              });
+            }
           }}
         />
       )}
