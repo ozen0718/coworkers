@@ -179,6 +179,19 @@ export default function TeamPage() {
     setFutureDate(getFutureDateString(100));
   }, []);
 
+  useEffect(() => {
+    if (!groupId || taskListIds.length === 0 || !futureDate || !todayDate) return;
+
+    taskListIds.forEach((taskListId) => {
+      queryClient.invalidateQueries({
+        queryKey: ['tasks', groupId, taskListId, 'today', todayDate],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [{ groupId, taskListId, type: 'future', date: futureDate }],
+      });
+    });
+  }, [groupId, taskListIds, futureDate, todayDate, queryClient]);
+
   const [newestTasks, setNewestTasks] = useState<NewestTaskProps[]>([]);
   const prevNewestRef = useRef<string>('');
 
