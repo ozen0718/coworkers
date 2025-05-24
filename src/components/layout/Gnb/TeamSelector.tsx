@@ -1,20 +1,26 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { useRef, useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import { useUserStore } from '@/stores/useUserStore';
 import { useSelectedTeamStore } from '@/stores/useSelectedTeamStore';
-import { useParams } from 'next/navigation';
 import SelectableDropdown from '@/components/dropdown/SelectableDropdown';
 import DropDownGroupsItem, { GroupOption } from '@/components/dropdown/Groups';
+import useClickOutside from '@/hooks/useClickOutside';
 
 export default function TeamSelector() {
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
   const teams = useUserStore((s) => s.teams) ?? [];
   const { selectedTeam, setSelectedTeam } = useSelectedTeamStore();
   const { teamid } = useParams() as { teamid: string };
   const [value, setValue] = useState<string>(selectedTeam?.name ?? '팀 없음');
 
-  //URL의 teamid와 현재 선택된 팀이 다르면 강제 동기화
+  // 바깥 클릭 시 드롭다운 닫기
+  useClickOutside(dropdownRef, () => setIsOpen(false));
+
+  // URL과 상태 동기화
   useEffect(() => {
     if (teams.length > 0 && teamid) {
       const matchedTeam = teams.find((t) => t.id === teamid);
@@ -24,7 +30,7 @@ export default function TeamSelector() {
     }
   }, [teams, teamid, selectedTeam, setSelectedTeam]);
 
-  // selectedTeam이 바뀌면 드롭다운 텍스트도 바뀜
+  // selectedTeam → 드롭다운 값 반영
   useEffect(() => {
     if (selectedTeam) {
       setValue(selectedTeam.name);
@@ -33,7 +39,7 @@ export default function TeamSelector() {
     }
   }, [selectedTeam]);
 
-  // fallback: 아무것도 없을 경우 첫 번째 팀 선택
+  // fallback: 팀 없음 → 첫 번째 팀 선택
   useEffect(() => {
     if (teams.length > 0 && !selectedTeam) {
       setSelectedTeam(teams[0]);
@@ -57,26 +63,34 @@ export default function TeamSelector() {
         onClick={() => {
           setSelectedTeam(team);
           setValue(team.name);
+          setIsOpen(false); // 항목 선택 시 드롭다운 닫기
         }}
       />
     );
   });
 
   return (
-    <SelectableDropdown
-      placement="top-10 mt-2"
-      size="xl"
-      value={value}
-      onChange={setValue}
-      options={options}
-      footerBtn={
-        <Link
-          href="/addteam"
-          className="flex h-12 w-46 items-center justify-center rounded-xl border border-white text-white"
-        >
-          + 팀 추가하기
-        </Link>
-      }
-    />
+    <div ref={dropdownRef}>
+      <SelectableDropdown
+        placement="top-10 mt-2"
+        size="xl"
+        value={value}
+        onChange={(v) => {
+          setValue(v);
+          setIsOpen((prev) => !prev);
+        }}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        options={options}
+        footerBtn={
+          <Link
+            href="/addteam"
+            className="flex h-12 w-46 items-center justify-center rounded-xl border border-white text-white"
+          >
+            + 팀 추가하기
+          </Link>
+        }
+      />
+    </div>
   );
 }
