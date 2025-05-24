@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useQuery, useQueries } from '@tanstack/react-query';
+import { useQuery, useQueries, UseQueryResult } from '@tanstack/react-query';
 import { getGroupPageInfo, getUserGroupList } from '@/api/user.api';
 import { getTasksByTaskList } from '@/api/tasklist.api';
 import { GroupPageInfo, TaskInfo } from '@/types/teampagetypes';
@@ -21,40 +21,55 @@ export const useAllTaskListTasks = (
   future: { taskListId: number; data: TaskInfo[] | undefined }[];
   today: { taskListId: number; data: TaskInfo[] | undefined }[];
 } => {
-  const queryDefs = useMemo(() => {
-    return taskListIds.flatMap((taskListId) => [
-      {
-        queryKey: ['tasks', groupId, taskListId, 'future', futureDate],
-        queryFn: () => getTasksByTaskList(groupId!, taskListId, futureDate),
-        enabled: !!groupId && !!taskListId && !!futureDate,
-      },
-      {
-        queryKey: ['tasks', groupId, taskListId, 'today', todayDate],
-        queryFn: () => getTasksByTaskList(groupId!, taskListId, todayDate),
-        enabled: !!groupId && !!taskListId && !!todayDate,
-      },
-    ]);
-  }, [groupId, taskListIds, futureDate, todayDate]);
+  const futureDefs = useMemo(() => {
+    return taskListIds.map((taskListId) => ({
+      taskListId,
+      queryKey: [{ groupId, taskListId, type: 'future', date: futureDate }],
+      queryFn: () => getTasksByTaskList(groupId!, taskListId, futureDate),
+      enabled: !!groupId && !!futureDate,
+    }));
+  }, [groupId, taskListIds, futureDate]);
 
-  const queries = useQueries({ queries: queryDefs });
+  const todayDefs = useMemo(() => {
+    return taskListIds.map((taskListId) => ({
+      taskListId,
+      queryKey: ['tasks', groupId, taskListId, 'today', todayDate],
+      queryFn: () => getTasksByTaskList(groupId!, taskListId, todayDate),
+      enabled: !!groupId && !!todayDate,
+    }));
+  }, [groupId, taskListIds, todayDate]);
+
+  const futureQueryResults = useQueries({
+    queries: futureDefs.map((def) => ({
+      queryKey: def.queryKey,
+      queryFn: def.queryFn,
+      enabled: def.enabled,
+      meta: { taskListId: def.taskListId },
+    })),
+  });
+
+  const todayQueryResults = useQueries({
+    queries: todayDefs.map((def) => ({
+      queryKey: def.queryKey,
+      queryFn: def.queryFn,
+      enabled: def.enabled,
+      meta: { taskListId: def.taskListId },
+    })),
+  });
 
   const future = useMemo(() => {
-    const half = queries.length / 2;
-
-    return queries.slice(0, half).map((q, i) => ({
-      taskListId: taskListIds[i],
-      data: q.data,
+    return futureDefs.map((def, index) => ({
+      taskListId: def.taskListId,
+      data: (futureQueryResults[index] as UseQueryResult<TaskInfo[]>).data,
     }));
-  }, [queries, taskListIds]);
+  }, [futureQueryResults, futureDefs]);
 
   const today = useMemo(() => {
-    const half = queries.length / 2;
-
-    return queries.slice(half).map((q, i) => ({
-      taskListId: taskListIds[i],
-      data: q.data,
+    return todayDefs.map((def, index) => ({
+      taskListId: def.taskListId,
+      data: (todayQueryResults[index] as UseQueryResult<TaskInfo[]>).data,
     }));
-  }, [queries, taskListIds]);
+  }, [todayQueryResults, todayDefs]);
 
   return { future, today };
 };

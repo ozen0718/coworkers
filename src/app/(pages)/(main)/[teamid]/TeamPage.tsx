@@ -16,7 +16,7 @@ import { createTaskList, getTaskDetail } from '@/api/tasklist.api';
 import { useGroupDetail } from '@/hooks/useGroupDetail';
 import { useGroupPageInfo, useAllTaskListTasks, useGroupList } from '@/hooks/useGroupPageInfo';
 import { useModalGroup } from '@/hooks/useModalGroup';
-import { NewestTaskProps } from '@/types/teampagetypes';
+import { NewestTaskProps, TaskInfo } from '@/types/teampagetypes';
 import { getFutureDateString } from '@/utils/date';
 
 export default function TeamPage() {
@@ -105,23 +105,53 @@ export default function TeamPage() {
   const teamName = userData?.group.name ?? '팀 없음';
   const groupId = userData?.group.id;
   const { data: groupDetail } = useGroupDetail(groupId);
+
   const todayDate = useMemo(() => new Date().toISOString().split('T')[0], []);
+
   const [futureDate, setFutureDate] = useState<string | null>(null);
+
   const taskListIds = useMemo(() => {
-    return groupDetail?.taskLists?.map((list) => list.id) ?? [];
+    return (groupDetail?.taskLists ?? []).map((list) => Number(list.id));
   }, [groupDetail?.taskLists]);
+
+  const shouldFetchTasks = !!groupId && taskListIds.length > 0 && !!futureDate;
+
   const { future: futureTasks, today: todayTasks } = useAllTaskListTasks(
-    groupId,
-    taskListIds,
-    futureDate ?? '',
-    todayDate
+    shouldFetchTasks ? groupId : undefined,
+    shouldFetchTasks ? taskListIds : [],
+    shouldFetchTasks ? futureDate : '',
+    shouldFetchTasks ? todayDate : ''
   );
+
+  const taskMap = useMemo(() => {
+    const map = new Map<number, TaskInfo[]>();
+
+    todayTasks.forEach(({ taskListId, data }) => {
+      map.set(taskListId, data ?? []);
+    });
+
+    futureTasks.forEach(({ taskListId, data }) => {
+      const existing = map.get(taskListId) ?? [];
+      const combined = [...existing, ...(data ?? [])];
+      map.set(taskListId, combined);
+    });
+
+    return map;
+  }, [todayTasks, futureTasks]);
 
   const futureTaskList = useMemo(() => {
     return futureTasks.flatMap(({ taskListId, data }) =>
       (data ?? []).map((task) => ({ ...task, taskListId }))
     );
   }, [futureTasks]);
+
+  const totalTaskCount = useMemo(() => {
+    let total = 0;
+    taskMap.forEach((tasks) => {
+      total += tasks.length;
+    });
+    return total;
+  }, [taskMap]);
 
   const todayTaskList = todayTasks.flatMap((entry) => entry.data ?? []);
   const totalTodayTasks = todayTaskList.length;
@@ -146,6 +176,19 @@ export default function TeamPage() {
   useEffect(() => {
     setFutureDate(getFutureDateString(100));
   }, []);
+
+  useEffect(() => {
+    if (!groupId || taskListIds.length === 0 || !futureDate || !todayDate) return;
+
+    taskListIds.forEach((taskListId) => {
+      queryClient.invalidateQueries({
+        queryKey: ['tasks', groupId, taskListId, 'today', todayDate],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [{ groupId, taskListId, type: 'future', date: futureDate }],
+      });
+    });
+  }, [groupId, taskListIds, futureDate, todayDate, queryClient]);
 
   const [newestTasks, setNewestTasks] = useState<NewestTaskProps[]>([]);
   const prevNewestRef = useRef<string>('');
@@ -213,7 +256,7 @@ export default function TeamPage() {
         <header className={sectionHeaderStyle}>
           <div className={sectionHeaderTitleStyle}>
             <h2 className={sectionHeaderH2Style}>할 일 목록</h2>
-            <p className={sectionHeaderPSTyle}>({groupDetail?.taskLists.length ?? 0}개)</p>
+            <p className={sectionHeaderPSTyle}>({totalTaskCount}개)</p>
           </div>
           {isClient && isAdmin && (
             <button className={sectionHeaderButtonStyle} onClick={() => open('createList')}>
@@ -241,7 +284,8 @@ export default function TeamPage() {
         </header>
 
         {paginatedTaskLists.map((list) => {
-          const taskData = futureTasks.find((entry) => entry.taskListId === list.id)?.data ?? [];
+          const taskListId = Number(list.id);
+          const taskData = taskMap.get(Number(taskListId)) ?? [];
           const total = taskData.length;
           const completed = taskData.filter((task) => task.doneAt !== null).length;
           if (!futureDate) return null;
