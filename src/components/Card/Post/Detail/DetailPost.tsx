@@ -196,7 +196,7 @@ export default function DetailPost({
         )}
         <div className="mt-2 flex items-center md:w-[747px]">
           <span className={clsx('text-xl-bold', isComplete && 'line-through')}>
-            {taskData?.data.name} 댓글{taskData?.data.commentCount}
+            {taskData?.data.name}
           </span>
           <Image
             className="ml-auto flex h-[24px] min-h-[21px] max-w-[699px] cursor-pointer"
