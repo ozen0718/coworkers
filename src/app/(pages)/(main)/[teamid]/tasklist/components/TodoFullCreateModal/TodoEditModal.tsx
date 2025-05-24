@@ -129,7 +129,7 @@ export default function TodoEditModal({
         {/* 날짜 + 시간 */}
         <div className="flex flex-col gap-4">
           <h2 className="text-lg-medium">시작 날짜 및 시간</h2>
-          <div className="flex gap-2">
+          <div className="calendarWrapper flex flex-col gap-2">
             <div className="pointer-events-none flex-1">
               <DatePickerCalendar
                 dateTime={new Date(taskData?.data?.recurring?.startDate ?? '')}
