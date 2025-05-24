@@ -32,6 +32,7 @@ interface TodoItemProps {
   recurring: boolean;
   comments: number;
   completed: boolean;
+  onOpenDetail: (taskId: number, title: string) => void;
 }
 
 export default function TodoItem({
@@ -40,6 +41,7 @@ export default function TodoItem({
   title,
   recurring,
   completed,
+  onOpenDetail,
 }: TodoItemProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
@@ -111,7 +113,12 @@ export default function TodoItem({
       ref={dropdownRef}
       className="flex cursor-pointer flex-col space-y-2 rounded-lg bg-slate-800 p-3"
     >
-      <div className="flex items-center justify-between">
+      <div
+        className="flex items-center justify-between"
+        onClick={() => {
+          onOpenDetail(taskid!, title);
+        }}
+      >
         <div className="flex items-center space-x-3">
           <button
             onClick={(e) => {
