@@ -92,6 +92,12 @@ export default function TodoEditModal({
       queryClient.invalidateQueries({
         queryKey: ['task', groupid, taskListid, taskid],
       });
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          return query.queryKey[0] === 'task';
+        },
+      });
+
       triggerReload();
     },
     onError: (error: AxiosError) => {

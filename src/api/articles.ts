@@ -7,7 +7,7 @@ export const fetchGeneral = (keyword?: string, orderBy?: string) => {
   if (keyword) params.keyword = keyword;
   if (orderBy) params.orderBy = orderBy;
 
-  return axiosInstance.get('/articles', { params });
+  return axiosInstance.get('/articles?pageSize=30', { params });
 };
 
 /* 자유게시판 - 베스트 글 */

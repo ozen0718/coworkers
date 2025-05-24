@@ -2,6 +2,8 @@
 
 import React from 'react';
 import clsx from 'clsx';
+import { useRef } from 'react';
+import useClickOutside from '@/hooks/useClickOutside';
 
 type PostDropdownProps = {
   type?: 'sort' | 'kebab';
@@ -22,6 +24,13 @@ export default function PostDropdown({
   toppercent,
   onClick,
 }: PostDropdownProps) {
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useClickOutside(dropdownRef, () => {
+    if (isOpen) toggleDropdown();
+  });
+
+  if (!isOpen) return null;
   return (
     <div
       onClick={onClick}
@@ -43,7 +52,12 @@ export default function PostDropdown({
           {options.map((option, idx) => (
             <div
               key={idx}
-              className="hover:bg-primary-hover cursor-pointer rounded-lg p-2"
+              className={clsx(
+                'cursor-pointer rounded-lg p-2',
+                option.label === '삭제하기' || option.label === '삭제'
+                  ? 'hover:bg-danger text-white'
+                  : 'hover:bg-primary-hover'
+              )}
               onClick={() => {
                 option.action();
                 toggleDropdown();

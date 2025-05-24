@@ -39,6 +39,8 @@ export type AuthorInfoProps = {
 /* BoardComment - 게시글 댓글 내용 */
 export type BoardCommentProps = {
   id?: string;
+  groupId?: string;
+  tasklistId?: string;
   type?: 'free' | 'list';
   author?: string;
   content?: string;
