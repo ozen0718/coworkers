@@ -12,6 +12,8 @@ import { useMutation } from '@tanstack/react-query';
 import { useQuery } from '@tanstack/react-query';
 import { fetchTask, deleteTask, deleteRecurringTask } from '@/api/detailPost';
 import { useQueryClient } from '@tanstack/react-query';
+import { useRef } from 'react';
+import useClickOutside from '@/hooks/useClickOutside';
 
 const frequencyLabelMap: Record<string, string> = {
   ONCE: '한 번',
@@ -48,6 +50,9 @@ export default function TodoItem({
   const { triggerReload } = useTaskReload();
 
   const queryClient = useQueryClient();
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  useClickOutside(dropdownRef, () => setIsDropDownOpen(false));
 
   const toggleDropdown = () => {
     setIsDropDownOpen((prev) => !prev);
@@ -105,7 +110,10 @@ export default function TodoItem({
   };
 
   return (
-    <div className="flex cursor-pointer flex-col space-y-2 rounded-lg bg-slate-800 p-3">
+    <div
+      ref={dropdownRef}
+      className="flex cursor-pointer flex-col space-y-2 rounded-lg bg-slate-800 p-3"
+    >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
           <button

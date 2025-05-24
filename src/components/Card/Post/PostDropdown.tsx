@@ -54,7 +54,7 @@ export default function PostDropdown({
               key={idx}
               className={clsx(
                 'cursor-pointer rounded-lg p-2',
-                option.label === '삭제하기'
+                option.label === '삭제하기' || option.label === '삭제'
                   ? 'hover:bg-danger text-white'
                   : 'hover:bg-primary-hover'
               )}
