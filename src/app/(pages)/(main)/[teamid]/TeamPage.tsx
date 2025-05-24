@@ -111,8 +111,6 @@ export default function TeamPage() {
   const [futureDate, setFutureDate] = useState<string | null>(null);
 
   const taskListIds = useMemo(() => {
-    const taskLists = groupDetail?.taskLists ?? [];
-    console.log('🔍 groupDetail.taskLists:', taskLists);
     return (groupDetail?.taskLists ?? []).map((list) => Number(list.id));
   }, [groupDetail?.taskLists]);
 
@@ -291,10 +289,6 @@ export default function TeamPage() {
           const total = taskData.length;
           const completed = taskData.filter((task) => task.doneAt !== null).length;
           if (!futureDate) return null;
-
-          console.log('🟡 list.id:', list.id);
-          console.log('🟡 taskMap keys:', [...taskMap.keys()]);
-          console.log('🟡 taskMap.get(list.id):', taskMap.get(taskListId));
 
           return (
             <TaskListsItem
