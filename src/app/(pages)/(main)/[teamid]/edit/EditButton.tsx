@@ -2,30 +2,40 @@
 
 import { useParams, useRouter } from 'next/navigation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import Button from '@/components/common/Button/Button';
-import { patchGroup } from '@/api/group.api';
-import { getUserInfo } from '@/api/user';
-import { useUserStore } from '@/stores/useUserStore';
 import { toast } from 'react-toastify';
+import { patchGroup } from '@/api/group.api';
+import { uploadImage } from '@/api/uploadImage.api';
+import { getUserInfo } from '@/api/user';
+import Button from '@/components/common/Button/Button';
 import { QUERY_KEYS } from '@/constants/queryKeys';
+import { useUserStore } from '@/stores/useUserStore';
 
 interface EditButtonProps {
   name: string;
+  image: string | null;
+  imageFile: File | null;
   onSuccess?: () => void;
 }
 
-export default function EditButton({ name, onSuccess }: EditButtonProps) {
+export default function EditButton({ name, image, imageFile, onSuccess }: EditButtonProps) {
   const { teamid } = useParams() as { teamid: string };
   const router = useRouter();
   const queryClient = useQueryClient();
   const setUserInfo = useUserStore((s) => s.setUserInfo);
 
   const mutation = useMutation({
-    mutationFn: () =>
-      patchGroup(Number(teamid), {
+    mutationFn: async () => {
+      let imageUrl = image;
+
+      if (imageFile) {
+        imageUrl = await uploadImage(imageFile);
+      }
+
+      await patchGroup(Number(teamid), {
         name,
-        image: null,
-      }),
+        image: imageUrl,
+      });
+    },
 
     onSuccess: async () => {
       const updatedUserInfo = await getUserInfo();

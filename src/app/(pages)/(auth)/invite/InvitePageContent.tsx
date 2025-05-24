@@ -8,7 +8,7 @@ import InviteAcceptScreen from '@/components/invite/InviteAcceptScreen';
 import { useInvitedUserInfo } from '@/hooks/useInvitePageInfo';
 import { useAuthStore } from '@/stores/useAuthStore';
 
-export default function InvitePage() {
+export default function InvitePageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [mode, setMode] = useState<'checking' | 'accept' | 'auth'>('checking');
