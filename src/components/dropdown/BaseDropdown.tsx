@@ -1,4 +1,3 @@
-// src/components/dropdown/BaseDropdown.tsx
 'use client';
 
 import React, { useState } from 'react';
@@ -14,6 +13,10 @@ export interface DropDownProps {
   dropDownOpenBtn?: React.ReactNode;
   footerBtn?: React.ReactNode;
   placement: string;
+
+  //외부 제어용
+  isOpen?: boolean;
+  setIsOpen?: (open: boolean) => void;
 }
 
 export default function DropDown({
@@ -23,8 +26,15 @@ export default function DropDown({
   size,
   footerBtn = null,
   placement,
+  isOpen: controlledIsOpen,
+  setIsOpen: setControlledIsOpen,
 }: DropDownProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  // 언컨트롤드 fallback
+  const [uncontrolledIsOpen, setUncontrolledIsOpen] = useState(false);
+
+  const isOpen = controlledIsOpen !== undefined ? controlledIsOpen : uncontrolledIsOpen;
+  const setIsOpen = setControlledIsOpen ?? setUncontrolledIsOpen;
+
   const hashedIndex = size.charCodeAt(0) % options.length;
 
   const handleClickOption = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -32,22 +42,26 @@ export default function DropDown({
     onSelect?.(e);
   };
 
+  const handleToggleOpen = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <div className="relative overflow-visible">
-      {' '}
       {/* overflow-visible로 부모가 자식 잘림 방지 */}
-      <div className="cursor-pointer" onClick={() => setIsOpen((prev) => !prev)}>
+      <div className="cursor-pointer" onClick={handleToggleOpen}>
         {dropDownOpenBtn}
       </div>
+
       {isOpen && (
         <div
           className={clsx(
-            'bg-bg200 border-bg100 absolute z-50 rounded-lg border', // z-50로 수정
+            'bg-bg200 border-bg100 absolute z-50 rounded-lg border',
             size === 'xl' && 'h-fit px-4 py-4',
             footerBtn && 'flex flex-col gap-4',
             placement
           )}
-          style={{ overflow: 'visible' }} // 메뉴 내 자식 요소도 잘리지 않도록
+          style={{ overflow: 'visible' }}
         >
           <div className="scroll-area max-h-120 overflow-auto">
             {options.map((option, idx) => (
