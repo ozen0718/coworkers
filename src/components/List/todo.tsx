@@ -2,8 +2,19 @@
 import React from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
+import { useState } from 'react';
+import PostDropdown from '../Card/Post/PostDropdown';
+import TodoEditModal from '@/app/(pages)/(main)/[teamid]/tasklist/components/TodoFullCreateModal/TodoEditModal';
+
+import { useTaskReload } from '@/context/TaskReloadContext';
+import { toast } from 'react-toastify';
+import { useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
+import { fetchTask, deleteTask, deleteRecurringTask } from '@/api/detailPost';
 
 interface TodoItemProps {
+  tasklistid?: number;
+  taskid?: number;
   id: number;
   title: string;
   date: string;
@@ -14,6 +25,8 @@ interface TodoItemProps {
 }
 
 export default function TodoItem({
+  tasklistid,
+  taskid,
   title,
   date,
   time,
@@ -21,6 +34,71 @@ export default function TodoItem({
   comments,
   completed,
 }: TodoItemProps) {
+  const [isDropDownOpen, setIsDropDownOpen] = useState(false);
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+
+  const { triggerReload } = useTaskReload();
+
+  /* 할 일 수정 */
+  const handleEdit = async () => {
+    setEditModalOpen(true);
+  };
+
+  /* 할 일 삭제 */
+  /*
+  const handleDelete = () => {
+    console.log('삭제');
+    console.log('tasklistid', tasklistid);
+    console.log('taskid', taskid);
+    setIsDropDownOpen(false);
+  };
+  */
+
+  const toggleDropdown = () => {
+    setIsDropDownOpen((prev) => !prev);
+  };
+
+  /* 그룹 아이디 */
+  const pathname = window.location.pathname;
+  const groupId = Number(pathname.split('/')[1]);
+
+  /* 할일 내용 */
+  const { data: taskData } = useQuery({
+    queryKey: ['task', groupId, tasklistid, taskid],
+    queryFn: () => {
+      if (!groupId || !tasklistid || !taskid) throw new Error('필수값 없음');
+      return fetchTask(groupId, tasklistid, taskid);
+    },
+    enabled: !!groupId && !!tasklistid && !!taskid,
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      if (!groupId || !tasklistid || !taskid) throw new Error('필수 값 없음');
+
+      if (taskData?.data.frequency === 'ONCE') {
+        // 단일 할일 삭제
+        return deleteTask(groupId, tasklistid, taskid);
+      }
+
+      const recurringId = taskData?.data.recurringId;
+      if (!recurringId) throw new Error('recurringId가 없습니다.');
+
+      // 반복 할일 전체 삭제
+      return deleteRecurringTask(groupId, tasklistid, taskid, recurringId);
+    },
+    onSuccess: () => {
+      triggerReload();
+    },
+    onError: () => {
+      toast.error('할일 삭제 실패');
+    },
+  });
+
+  const handleDelete = () => {
+    deleteMutation.mutate();
+  };
+
   return (
     <div className="flex cursor-pointer flex-col space-y-2 rounded-lg bg-slate-800 p-3">
       <div className="flex items-center justify-between">
@@ -65,7 +143,9 @@ export default function TodoItem({
         <button
           onClick={(e) => {
             e.stopPropagation();
+            toggleDropdown();
           }}
+          className="relative"
         >
           <Image
             src="/icons/kebab.svg"
@@ -74,6 +154,20 @@ export default function TodoItem({
             height={16}
             className="text-gray-300"
           />
+
+          {isDropDownOpen && (
+            <PostDropdown
+              type="kebab"
+              textJustify="center"
+              options={[
+                { label: '수정', value: '수정', action: handleEdit },
+                { label: '삭제', value: '삭제', action: handleDelete },
+              ]}
+              isOpen={isDropDownOpen}
+              toggleDropdown={toggleDropdown}
+              toppercent="135%"
+            />
+          )}
         </button>
       </div>
 
@@ -106,6 +200,19 @@ export default function TodoItem({
           {recurring && <span>반복</span>}
         </div>
       </div>
+
+      {isEditModalOpen && (
+        <TodoEditModal
+          isOpen={isEditModalOpen}
+          onCloseAction={() => setEditModalOpen(false)}
+          groupid={groupId!}
+          taskListid={4047}
+          taskid={23511}
+          onSubmit={() => {
+            setEditModalOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 }

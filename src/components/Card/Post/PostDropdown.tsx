@@ -2,6 +2,8 @@
 
 import React from 'react';
 import clsx from 'clsx';
+import { useRef } from 'react';
+import useClickOutside from '@/hooks/useClickOutside';
 
 type PostDropdownProps = {
   type?: 'sort' | 'kebab';
@@ -22,6 +24,13 @@ export default function PostDropdown({
   toppercent,
   onClick,
 }: PostDropdownProps) {
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useClickOutside(dropdownRef, () => {
+    if (isOpen) toggleDropdown();
+  });
+
+  if (!isOpen) return null;
   return (
     <div
       onClick={onClick}

@@ -324,7 +324,6 @@ export default function TaskListPage() {
       try {
         const tasks = await getTasksByTaskList(groupId, taskList.id, dateKey);
         const todos = tasks.map(convertTaskToTodo);
-        console.log('convertTaskToTodo', convertTaskToTodo);
 
         console.log('todos', todos);
         setTodoList(todos);
@@ -547,12 +546,12 @@ export default function TaskListPage() {
           )}
 
           <section className="min-h-[calc(100vh-16rem)]">
-            {todoList.length > 0 ? (
+            {selectedTaskList && todoList.length > 0 ? (
               <ul className="space-y-4">
                 {todoList.map((todo) => (
                   <li key={todo.id}>
                     <div onClick={() => handleOpenDetail(todo)}>
-                      <TodoItem {...todo} />
+                      <TodoItem tasklistid={selectedTaskList.id} taskid={todo.id} {...todo} />
                     </div>
                   </li>
                 ))}
