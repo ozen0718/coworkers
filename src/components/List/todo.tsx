@@ -119,7 +119,6 @@ export default function TodoItem({
           <button
             onClick={(e) => {
               e.stopPropagation();
-              //toggleChecked();
             }}
             aria-pressed={completed}
             className="cursor-pointer p-1"

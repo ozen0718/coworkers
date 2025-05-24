@@ -24,6 +24,8 @@ import { completeTask } from '@/api/detailPost';
 import { useEffect } from 'react';
 import TodoEditModal from '@/app/(pages)/(main)/[teamid]/tasklist/components/TodoFullCreateModal/TodoEditModal';
 import { QUERY_KEYS } from '@/constants/queryKeys';
+import useClickOutside from '@/hooks/useClickOutside';
+import { useRef } from 'react';
 
 type DetailPostProps = {
   groupId?: number;
@@ -178,6 +180,9 @@ export default function DetailPost({
     },
   });
 
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  useClickOutside(dropdownRef, () => setIsDropDownOpen(false));
+
   return (
     <div
       style={{ borderLeft: '1px solid var(--Border-Primary, #F8FAFC1A)' }}
@@ -194,7 +199,7 @@ export default function DetailPost({
             <p className="text-tertiary text-xs font-medium">완료</p>
           </div>
         )}
-        <div className="mt-2 flex items-center md:w-[747px]">
+        <div className="mt-2 flex items-center md:w-[747px]" ref={dropdownRef}>
           <span className={clsx('text-xl-bold', isComplete && 'line-through')}>
             {taskData?.data.name}
           </span>
@@ -216,7 +221,7 @@ export default function DetailPost({
               ]}
               isOpen={isDropDownOpen}
               toggleDropdown={toggleDropdown}
-              toppercent="11%"
+              toppercent="13%"
             />
           )}
         </div>
