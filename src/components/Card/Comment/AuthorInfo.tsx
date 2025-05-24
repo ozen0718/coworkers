@@ -7,7 +7,6 @@ import { AxiosError } from 'axios';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { addLike, deleteLike } from '@/api/articles';
 import { useQueryClient } from '@tanstack/react-query';
-import { QUERY_KEYS } from '@/constants/queryKeys';
 
 export default function AuthorInfo({
   type,
