@@ -24,15 +24,10 @@ export default function TeamEditPage() {
   const { setSelectedTeam } = useSelectedTeamStore();
 
   useEffect(() => {
-    if (groupDetail?.name) {
-      setTeamName(groupDetail.name);
-    }
-  }, [groupDetail?.name]);
-
-  useEffect(() => {
-    if (groupDetail?.name) setTeamName(groupDetail.name);
-    if (groupDetail?.image) setTeamImage(groupDetail.image);
-  }, [groupDetail?.name, groupDetail?.image]);
+    if (!groupDetail) return;
+    setTeamName(groupDetail.name);
+    setTeamImage(groupDetail.image ?? null);
+  }, [groupDetail]);
 
   if (!userData || !groupDetail) return null;
 
@@ -44,13 +39,17 @@ export default function TeamEditPage() {
     });
   };
 
+  if (!userData || !groupDetail) return null;
+
+  const imageUrl = groupDetail.image ?? null;
+
   return (
     <div className={clsx(AuthPagesLayout, 'mt-14')}>
       <h2 className={PageTitleStyle}>팀 수정하기</h2>
 
       <div className="mt-6 flex flex-col gap-6 md:mt-20">
         <EditableTeamProfileSection
-          teamProfileUrl={teamImage}
+          teamProfileUrl={imageUrl}
           onImageChange={(url, file) => {
             setTeamImage(url);
             setTeamImageFile(file);
