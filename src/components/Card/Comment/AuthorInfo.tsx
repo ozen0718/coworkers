@@ -7,6 +7,7 @@ import { AxiosError } from 'axios';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { addLike, deleteLike } from '@/api/articles';
 import { useQueryClient } from '@tanstack/react-query';
+import { QUERY_KEYS } from '@/constants/queryKeys';
 
 export default function AuthorInfo({
   type,
@@ -42,8 +43,10 @@ export default function AuthorInfo({
         await addLike(Number(articleId));
       }
       onLikeChanged?.();
-      queryClient.invalidateQueries({ queryKey: ['bestPosts'] });
-      queryClient.invalidateQueries({ queryKey: ['generalPosts'] });
+      queryClient.invalidateQueries({
+        predicate: (query) =>
+          ['generalPosts', 'bestPosts', 'article'].includes(query.queryKey[0] as string),
+      });
     } catch (err) {
       const error = err as AxiosError;
       console.error('좋아요 요청 실패:', error);
