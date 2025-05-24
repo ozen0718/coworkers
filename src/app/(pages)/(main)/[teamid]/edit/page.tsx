@@ -18,7 +18,7 @@ export default function TeamEditPage() {
   const { data: userData } = useGroupPageInfo(teamid);
   const { data: groupDetail } = useGroupDetail(userData?.group.id);
 
-  const { selectedTeam, setSelectedTeam } = useSelectedTeamStore();
+  const { setSelectedTeam } = useSelectedTeamStore();
 
   if (!userData || !groupDetail) return null;
 
