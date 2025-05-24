@@ -13,6 +13,13 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchTask, deleteTask, deleteRecurringTask } from '@/api/detailPost';
 import { useQueryClient } from '@tanstack/react-query';
 
+const frequencyLabelMap: Record<string, string> = {
+  ONCE: '한 번',
+  DAILY: '매일',
+  WEEKLY: '주 반복',
+  MONTHLY: '월 반복',
+};
+
 interface TodoItemProps {
   tasklistid?: number;
   taskid?: number;
@@ -194,7 +201,9 @@ export default function TodoItem({
               'opacity-30': !recurring,
             })}
           />
-          {recurring && <span>반복</span>}
+          {taskData?.data.recurring.frequencyType && (
+            <span>{frequencyLabelMap[taskData.data.recurring.frequencyType]} 반복</span>
+          )}
         </div>
       </div>
 
