@@ -65,7 +65,7 @@ export default function LandingHeader({ topImageSrc }: LandingHeaderProps) {
 
       <button
         onClick={handleStartClick}
-        className="bg-gradient-primary text-text-inverse absolute bottom-[48px] h-[45px] w-[343px] rounded-[32px] text-lg font-bold md:bottom-[119px] md:w-[373px] lg:bottom-[120px] lg:w-[373px]"
+        className={`bg-gradient-primary text-text-inverse fixed bottom-4 left-1/2 z-50 h-[45px] w-[343px] -translate-x-1/2 rounded-[32px] text-lg font-bold sm:absolute sm:bottom-[119px] sm:left-auto sm:translate-x-0 md:w-[373px] lg:bottom-[120px]`}
       >
         지금 시작하기
       </button>
