@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import clsx from 'clsx';
 import EditableTeamProfileSection from './EditableTeamProfileSection';
@@ -13,12 +13,26 @@ import { useSelectedTeamStore } from '@/stores/useSelectedTeamStore';
 
 export default function TeamEditPage() {
   const [teamName, setTeamName] = useState('');
+  const [teamImage, setTeamImage] = useState<string | null>(null);
+  const [teamImageFile, setTeamImageFile] = useState<File | null>(null);
+
   const { teamid } = useParams() as { teamid: string };
 
   const { data: userData } = useGroupPageInfo(teamid);
   const { data: groupDetail } = useGroupDetail(userData?.group.id);
 
   const { setSelectedTeam } = useSelectedTeamStore();
+
+  useEffect(() => {
+    if (groupDetail?.name) {
+      setTeamName(groupDetail.name);
+    }
+  }, [groupDetail?.name]);
+
+  useEffect(() => {
+    if (groupDetail?.name) setTeamName(groupDetail.name);
+    if (groupDetail?.image) setTeamImage(groupDetail.image);
+  }, [groupDetail?.name, groupDetail?.image]);
 
   if (!userData || !groupDetail) return null;
 
@@ -35,11 +49,22 @@ export default function TeamEditPage() {
       <h2 className={PageTitleStyle}>팀 수정하기</h2>
 
       <div className="mt-6 flex flex-col gap-6 md:mt-20">
-        <EditableTeamProfileSection teamProfileUrl={null} />
+        <EditableTeamProfileSection
+          teamProfileUrl={teamImage}
+          onImageChange={(url, file) => {
+            setTeamImage(url);
+            setTeamImageFile(file);
+          }}
+        />
         <EditableTeamNameSection name={teamName} setName={setTeamName} />
       </div>
 
-      <EditButton name={teamName} onSuccess={handleSuccess} />
+      <EditButton
+        name={teamName}
+        image={teamImage}
+        imageFile={teamImageFile}
+        onSuccess={handleSuccess}
+      />
 
       <p className="text-center text-sm md:text-base">
         팀 이름은 회사명이나 모임 이름 등으로 설정하면 좋아요.
