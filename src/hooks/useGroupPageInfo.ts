@@ -31,12 +31,16 @@ export const useAllTaskListTasks = (
   }, [groupId, taskListIds, futureDate]);
 
   const todayDefs = useMemo(() => {
-    return taskListIds.map((taskListId) => ({
-      taskListId,
-      queryKey: ['tasks', groupId, taskListId, 'today', todayDate],
-      queryFn: () => getTasksByTaskList(groupId!, taskListId, todayDate),
-      enabled: !!groupId && !!todayDate,
-    }));
+    return taskListIds.map((taskListId) => {
+      console.log('🔥 today task 요청:', groupId, taskListId, todayDate);
+
+      return {
+        taskListId,
+        queryKey: ['tasks', groupId, taskListId, 'today', todayDate],
+        queryFn: () => getTasksByTaskList(groupId!, taskListId, todayDate),
+        enabled: !!groupId && !!todayDate,
+      };
+    });
   }, [groupId, taskListIds, todayDate]);
 
   const futureQueryResults = useQueries({
@@ -70,6 +74,9 @@ export const useAllTaskListTasks = (
       data: (todayQueryResults[index] as UseQueryResult<TaskInfo[]>).data,
     }));
   }, [todayQueryResults, todayDefs]);
+
+  console.log('🧪 todayTaskList 샘플:', today.flatMap((entry) => entry.data ?? []).slice(0, 3));
+  console.log('✅ todayDate:', todayDate);
 
   return { future, today };
 };

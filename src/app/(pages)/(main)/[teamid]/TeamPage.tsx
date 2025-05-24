@@ -16,7 +16,7 @@ import { createTaskList, getTaskDetail } from '@/api/tasklist.api';
 import { useGroupDetail } from '@/hooks/useGroupDetail';
 import { useGroupPageInfo, useAllTaskListTasks, useGroupList } from '@/hooks/useGroupPageInfo';
 import { useModalGroup } from '@/hooks/useModalGroup';
-import { NewestTaskProps, TaskInfo } from '@/types/teampagetypes';
+import { TaskInfo } from '@/types/teampagetypes';
 import { getFutureDateString } from '@/utils/date';
 
 export default function TeamPage() {
@@ -106,7 +106,13 @@ export default function TeamPage() {
   const groupId = userData?.group.id;
   const { data: groupDetail } = useGroupDetail(groupId);
 
-  const todayDate = useMemo(() => new Date().toISOString().split('T')[0], []);
+  const todayDate = useMemo(() => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }, []);
 
   const [futureDate, setFutureDate] = useState<string | null>(null);
 
@@ -165,6 +171,13 @@ export default function TeamPage() {
 
   const totalPages = Math.ceil((groupDetail?.taskLists?.length ?? 0) / ITEMS_PER_PAGE);
 
+  const weeklyCount = todayTaskList.filter((task) => task.frequency === 'WEEKLY').length;
+  const monthlyCount = todayTaskList.filter((task) => task.frequency === 'MONTHLY').length;
+  console.log(
+    '📦 todayTaskList:',
+    todayTaskList.map((t) => ({ id: t.id, name: t.name, frequency: t.frequency }))
+  );
+
   const paginatedMembers = useMemo(() => {
     if (!groupDetail?.members) return [];
     const startIndex = (memberPage - 1) * MEMBERS_PER_PAGE;
@@ -190,7 +203,6 @@ export default function TeamPage() {
     });
   }, [groupId, taskListIds, futureDate, todayDate, queryClient]);
 
-  const [newestTasks, setNewestTasks] = useState<NewestTaskProps[]>([]);
   const prevNewestRef = useRef<string>('');
 
   useEffect(() => {
@@ -225,17 +237,6 @@ export default function TeamPage() {
       }
 
       prevNewestRef.current = taskKey;
-
-      if (pastTasks.length === 0) {
-        setNewestTasks([{ title: '새롭게 시작된 할 일이 없습니다.', startDate: '' }]);
-      } else {
-        setNewestTasks(
-          pastTasks.map((task) => ({
-            title: task.name,
-            startDate: task.startDate,
-          }))
-        );
-      }
     };
 
     fetchNewestTaskDetails();
@@ -332,7 +333,12 @@ export default function TeamPage() {
           </div>
         </header>
 
-        <Report total={totalTodayTasks} completed={completedTodayTasks} newestTasks={newestTasks} />
+        <Report
+          total={totalTodayTasks}
+          completed={completedTodayTasks}
+          weeklyCount={weeklyCount}
+          monthlyCount={monthlyCount}
+        />
       </section>
 
       <section className={sectionStyle}>
