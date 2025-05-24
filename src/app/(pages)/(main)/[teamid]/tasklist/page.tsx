@@ -389,11 +389,6 @@ export default function TaskListPage() {
     setTodoModalOpen(false);
   };
 
-  const handleOpenDetail = (todo: Todo) => {
-    setSelectedTodo(todo);
-    setDetailOpen(true);
-  };
-
   const moveTaskList = async (dragIndex: number, hoverIndex: number) => {
     const draggedTaskList = taskLists[dragIndex];
     const newTaskLists = [...taskLists];
