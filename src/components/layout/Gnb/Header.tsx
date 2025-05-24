@@ -2,6 +2,9 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect } from 'react';
+import { useParams } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
 import Logo from './Logo';
 import SideMenu from './SideMenu';
 import TeamSelector from './TeamSelector';
@@ -10,10 +13,8 @@ import { useHeader } from './HeaderContext';
 import { useUserStore } from '@/stores/useUserStore';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useSelectedTeamStore } from '@/stores/useSelectedTeamStore';
-import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/constants/queryKeys';
 import { getUserInfo } from '@/api/user';
-import { useEffect } from 'react';
 
 interface HeaderProps {
   onOpenSideMenu: () => void;
@@ -24,6 +25,7 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
   const accessToken = useAuthStore((s) => s.accessToken);
   const { teams, setUserInfo } = useUserStore();
   const { selectedTeam, setSelectedTeam } = useSelectedTeamStore();
+  const { teamid } = useParams() as { teamid: string };
 
   const { data: userData } = useQuery({
     queryKey: QUERY_KEYS.user.me,
@@ -32,6 +34,7 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
     enabled: !!accessToken,
   });
 
+  // 유저 정보 받아오면 상태 반영
   useEffect(() => {
     if (userData) {
       setUserInfo({
@@ -42,17 +45,27 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
     }
   }, [userData, setUserInfo]);
 
-  //teams 배열이 바뀔 때마다 selectedTeam 유효성 검사
+  // 새로고침 시 URL의 teamid로 selectedTeam 복원
   useEffect(() => {
-    if (teams.length > 0) {
+    if (!selectedTeam && teams.length > 0 && teamid) {
+      const matchedTeam = teams.find((t) => t.id === teamid);
+      if (matchedTeam) {
+        setSelectedTeam(matchedTeam);
+      }
+    }
+  }, [selectedTeam, teams, teamid, setSelectedTeam]);
+
+  // 선택된 팀이 삭제되었거나 유효하지 않으면 fallback
+  useEffect(() => {
+    if (teams && teams.length > 0) {
       const stillExists = teams.find((team) => team.id === selectedTeam?.id);
       if (!stillExists) {
-        setSelectedTeam(teams[0]); // 현재 선택된 팀이 삭제된 경우, 첫 번째 팀으로 설정
+        setSelectedTeam(teams[0]); // fallback to 첫 번째 팀
       }
     } else {
-      setSelectedTeam(null); // 팀이 없는 경우 null로 초기화
+      setSelectedTeam(null);
     }
-  }, [teams]); // selectedTeam은 deps에서 제거 (의도적)
+  }, [teams]);
 
   return (
     <header className="bg-bg200 border-border sticky top-0 z-50 flex h-15 w-full justify-center border-b-1 py-[14px]">
