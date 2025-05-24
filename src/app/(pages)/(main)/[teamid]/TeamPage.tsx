@@ -173,10 +173,6 @@ export default function TeamPage() {
 
   const weeklyCount = todayTaskList.filter((task) => task.frequency === 'WEEKLY').length;
   const monthlyCount = todayTaskList.filter((task) => task.frequency === 'MONTHLY').length;
-  console.log(
-    '📦 todayTaskList:',
-    todayTaskList.map((t) => ({ id: t.id, name: t.name, frequency: t.frequency }))
-  );
 
   const paginatedMembers = useMemo(() => {
     if (!groupDetail?.members) return [];

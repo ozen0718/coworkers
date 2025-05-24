@@ -32,8 +32,6 @@ export const useAllTaskListTasks = (
 
   const todayDefs = useMemo(() => {
     return taskListIds.map((taskListId) => {
-      console.log('🔥 today task 요청:', groupId, taskListId, todayDate);
-
       return {
         taskListId,
         queryKey: ['tasks', groupId, taskListId, 'today', todayDate],
@@ -74,9 +72,6 @@ export const useAllTaskListTasks = (
       data: (todayQueryResults[index] as UseQueryResult<TaskInfo[]>).data,
     }));
   }, [todayQueryResults, todayDefs]);
-
-  console.log('🧪 todayTaskList 샘플:', today.flatMap((entry) => entry.data ?? []).slice(0, 3));
-  console.log('✅ todayDate:', todayDate);
 
   return { future, today };
 };
