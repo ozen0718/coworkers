@@ -17,6 +17,7 @@ import { toast } from 'react-toastify';
 import { useQuery } from '@tanstack/react-query';
 import { deleteDetailComment } from '@/api/detailPost';
 import { editDetailComment } from '@/api/detailPost';
+import { useTaskReload } from '@/context/TaskReloadContext';
 
 export default function BoardComment({
   commentId,
@@ -27,12 +28,16 @@ export default function BoardComment({
   onChange,
   writer,
   taskId,
+  groupId,
+  tasklistId,
 }: BoardCommentProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const params = useParams();
   const id = params?.articleid;
   const [editedContent, setEditedContent] = useState(content);
+
+  const { triggerReload } = useTaskReload();
 
   const queryClient = useQueryClient();
 
@@ -78,6 +83,14 @@ export default function BoardComment({
       console.log('댓글 삭제 성공');
       onChange?.();
       queryClient.invalidateQueries({ queryKey: ['comments', id] });
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          console.log('invalidate:', query.queryKey);
+          return query.queryKey[0] === 'task';
+        },
+      });
+      queryClient.invalidateQueries({ queryKey: ['task', groupId, tasklistId, taskId] });
+      triggerReload();
     },
     onError: (err: AxiosError) => {
       console.error('댓글 삭제 실패:', err.response?.data);
@@ -95,6 +108,14 @@ export default function BoardComment({
       console.log('상세 카드 댓글 삭제 성공');
       onChange?.();
       queryClient.invalidateQueries({ queryKey: ['comments', taskId] });
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          console.log('invalidate:', query.queryKey);
+          return query.queryKey[0] === 'task';
+        },
+      });
+
+      triggerReload();
     },
     onError: (err: AxiosError) => {
       console.error('상세 카드 댓글 삭제 실패:', err.response?.data);

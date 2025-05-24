@@ -23,6 +23,9 @@ import { deleteRecurringTask } from '@/api/detailPost';
 import { completeTask } from '@/api/detailPost';
 import { useEffect } from 'react';
 import TodoEditModal from '@/app/(pages)/(main)/[teamid]/tasklist/components/TodoFullCreateModal/TodoEditModal';
+import { QUERY_KEYS } from '@/constants/queryKeys';
+import useClickOutside from '@/hooks/useClickOutside';
+import { useRef } from 'react';
 
 type DetailPostProps = {
   groupId?: number;
@@ -62,9 +65,11 @@ export default function DetailPost({
       if (!taskid) throw new Error('taskid 없음');
       return createComment(taskid, { content });
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success('댓글이 작성되었습니다');
-      if (taskid) queryClient.invalidateQueries({ queryKey: ['comments', taskid] });
+      queryClient.invalidateQueries({ queryKey: ['comments', taskid] });
+      queryClient.invalidateQueries({ queryKey: ['task'] });
+      triggerReload();
     },
     onError: () => {
       toast.error('댓글 작성 실패');
@@ -81,6 +86,7 @@ export default function DetailPost({
       return;
     }
     mutation.mutate(content);
+    //triggerReload();
   };
 
   const toggleDropdown = () => {
@@ -90,7 +96,7 @@ export default function DetailPost({
   const [isEditModalOpen, setEditModalOpen] = useState(false);
 
   /* 할 일 수정 */
-  const handleEdit = async () => {
+  const handleEdit: () => void = () => {
     setEditModalOpen(true);
   };
 
@@ -99,9 +105,11 @@ export default function DetailPost({
     queryKey: ['task', groupId, tasklistid, taskid],
     queryFn: () => {
       if (!groupId || !tasklistid || !taskid) throw new Error('필수값 없음');
+      console.log('fetchTask called22');
       return fetchTask(groupId, tasklistid, taskid);
     },
     enabled: !!groupId && !!tasklistid && !!taskid,
+    staleTime: 0,
   });
 
   /* 할일 삭제 */
@@ -163,6 +171,7 @@ export default function DetailPost({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['task', groupId, tasklistid, taskid] });
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.user.history });
       setIsComplete((prev) => !prev);
       triggerReload();
     },
@@ -170,6 +179,9 @@ export default function DetailPost({
       toast.error('완료 처리 실패');
     },
   });
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  useClickOutside(dropdownRef, () => setIsDropDownOpen(false));
 
   return (
     <div
@@ -187,7 +199,7 @@ export default function DetailPost({
             <p className="text-tertiary text-xs font-medium">완료</p>
           </div>
         )}
-        <div className="mt-2 flex items-center md:w-[747px]">
+        <div className="mt-2 flex items-center md:w-[747px]" ref={dropdownRef}>
           <span className={clsx('text-xl-bold', isComplete && 'line-through')}>
             {taskData?.data.name}
           </span>
@@ -209,7 +221,7 @@ export default function DetailPost({
               ]}
               isOpen={isDropDownOpen}
               toggleDropdown={toggleDropdown}
-              toppercent="11%"
+              toppercent="13%"
             />
           )}
         </div>
@@ -249,6 +261,8 @@ export default function DetailPost({
         {commentData?.data?.map((comment: CommentDetail) => (
           <BoardComment
             type="list"
+            groupId={String(groupId)}
+            tasklistId={String(tasklistid)}
             taskId={taskid}
             key={comment.id}
             commentId={comment.id}
