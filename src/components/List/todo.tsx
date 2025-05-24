@@ -16,8 +16,8 @@ import { useQueryClient } from '@tanstack/react-query';
 const frequencyLabelMap: Record<string, string> = {
   ONCE: '한 번',
   DAILY: '매일',
-  WEEKLY: '주 반복',
-  MONTHLY: '월 반복',
+  WEEKLY: '주',
+  MONTHLY: '월',
 };
 
 interface TodoItemProps {

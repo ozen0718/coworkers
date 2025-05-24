@@ -70,8 +70,7 @@ export default function DetailPost({
       console.log('tasklistid', tasklistid);
       console.log('taskid', taskid);
       queryClient.invalidateQueries({ queryKey: ['comments', taskid] });
-      await refetchTask();
-      await queryClient.invalidateQueries({ queryKey: ['task', groupId, tasklistid, taskid] });
+      queryClient.invalidateQueries({ queryKey: ['task', groupId, tasklistid, taskid] });
     },
     onError: () => {
       toast.error('댓글 작성 실패');
