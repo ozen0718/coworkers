@@ -425,8 +425,6 @@ export default function TaskListPage() {
     }
   };
 
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-
   return (
     <DndProvider backend={HTML5Backend}>
       <Toaster position="top-center" />
@@ -583,7 +581,7 @@ export default function TaskListPage() {
             )}
 
             <SlideWrapper isOpen={detailopen} onCloseAction={() => setDetailOpen(false)}>
-              {selectedTodo && selectedTaskList && !isEditModalOpen && (
+              {selectedTodo && selectedTaskList && (
                 <DetailPost
                   groupId={groupId}
                   tasklistid={selectedTaskList.id}

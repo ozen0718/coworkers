@@ -38,10 +38,7 @@ export default function TodoItem({
   tasklistid,
   taskid,
   title,
-  date,
-  time,
   recurring,
-  comments,
   completed,
 }: TodoItemProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);

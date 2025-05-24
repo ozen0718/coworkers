@@ -19,8 +19,6 @@ import { deleteDetailComment } from '@/api/detailPost';
 import { editDetailComment } from '@/api/detailPost';
 import { useTaskReload } from '@/context/TaskReloadContext';
 
-import { fetchTask } from '@/api/detailPost';
-
 export default function BoardComment({
   commentId,
   type,
