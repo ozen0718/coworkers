@@ -156,7 +156,7 @@ export default function TodoFullCreateModal({
       onSubmit={handleCreate}
       disabled={disabled}
     >
-      <div className="scrollbar-hide mt-6 mb-2 flex max-h-[70vh] flex-col gap-6 overflow-y-auto">
+      <div className="scrollbar-hide h-[50vh] mt-6 mb-5 flex flex-col gap-6 overflow-y-auto">
         {/* 제목 */}
         <div className="flex flex-col gap-4">
           <label htmlFor="todo-title" className="text-lg-medium">
@@ -173,11 +173,11 @@ export default function TodoFullCreateModal({
         {/* 날짜 + 시간 */}
         <div className="flex flex-col gap-4">
           <h2 className="text-lg-medium">시작 날짜 및 시간</h2>
-          <div className="flex gap-2">
-            <div className="flex-1">
+          <div className="calendarWrapper flex flex-col gap-2">
+            <div>
               <DatePickerCalendar dateTime={dateTime} setDate={setDate} />
             </div>
-            <div className="flex-1">
+            <div>
               <DatePickerTime dateTime={dateTime} setTime={setTime} />
             </div>
           </div>
