@@ -17,7 +17,7 @@ import { CreateRecurringTaskBody } from '@/api/createTask';
 import { useTaskReload } from '@/context/TaskReloadContext';
 import { DateTime } from 'luxon';
 import { toast } from 'react-hot-toast';
-import { format, addDays } from 'date-fns';
+import { format } from 'date-fns';
 
 export interface TodoFullCreateModalProps {
   isOpen: boolean;
@@ -91,36 +91,22 @@ export default function TodoFullCreateModal({
     }
 
     const frequencyType = repeatToFrequency[repeat];
-    // 서울 시간 기준으로 날짜 설정
-    const startDate = new Date(
-      dateTime.getFullYear(),
-      dateTime.getMonth(),
-      dateTime.getDate(),
-      0,
-      0,
-      0
-    ).toISOString();
+
+    // 로컬 시간을 UTC로 명시적 변환
+    const startDate =
+      DateTime.fromJSDate(dateTime)
+        .setZone('Asia/Seoul', { keepLocalTime: true })
+        .toUTC()
+        .toISO() || undefined;
 
     const body: CreateRecurringTaskBody = {
       name: title,
       description: memo,
-      startDate: startDate,
+      startDate,
       frequencyType,
+      weekDays: frequencyType === 'WEEKLY' ? repeatDays.map((day) => dayToNumber[day]) : undefined,
+      monthDay: frequencyType === 'MONTHLY' ? dateTime.getDate() : undefined,
     };
-
-    // 주 반복인 경우 요일 설정
-    if (frequencyType === 'WEEKLY') {
-      if (repeatDays.length === 0) {
-        toast.error('반복할 요일을 선택해주세요.');
-        return;
-      }
-      body.weekDays = repeatDays.map((day) => dayToNumber[day]);
-    }
-
-    // 월 반복인 경우 일자 설정
-    if (frequencyType === 'MONTHLY') {
-      body.monthDay = dateTime.getDate();
-    }
 
     try {
       // 반복 할일 생성
