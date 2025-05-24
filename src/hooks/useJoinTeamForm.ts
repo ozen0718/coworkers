@@ -29,7 +29,7 @@ export function useJoinTeamForm() {
         throw new Error('No token found');
       }
       return token;
-    } catch (err) {
+    } catch {
       return null;
     }
   };
