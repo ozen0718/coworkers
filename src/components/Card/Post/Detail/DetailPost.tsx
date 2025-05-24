@@ -65,12 +65,9 @@ export default function DetailPost({
     },
     onSuccess: async () => {
       toast.success('댓글이 작성되었습니다');
-      console.log('Invalidate task 쿼리 실행');
-      console.log('groupId', groupId);
-      console.log('tasklistid', tasklistid);
-      console.log('taskid', taskid);
       queryClient.invalidateQueries({ queryKey: ['comments', taskid] });
-      queryClient.invalidateQueries({ queryKey: ['task', groupId, tasklistid, taskid] });
+      queryClient.invalidateQueries({ queryKey: ['task'] });
+      triggerReload();
     },
     onError: () => {
       toast.error('댓글 작성 실패');
@@ -102,10 +99,11 @@ export default function DetailPost({
   };
 
   /* 할일 내용 */
-  const { data: taskData, refetch: refetchTask } = useQuery({
+  const { data: taskData } = useQuery({
     queryKey: ['task', groupId, tasklistid, taskid],
     queryFn: () => {
       if (!groupId || !tasklistid || !taskid) throw new Error('필수값 없음');
+      console.log('fetchTask called22');
       return fetchTask(groupId, tasklistid, taskid);
     },
     enabled: !!groupId && !!tasklistid && !!taskid,
@@ -258,6 +256,8 @@ export default function DetailPost({
         {commentData?.data?.map((comment: CommentDetail) => (
           <BoardComment
             type="list"
+            groupId={String(groupId)}
+            tasklistId={String(tasklistid)}
             taskId={taskid}
             key={comment.id}
             commentId={comment.id}
