@@ -16,7 +16,7 @@ import { createTaskList, getTaskDetail } from '@/api/tasklist.api';
 import { useGroupDetail } from '@/hooks/useGroupDetail';
 import { useGroupPageInfo, useAllTaskListTasks, useGroupList } from '@/hooks/useGroupPageInfo';
 import { useModalGroup } from '@/hooks/useModalGroup';
-import { NewestTaskProps } from '@/types/teampagetypes';
+import { NewestTaskProps, TaskInfo } from '@/types/teampagetypes';
 import { getFutureDateString } from '@/utils/date';
 
 export default function TeamPage() {
@@ -105,17 +105,41 @@ export default function TeamPage() {
   const teamName = userData?.group.name ?? '팀 없음';
   const groupId = userData?.group.id;
   const { data: groupDetail } = useGroupDetail(groupId);
+
   const todayDate = useMemo(() => new Date().toISOString().split('T')[0], []);
+
   const [futureDate, setFutureDate] = useState<string | null>(null);
+
   const taskListIds = useMemo(() => {
-    return groupDetail?.taskLists?.map((list) => list.id) ?? [];
+    const taskLists = groupDetail?.taskLists ?? [];
+    console.log('🔍 groupDetail.taskLists:', taskLists);
+    return (groupDetail?.taskLists ?? []).map((list) => Number(list.id));
   }, [groupDetail?.taskLists]);
+
+  const shouldFetchTasks = !!groupId && taskListIds.length > 0 && !!futureDate;
+
   const { future: futureTasks, today: todayTasks } = useAllTaskListTasks(
-    groupId,
-    taskListIds,
-    futureDate ?? '',
-    todayDate
+    shouldFetchTasks ? groupId : undefined,
+    shouldFetchTasks ? taskListIds : [],
+    shouldFetchTasks ? futureDate : '',
+    shouldFetchTasks ? todayDate : ''
   );
+
+  const taskMap = useMemo(() => {
+    const map = new Map<number, TaskInfo[]>();
+
+    todayTasks.forEach(({ taskListId, data }) => {
+      map.set(taskListId, data ?? []);
+    });
+
+    futureTasks.forEach(({ taskListId, data }) => {
+      const existing = map.get(taskListId) ?? [];
+      const combined = [...existing, ...(data ?? [])];
+      map.set(taskListId, combined);
+    });
+
+    return map;
+  }, [todayTasks, futureTasks]);
 
   const futureTaskList = useMemo(() => {
     return futureTasks.flatMap(({ taskListId, data }) =>
@@ -241,10 +265,15 @@ export default function TeamPage() {
         </header>
 
         {paginatedTaskLists.map((list) => {
-          const taskData = futureTasks.find((entry) => entry.taskListId === list.id)?.data ?? [];
+          const taskListId = Number(list.id);
+          const taskData = taskMap.get(Number(taskListId)) ?? [];
           const total = taskData.length;
           const completed = taskData.filter((task) => task.doneAt !== null).length;
           if (!futureDate) return null;
+
+          console.log('🟡 list.id:', list.id);
+          console.log('🟡 taskMap keys:', [...taskMap.keys()]);
+          console.log('🟡 taskMap.get(list.id):', taskMap.get(taskListId));
 
           return (
             <TaskListsItem

@@ -25,9 +25,14 @@ export const getTasksByTaskList = async (
   taskListId: number,
   date?: string
 ): Promise<Task[]> => {
-  const response = await axiosInstance.get(`/groups/${groupId}/task-lists/${taskListId}/tasks`, {
-    params: date ? { date } : {},
-  });
+  const url = `/groups/${groupId}/task-lists/${taskListId}/tasks`;
+  const params = date ? { date } : {};
+
+  console.log('🛰️ [API CALL] URL:', url, 'Params:', params);
+
+  const response = await axiosInstance.get(url, { params });
+  console.log('📥 [API RESPONSE]', response.data);
+
   return response.data;
 };
 
