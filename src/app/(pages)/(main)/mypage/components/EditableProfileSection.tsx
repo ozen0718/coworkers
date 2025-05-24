@@ -16,7 +16,13 @@ export default function EditableProfileSection({}) {
     }
   }, [submitError]);
 
-  const fileUrl = previewUrl !== null ? previewUrl : (user?.image ?? null);
+  const getFileUrl = () => {
+    if (previewUrl !== null) return previewUrl;
+    if (user?.image) return user.image;
+    return null;
+  };
+
+  const fileUrl = getFileUrl();
 
   return (
     <div className="flex w-fit flex-col items-center gap-3">
