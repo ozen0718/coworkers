@@ -340,22 +340,13 @@ export default function TaskListPage() {
   useEffect(() => {
     const loadTasksForList = async (taskList: TaskList) => {
       try {
-        // 현재 날짜의 ISO 문자열 생성 (서울 시간 기준)
-        const isoDate = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate(),
-          0,
-          0,
-          0
-        ).toISOString();
+        const kstDateString = format(currentDate, 'yyyy-MM-dd');
 
-        // date 파라미터로 해당 날짜의 할일 조회 (반복 할일 포함)
-        const tasks = await getTasksByTaskList(groupId, taskList.id, isoDate);
+        const tasks = await getTasksByTaskList(groupId, taskList.id, kstDateString);
         const todos = tasks.map(convertTaskToTodo);
         setTodoList(todos);
       } catch (error) {
-        console.error(`Failed to load tasks for list ${taskList.name}:`, error);
+        console.error(`목록 불러오는 거 실패 ${taskList.name}:`, error);
         toast.error(`${taskList.name} 목록의 할 일을 불러오는데 실패했습니다.`);
       }
     };
@@ -503,7 +494,7 @@ export default function TaskListPage() {
                         onClick={() => setIsCalendarOpen(false)}
                       />
 
-                      <div className="fixed right-0 bottom-0 left-0 max-h-[80vh] overflow-y-auto rounded-t-2xl bg-gray-800 p-4">
+                      <div className="fixed right-0 bottom-0 left-0 h-[60vh] max-h-[80vh] overflow-y-auto rounded-t-2xl bg-gray-800 p-4">
                         <div className="mb-4 flex items-center justify-between">
                           <h3 className="text-lg font-medium text-white">날짜 선택</h3>
                           <button
@@ -525,18 +516,23 @@ export default function TaskListPage() {
                             </svg>
                           </button>
                         </div>
-                        <DatePickerCalendar
-                          dateTime={currentDate}
-                          setDate={(date) => {
-                            if (date) {
-                              setCurrentDate(date);
-                              const params = new URLSearchParams(searchParams.toString());
-                              params.set('date', format(date, 'yyyy-MM-dd'));
-                              router.push(`/${teamId}/tasklist?${params.toString()}`);
-                              setIsCalendarOpen(false);
-                            }
-                          }}
-                        />
+
+                        <div className="relative">
+                          <DatePickerCalendar
+                            dateTime={currentDate}
+                            setDate={(date) => {
+                              if (date) {
+                                setCurrentDate(date);
+                                const params = new URLSearchParams(searchParams.toString());
+                                params.set('date', format(date, 'yyyy-MM-dd'));
+                                router.push(`/${teamId}/tasklist?${params.toString()}`);
+                                setIsCalendarOpen(false);
+                              }
+                            }}
+                          />
+
+                          <div className="pointer-events-none h-[320px]" />
+                        </div>
                       </div>
                     </div>
                   </>
