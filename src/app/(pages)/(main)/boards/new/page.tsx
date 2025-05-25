@@ -37,7 +37,6 @@ export default function CreateBoard() {
 
       const response = await createArticle(payload);
 
-      console.log('글 작성 성공:', response.data);
       router.push('/boards');
       queryClient.invalidateQueries({ queryKey: ['generalPosts'] });
     } catch (error) {
