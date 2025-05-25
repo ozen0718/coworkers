@@ -9,7 +9,7 @@ import { notFound, useParams, useSearchParams, useRouter } from 'next/navigation
 import { Toaster, toast } from 'react-hot-toast';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-
+import { Tooltip } from 'react-tooltip';
 import Modal from '@/components/common/Modal';
 import TodoItem from '@/components/List/todo';
 import { TextInput } from '@/components/common/Inputs';
@@ -155,6 +155,7 @@ const TaskListDropdown: React.FC<{
   return (
     <div className="relative" ref={dropdownRef}>
       <button
+        id="expand-btn"
         onClick={onToggle}
         className="text-gray400 rounded-lg px-3 py-1 text-sm font-medium transition hover:bg-gray-700 focus:outline-none"
       >
@@ -542,6 +543,7 @@ export default function TaskListPage() {
                 )}
               </div>
               <button
+                id="add-list-btn"
                 className="text-primary rounded-lg px-3 py-1 text-sm font-medium transition hover:bg-gray-700 focus:outline-none"
                 onClick={() => setListModalOpen(true)}
               >
@@ -675,6 +677,78 @@ export default function TaskListPage() {
           />
         </div>
       </Modal>
+      {/* 툴팁 */}
+
+      <Tooltip
+        anchorId="add-list-btn"
+        place={isMobile ? 'top' : 'right'}
+        content="목록들의 순서를 변경할 수 있어요!"
+        delayShow={200}
+        delayHide={200}
+        className="tooltip-bounce-in"
+      />
+
+      {!isMobile && (
+        <Tooltip
+          anchorId="expand-btn"
+          place="right"
+          content="더보기에 들어간 리스트를 꺼낼 수 있어요!"
+          delayShow={200}
+          delayHide={200}
+          className="tooltip-bounce-in"
+        />
+      )}
+
+      <style jsx global>{`
+        .tooltip-bounce-in {
+          background-color: #1e3a8a !important;
+          color: #ffffff !important;
+          padding: 8px 12px;
+          border-radius: 12px;
+          font-size: 0.85rem;
+          max-width: 110px; /* 최대 너비 제한 */
+          white-space: normal !important; /* 줄바꿈 허용 */
+          text-align: center;
+          animation: bounce-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+          transform-origin: left center; /* 기본 발생축 */
+        }
+
+        /* 모바일(767px 이하)에서 transform-origin을 아래 중앙으로 변경 */
+        @media (max-width: 767px) {
+          .tooltip-bounce-in {
+            transform-origin: center bottom;
+          }
+        }
+
+        .tooltip-bounce-in[data-state='hidden'] {
+          animation: fade-out 0.2s ease-out forwards;
+        }
+
+        @keyframes bounce-in {
+          0% {
+            opacity: 0;
+            transform: scale(0.6);
+          }
+          60% {
+            opacity: 1;
+            transform: scale(1.1);
+          }
+          100% {
+            transform: scale(1);
+          }
+        }
+
+        @keyframes fade-out {
+          from {
+            opacity: 1;
+            transform: scale(1);
+          }
+          to {
+            opacity: 0;
+            transform: scale(0.8);
+          }
+        }
+      `}</style>
     </DndProvider>
   );
 }
