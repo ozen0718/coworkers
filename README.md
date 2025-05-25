@@ -3,8 +3,8 @@
 
 <div style="text-align: center;">
   <a href="https://coworkers-ruddy.vercel.app/">
-
-    <img alt="coworker" src='public/images/ReadMe.png' width="auto" height="auto">
+    
+![ReadMe](https://github.com/user-attachments/assets/53fe895b-c4c2-4eaa-98e6-b2e5f353f392)
   </a>
 </div>
 <p style="text-align: center">
