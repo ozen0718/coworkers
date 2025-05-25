@@ -7,7 +7,8 @@ export interface MemberProps {
   email: string;
   onClick: () => void;
   userId: number;
-  hideMenu?: boolean;
+  isCurrentUserAdmin: boolean;
+  isTargetAdmin: boolean;
 }
 
 export type ProgressProp = {
