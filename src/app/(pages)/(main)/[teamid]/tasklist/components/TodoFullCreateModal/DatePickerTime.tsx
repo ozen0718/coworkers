@@ -9,7 +9,7 @@ interface DatePickerTimeProps {
 export default function DatePickerTime({ dateTime, setTime }: DatePickerTimeProps) {
   return (
     <DatePicker
-      wrapperClassName="time-picker"
+      popperClassName="time-picker"
       selected={dateTime || undefined}
       onChange={(d) => setTime(d)}
       customInput={<DatePickerInput value={dateTime?.toTimeString().slice(0, 5) ?? ''} />}
