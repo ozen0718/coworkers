@@ -11,18 +11,20 @@ import DatePickerTime from './DatePickerTime';
 
 import { AxiosError } from 'axios';
 import { createRecurringTask } from '@/api/createTask';
+// import { createTaskList } from '@/api/tasklist.api';
 import { useMutation } from '@tanstack/react-query';
 import { CreateRecurringTaskBody } from '@/api/createTask';
 import { useTaskReload } from '@/context/TaskReloadContext';
 import { DateTime } from 'luxon';
 import { toast } from 'react-hot-toast';
-import { format } from 'date-fns';
+// import { format } from 'date-fns';
 
 export interface TodoFullCreateModalProps {
   isOpen: boolean;
   onCloseAction: () => void;
   taskListId?: number;
   groupId?: number;
+  selectedTaskList?: { id: number; name: string };
   onSubmit: (newTodo: {
     title: string;
     date: Date | null;
@@ -43,6 +45,7 @@ export default function TodoFullCreateModal({
   taskListId,
   disabled = false,
   groupId,
+  // selectedTaskList,
 }: TodoFullCreateModalProps) {
   const [title, setTitle] = useState('');
   const [repeat, setRepeat] = useState(todoRepeatOptions[0]);
@@ -87,42 +90,26 @@ export default function TodoFullCreateModal({
       return;
     }
 
-    const selectedDate = format(dateTime, 'yyyy-MM-dd');
-    const taskListDate = format(new Date(), 'yyyy-MM-dd');
-
-    if (selectedDate !== taskListDate) {
-      toast.error('선택한 날짜에 해당하는 목록이 없습니다.');
-      return;
-    }
-
     const frequencyType = repeatToFrequency[repeat];
+
+    // 로컬 시간을 UTC로 명시적 변환
     const startDate =
-      DateTime.fromJSDate(dateTime ?? new Date())
-        .setZone('Asia/Seoul')
-        .toISO() ?? new Date().toISOString();
+      DateTime.fromJSDate(dateTime)
+        .setZone('Asia/Seoul', { keepLocalTime: true })
+        .toUTC()
+        .toISO() || undefined;
 
     const body: CreateRecurringTaskBody = {
       name: title,
       description: memo,
-      startDate: startDate,
+      startDate,
       frequencyType,
+      weekDays: frequencyType === 'WEEKLY' ? repeatDays.map((day) => dayToNumber[day]) : undefined,
+      monthDay: frequencyType === 'MONTHLY' ? dateTime.getDate() : undefined,
     };
 
-    // 주 반복인 경우 요일 설정
-    if (frequencyType === 'WEEKLY') {
-      if (repeatDays.length === 0) {
-        toast.error('반복할 요일을 선택해주세요.');
-        return;
-      }
-      body.weekDays = repeatDays.map((day) => dayToNumber[day]);
-    }
-
-    // 월 반복인 경우 일자 설정
-    if (frequencyType === 'MONTHLY') {
-      body.monthDay = dateTime.getDate();
-    }
-
     try {
+      // 반복 할일 생성
       await mutation.mutateAsync(body);
       toast.success('할일이 생성되었습니다.');
       onCloseAction();
