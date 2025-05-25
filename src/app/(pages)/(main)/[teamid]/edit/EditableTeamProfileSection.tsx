@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { EditableTeamProfile } from '@/components/common/Profiles';
 
 export interface EditableTeamProfileSectionProps {
@@ -12,6 +12,10 @@ export default function EditableTeamProfileSection({
 }: EditableTeamProfileSectionProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(teamProfileUrl);
+
+  useEffect(() => {
+    setPreviewUrl(teamProfileUrl);
+  }, [teamProfileUrl]);
 
   const handleClick = () => {
     inputRef.current?.click();
