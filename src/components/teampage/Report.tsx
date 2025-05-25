@@ -1,13 +1,12 @@
-import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import Alert from '@/assets/icons/Alert';
 import ReportProgress from '@/components/teampage/ReportProgress';
 import {
   ProgressProp,
-  NewestTaskProps as NewestTaskProps,
+  RecurringCountBoxProps,
+  RecurringTasksReportColumnProps,
   ReportProps,
+  TaskTotalAndDoneProps,
 } from '@/types/teampagetypes';
-import { formatElapsedTime } from '@/utils/date';
 
 const taskReportBoxStyle = 'flex h-20 w-full items-end justify-between bg-bg100 p-4 rounded-xl';
 const taskReportTextBoxStyle = 'flex flex-col items-start justify-center gap-1 ';
@@ -53,14 +52,14 @@ function TodayCompletedTasks({ completed }: { completed: number }) {
     <div className={taskReportBoxStyle}>
       <div className={taskReportTextBoxStyle}>
         <h3 className={taskReportLabelStyle}>한 일</h3>
-        <p className={taskReportNumberStyle}>{completed}</p>
+        <p className={taskReportNumberStyle}>{completed}개</p>
       </div>
       <Image src="/icons/sign_done.svg" alt="한 일" width={40} height={40} />
     </div>
   );
 }
 
-function TaskReportColumn({ total, completed }: ReportProps) {
+function TaskReportColumn({ total, completed }: TaskTotalAndDoneProps) {
   return (
     <div className="flex w-full flex-col gap-4">
       <TodayTasks total={total} />
@@ -69,76 +68,71 @@ function TaskReportColumn({ total, completed }: ReportProps) {
   );
 }
 
-function NewestTask({ title, startDate }: NewestTaskProps) {
-  const [elapsedTime, setElapsedTime] = useState(() =>
-    startDate ? formatElapsedTime(startDate) : '알 수 없음'
-  );
-
-  useEffect(() => {
-    if (!startDate) return;
-
-    const interval = setInterval(() => {
-      setElapsedTime(formatElapsedTime(startDate));
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [startDate]);
-
+function RecurringCountBox({ label, count, imageSrc }: RecurringCountBoxProps) {
   return (
-    <div
-      className={`${taskReportBoxStyle} border-danger from-danger via-bg200 to-bg100 bg-gradient-to-r via-[12px] to-50%`}
-    >
+    <div className={taskReportBoxStyle}>
       <div className={taskReportTextBoxStyle}>
-        <h3 className="text-xs-medium text-pink">NEWEST</h3>
-        <p className={taskReportLabelStyle}>{elapsedTime}</p>
-        <p className={`${taskReportNumberStyle} text-md-medium break-word line-clamp-1`}>{title}</p>
+        <h3 className={taskReportLabelStyle}>{label}</h3>
+        <p className={taskReportNumberStyle}>{count}개</p>
       </div>
+      <Image src={imageSrc} alt={label} width={40} height={40} />
     </div>
   );
 }
 
-function NewestTaskForMobile({ title, startDate }: NewestTaskProps) {
-  const [elapsedTime, setElapsedTime] = useState(() =>
-    startDate ? formatElapsedTime(startDate) : '알 수 없음'
-  );
-
-  useEffect(() => {
-    if (!startDate) return;
-    const interval = setInterval(() => {
-      setElapsedTime(formatElapsedTime(startDate));
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [startDate]);
-
+function RecurringCountBoxMobile({ label, count, imageSrc }: RecurringCountBoxProps) {
   return (
-    <div className="bg-bg200 right-[28%] flex h-14 w-full items-center justify-start gap-4 rounded-xl pr-2">
-      <div className="from-danger to-bg200 flex h-full w-70 items-center justify-start gap-2 rounded-l-xl bg-gradient-to-r px-2">
-        <Alert className="text-white" />
-        <div className="flex flex-col items-center justify-center">
-          <p className="text-xs-regular text-tertiary test-left w-full whitespace-nowrap">NEWEST</p>
-          <p className="text-lg-medium h-fit w-fit rounded-l-full whitespace-nowrap">
-            {elapsedTime}
-          </p>
-        </div>
+    <div className={taskReportBoxStyle}>
+      <div className={taskReportTextBoxStyle}>
+        <h3 className={taskReportLabelStyle}>{label}</h3>
+        <p className={taskReportNumberStyle}>{count}개</p>
       </div>
-      <div className="flex h-full w-full items-center">
-        <p className="text-md-regular break-word line-clamp-2">{title}</p>
-      </div>
+      <Image src={imageSrc} alt={label} width={40} height={40} />
     </div>
   );
 }
 
-function NewestTasksReportColumn({ tasks }: { tasks: NewestTaskProps[] }) {
+function RecurringTasksReportColumn({
+  weeklyCount,
+  monthlyCount,
+}: RecurringTasksReportColumnProps) {
   return (
     <div className="flex w-full flex-col gap-4">
-      {tasks.map((task, index) => (
-        <NewestTask key={index} title={task.title} startDate={task.startDate} />
-      ))}
+      <RecurringCountBox
+        label="오늘의 주간 반복"
+        count={weeklyCount}
+        imageSrc="/icons/weekly.svg"
+      />
+      <RecurringCountBox
+        label="오늘의 월간 반복"
+        count={monthlyCount}
+        imageSrc="/icons/monthly.svg"
+      />
     </div>
   );
 }
 
-export default function Report({ total, completed, newestTasks: newestTasks = [] }: ReportProps) {
+function RecurringTasksReportColumnMobile({
+  weeklyCount,
+  monthlyCount,
+}: RecurringTasksReportColumnProps) {
+  return (
+    <div className="mt-4 flex items-center justify-start gap-4 sm:hidden">
+      <RecurringCountBoxMobile
+        label="오늘의 주간 반복"
+        count={weeklyCount}
+        imageSrc="/icons/weekly.svg"
+      />
+      <RecurringCountBoxMobile
+        label="오늘의 월간 반복"
+        count={monthlyCount}
+        imageSrc="/icons/monthly.svg"
+      />
+    </div>
+  );
+}
+
+export default function Report({ total, completed, weeklyCount, monthlyCount }: ReportProps) {
   const percentage = total === 0 ? 0 : Math.round((completed / total) * 100);
 
   return (
@@ -146,30 +140,17 @@ export default function Report({ total, completed, newestTasks: newestTasks = []
       <div className="bg-bg200 grid grid-cols-[1fr_0px_1fr] gap-1 rounded-xl px-2 py-2 sm:grid-cols-3 sm:gap-4 sm:px-6">
         <LeftSide percentage={percentage} />
         <div className="sm:hidden" />
-        {newestTasks.length > 0 && newestTasks[0].startDate !== '' ? (
-          <div className="hidden justify-center sm:flex">
-            <NewestTasksReportColumn tasks={newestTasks} />
-          </div>
-        ) : (
-          <div className="bg-bg200 border-bg100 hidden w-full items-center justify-center gap-4 rounded-xl border-4 border-dashed sm:flex">
-            <p className="text-md-regular text-gray500">새로운 할 일이 없습니다.</p>
-          </div>
-        )}
+
+        <div className="hidden justify-center sm:flex">
+          <RecurringTasksReportColumn weeklyCount={weeklyCount} monthlyCount={monthlyCount} />
+        </div>
+
         <div className="flex justify-end">
           <TaskReportColumn total={total} completed={completed} />
         </div>
       </div>
-      {newestTasks.length > 0 && newestTasks[0].startDate !== '' && (
-        <div className="mt-4 flex flex-col items-center justify-start gap-4 sm:hidden">
-          {newestTasks.map((newestTask, index) => (
-            <NewestTaskForMobile
-              key={index}
-              title={newestTask.title}
-              startDate={newestTask.startDate}
-            />
-          ))}
-        </div>
-      )}
+
+      <RecurringTasksReportColumnMobile weeklyCount={weeklyCount} monthlyCount={monthlyCount} />
     </div>
   );
 }
