@@ -1,3 +1,4 @@
+// src/components/dropdown/ProfileDropdown.tsx
 'use client';
 
 import Image from 'next/image';
@@ -25,8 +26,14 @@ export default function ProfileDropdown() {
       logout();
       router.push('/');
     }
-    setIsOpen(false); //선택 시 드롭다운 닫기
+    setIsOpen(false);
   };
+
+  const hoverEffect = `
+    p-1 rounded
+    transition-transform transition-shadow duration-200 ease-out
+    hover:shadow-xl hover:scale-105 hover:-translate-y-0.5
+  `;
 
   return (
     <div ref={ref}>
@@ -36,7 +43,10 @@ export default function ProfileDropdown() {
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         dropDownOpenBtn={
-          <button className="flex items-center gap-2">
+          <button
+            className={`flex cursor-pointer items-center gap-2 ${hoverEffect}`}
+            onClick={() => setIsOpen((o) => !o)}
+          >
             <Image src="/icons/profile.svg" alt="유저 아이콘" width={24} height={24} />
             <span className="text-md-md hidden lg:inline">{nickname ?? '...'}</span>
           </button>
