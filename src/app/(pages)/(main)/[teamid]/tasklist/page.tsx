@@ -144,9 +144,11 @@ const TaskListDropdown: React.FC<{
 
     if (isOpen) {
       document.addEventListener('mousedown', handleClickOutside);
+      document.body.style.overflow = 'hidden';
     }
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.body.style.overflow = 'auto';
     };
   }, [isOpen, onToggle]);
 
@@ -180,41 +182,45 @@ const TaskListDropdown: React.FC<{
           <div className="fixed inset-0 z-50 sm:hidden">
             <div className="fixed inset-0 bg-black/50" onClick={onToggle} />
 
-            <div className="fixed right-0 bottom-0 left-0 max-h-[50vh] overflow-y-auto rounded-t-2xl bg-gray-800 p-4">
-              <div className="mb-4 flex items-center justify-between">
-                <h3 className="text-lg font-medium text-white">목록 선택</h3>
-                <button
-                  onClick={onToggle}
-                  className="rounded-lg p-2 text-gray-400 hover:bg-gray-700"
-                >
-                  <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div className="space-y-2">
-                {taskLists.slice(visibleCount).map((taskList) => (
+            <div className="fixed right-0 bottom-0 left-0 max-h-[50vh] rounded-t-2xl bg-gray-800">
+              <div className="sticky top-0 z-10 rounded-lg bg-gray-800 p-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="p-4 text-lg font-medium text-white">목록 선택</h3>
                   <button
-                    key={taskList.id}
-                    className={clsx(
-                      'w-full rounded-lg px-4 py-3 text-left text-sm',
-                      taskList.id === selectedTaskList?.id
-                        ? 'bg-gray-700 text-white'
-                        : 'text-gray-300 hover:bg-gray-700'
-                    )}
-                    onClick={() => {
-                      onSelect(taskList);
-                      onToggle();
-                    }}
+                    onClick={onToggle}
+                    className="rounded-lg p-2 text-gray-400 hover:bg-gray-700"
                   >
-                    {taskList.name}
+                    <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
                   </button>
-                ))}
+                </div>
+              </div>
+              <div className="h-[calc(50vh-80px)] overflow-y-auto px-4 pb-4">
+                <div className="space-y-2">
+                  {taskLists.slice(visibleCount).map((taskList) => (
+                    <button
+                      key={taskList.id}
+                      className={clsx(
+                        'w-full rounded-lg px-4 py-3 text-left text-sm',
+                        taskList.id === selectedTaskList?.id
+                          ? 'bg-gray-700 text-white'
+                          : 'text-gray-300 hover:bg-gray-700'
+                      )}
+                      onClick={() => {
+                        onSelect(taskList);
+                        onToggle();
+                      }}
+                    >
+                      {taskList.name}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -235,7 +241,7 @@ export default function TaskListPage() {
     // return;
   }
 
-  const { reloadKey } = useTaskReload();
+  const { reloadKey, triggerReload } = useTaskReload();
 
   const [currentDate, setCurrentDate] = useState(() => {
     const dateParam = searchParams.get('date');
@@ -269,7 +275,7 @@ export default function TaskListPage() {
     router.push(`/${teamId}/tasklist?${params.toString()}`);
   };
 
-  const dateKey = format(currentDate, 'yyyy-MM-dd');
+  // const dateKey = format(currentDate, 'yyyy-MM-dd');
 
   const [taskLists, setTaskLists] = useState<TaskList[]>([]);
   const [selectedTaskList, setSelectedTaskList] = useState<TaskList | null>(null);
@@ -310,16 +316,12 @@ export default function TaskListPage() {
     const fetchTaskLists = async () => {
       setIsLoading(true);
       try {
+        // 모든 목록을 가져옴 (날짜 필터링 없음)
         const { taskLists } = await getGroupDetail(groupId);
-        const filteredTaskLists = taskLists.filter((taskList) => {
-          const taskListDate = format(new Date(taskList.createdAt), 'yyyy-MM-dd');
-          return taskListDate === dateKey;
-        });
+        setTaskLists(taskLists);
 
-        setTaskLists(filteredTaskLists);
-
-        if (filteredTaskLists.length > 0) {
-          setSelectedTaskList(filteredTaskLists[0]);
+        if (taskLists.length > 0) {
+          setSelectedTaskList(taskLists[0]);
         } else {
           setSelectedTaskList(null);
         }
@@ -332,15 +334,24 @@ export default function TaskListPage() {
     };
 
     fetchTaskLists();
-  }, [groupId, dateKey, reloadKey]);
+  }, [groupId, reloadKey]);
 
   useEffect(() => {
     const loadTasksForList = async (taskList: TaskList) => {
       try {
-        const tasks = await getTasksByTaskList(groupId, taskList.id, dateKey);
-        const todos = tasks.map(convertTaskToTodo);
+        // 현재 날짜의 ISO 문자열 생성 (서울 시간 기준)
+        const isoDate = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth(),
+          currentDate.getDate(),
+          0,
+          0,
+          0
+        ).toISOString();
 
-        console.log('todos', todos);
+        // date 파라미터로 해당 날짜의 할일 조회 (반복 할일 포함)
+        const tasks = await getTasksByTaskList(groupId, taskList.id, isoDate);
+        const todos = tasks.map(convertTaskToTodo);
         setTodoList(todos);
       } catch (error) {
         console.error(`Failed to load tasks for list ${taskList.name}:`, error);
@@ -351,7 +362,20 @@ export default function TaskListPage() {
     if (selectedTaskList) {
       loadTasksForList(selectedTaskList);
     }
-  }, [selectedTaskList, groupId, dateKey, reloadKey]);
+  }, [selectedTaskList, groupId, currentDate, reloadKey]);
+
+  // 자정에 자동으로 데이터 갱신
+  useEffect(() => {
+    const now = new Date();
+    const nextMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
+    const msUntilMidnight = nextMidnight.getTime() - now.getTime();
+
+    const timer = setTimeout(() => {
+      triggerReload();
+    }, msUntilMidnight);
+
+    return () => clearTimeout(timer);
+  }, [triggerReload]);
 
   const handleAddList = async () => {
     const name = newListName.trim().slice(0, MAX_LIST_NAME_LENGTH);
@@ -368,6 +392,7 @@ export default function TaskListPage() {
 
     setIsLoading(true);
     try {
+      // 현재 날짜의 목록만 생성
       const newTaskList = await createTaskList({
         groupId,
         name: formattedName,
@@ -619,6 +644,9 @@ export default function TaskListPage() {
         disabled={!selectedTaskList?.id || isLoading}
         taskListId={selectedTaskList?.id}
         groupId={groupId}
+        selectedTaskList={
+          selectedTaskList ? { id: selectedTaskList.id, name: selectedTaskList.name } : undefined
+        }
       />
 
       <Modal
