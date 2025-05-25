@@ -2,8 +2,29 @@
 import React from 'react';
 import Image from 'next/image';
 import clsx from 'clsx';
+import { useState } from 'react';
+import PostDropdown from '../Card/Post/PostDropdown';
+import TodoEditModal from '@/app/(pages)/(main)/[teamid]/tasklist/components/TodoFullCreateModal/TodoEditModal';
+
+import { useTaskReload } from '@/context/TaskReloadContext';
+import { toast } from 'react-toastify';
+import { useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
+import { fetchTask, deleteTask, deleteRecurringTask } from '@/api/detailPost';
+import { useQueryClient } from '@tanstack/react-query';
+import { useRef } from 'react';
+import useClickOutside from '@/hooks/useClickOutside';
+
+const frequencyLabelMap: Record<string, string> = {
+  ONCE: '한 번',
+  DAILY: '매일',
+  WEEKLY: '주',
+  MONTHLY: '월',
+};
 
 interface TodoItemProps {
+  tasklistid?: number;
+  taskid?: number;
   id: number;
   title: string;
   date: string;
@@ -11,24 +32,97 @@ interface TodoItemProps {
   recurring: boolean;
   comments: number;
   completed: boolean;
+  onOpenDetail: (taskId: number, title: string) => void;
 }
 
 export default function TodoItem({
+  tasklistid,
+  taskid,
   title,
-  date,
-  time,
   recurring,
-  comments,
   completed,
+  onOpenDetail,
 }: TodoItemProps) {
+  const [isDropDownOpen, setIsDropDownOpen] = useState(false);
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+
+  const { triggerReload } = useTaskReload();
+
+  const queryClient = useQueryClient();
+
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  useClickOutside(dropdownRef, () => setIsDropDownOpen(false));
+
+  const toggleDropdown = () => {
+    setIsDropDownOpen((prev) => !prev);
+  };
+
+  /* 그룹 아이디 */
+  const pathname = window.location.pathname;
+  const groupId = Number(pathname.split('/')[1]);
+
+  /* 할 일 수정 */
+  const handleEdit: () => void = () => {
+    console.log('수정 눌렀따');
+    setIsDropDownOpen(false);
+    setEditModalOpen(true);
+  };
+
+  /* 할일 내용 */
+  const { data: taskData } = useQuery({
+    queryKey: ['task', groupId, tasklistid, taskid],
+    queryFn: () => {
+      if (!groupId || !tasklistid || !taskid) throw new Error('필수값 없음');
+      console.log('fetchTask called11');
+      return fetchTask(groupId, tasklistid, taskid);
+    },
+    enabled: !!groupId && !!tasklistid && !!taskid,
+    staleTime: 0,
+  });
+
+  /* 할일 삭제 */
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      if (!groupId || !tasklistid || !taskid) throw new Error('필수 값 없음');
+
+      if (taskData?.data.frequency === 'ONCE') {
+        // 단일 할일 삭제
+        return deleteTask(groupId, tasklistid, taskid);
+      }
+
+      const recurringId = taskData?.data.recurringId;
+      if (!recurringId) throw new Error('recurringId가 없습니다.');
+
+      // 반복 할일 전체 삭제
+      return deleteRecurringTask(groupId, tasklistid, taskid, recurringId);
+    },
+    onSuccess: () => {
+      triggerReload();
+    },
+    onError: () => {
+      toast.error('할일 삭제 실패');
+    },
+  });
+
+  const handleDelete = () => {
+    deleteMutation.mutate();
+  };
+
   return (
-    <div className="flex cursor-pointer flex-col space-y-2 rounded-lg bg-slate-800 p-3">
-      <div className="flex items-center justify-between">
+    <div
+      ref={dropdownRef}
+      className="flex cursor-pointer flex-col space-y-2 rounded-lg bg-slate-800 p-3"
+    >
+      <div
+        className="flex items-center justify-between"
+        onClick={() => {
+          onOpenDetail(taskid!, title);
+        }}
+      >
         <div className="flex items-center space-x-3">
           <button
             onClick={(e) => {
               e.stopPropagation();
-              //toggleChecked();
             }}
             aria-pressed={completed}
             className="cursor-pointer p-1"
@@ -58,14 +152,16 @@ export default function TodoItem({
               height={16}
               className="text-gray-300"
             />
-            <span className="text-xs text-gray-300">{comments}</span>
+            <span className="text-xs text-gray-300">{taskData?.data.commentCount}</span>
           </button>
         </div>
 
         <button
           onClick={(e) => {
             e.stopPropagation();
+            toggleDropdown();
           }}
+          className="relative"
         >
           <Image
             src="/icons/kebab.svg"
@@ -74,6 +170,20 @@ export default function TodoItem({
             height={16}
             className="text-gray-300"
           />
+
+          {isDropDownOpen && (
+            <PostDropdown
+              type="kebab"
+              textJustify="center"
+              options={[
+                { label: '수정', value: '수정', action: handleEdit },
+                { label: '삭제', value: '삭제', action: handleDelete },
+              ]}
+              isOpen={isDropDownOpen}
+              toggleDropdown={toggleDropdown}
+              toppercent="135%"
+            />
+          )}
         </button>
       </div>
 
@@ -87,11 +197,11 @@ export default function TodoItem({
             height={12}
             className="h-3 w-3"
           />
-          <span>{date}</span>
+          <span>{taskData?.data.recurring.createdAt.slice(0, 10)}</span>
         </div>
         <div className="flex items-center space-x-1">
           <Image src="/icons/icon_time.svg" alt="시간" width={12} height={12} className="h-3 w-3" />
-          <span>{time}</span>
+          <span>{taskData?.data.recurring.createdAt.slice(11, 16)}</span>
         </div>
         <div className="flex items-center space-x-1">
           <Image
@@ -103,9 +213,29 @@ export default function TodoItem({
               'opacity-30': !recurring,
             })}
           />
-          {recurring && <span>반복</span>}
+          {taskData?.data.recurring.frequencyType && (
+            <span>{frequencyLabelMap[taskData.data.recurring.frequencyType]} 반복</span>
+          )}
         </div>
       </div>
+
+      {tasklistid !== undefined && taskid !== undefined && isEditModalOpen && (
+        <TodoEditModal
+          isOpen={isEditModalOpen}
+          onCloseAction={() => setEditModalOpen(false)}
+          groupid={groupId!}
+          taskListid={tasklistid}
+          taskid={taskid}
+          onSubmit={() => {
+            setEditModalOpen(false);
+            if (groupId && tasklistid && taskid) {
+              queryClient.invalidateQueries({
+                queryKey: ['task', groupId, tasklistid, taskid],
+              });
+            }
+          }}
+        />
+      )}
     </div>
   );
 }

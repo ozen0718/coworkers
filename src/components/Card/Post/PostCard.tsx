@@ -15,6 +15,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { getUserInfo } from '@/api/user';
 import { toast } from 'react-toastify';
+import { useRef } from 'react';
+import useClickOutside from '@/hooks/useClickOutside';
 
 const sizeClass = {
   large: 'min-h-[176px] w-full',
@@ -41,6 +43,9 @@ export default function PostCard({
   writer,
 }: PostCardProps) {
   const [isDropDownOpen, setIsDropDownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+
+  useClickOutside(dropdownRef, () => setIsDropDownOpen(false));
 
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -159,7 +164,7 @@ export default function PostCard({
         )}
 
         {/* 내용 */}
-        <div className="flex w-full cursor-pointer items-start">
+        <div className="flex w-full cursor-pointer items-start" ref={dropdownRef}>
           <div
             className="relative flex w-full items-start justify-between"
             onClick={handleTitleClick}

@@ -92,6 +92,12 @@ export default function TodoEditModal({
       queryClient.invalidateQueries({
         queryKey: ['task', groupid, taskListid, taskid],
       });
+      queryClient.invalidateQueries({
+        predicate: (query) => {
+          return query.queryKey[0] === 'task';
+        },
+      });
+
       triggerReload();
     },
     onError: (error: AxiosError) => {
@@ -122,7 +128,10 @@ export default function TodoEditModal({
             id="todo-title"
             placeholder="할 일 제목을 입력해주세요."
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => {
+              e.stopPropagation();
+              setTitle(e.target.value);
+            }}
           />
         </div>
 
@@ -167,7 +176,10 @@ export default function TodoEditModal({
             placeholder="메모를 입력해주세요."
             height="h-[75px]"
             value={memo}
-            onChange={(e) => setMemo(e.target.value)}
+            onChange={(e) => {
+              e.stopPropagation();
+              setMemo(e.target.value);
+            }}
           />
         </div>
       </div>
