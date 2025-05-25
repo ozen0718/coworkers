@@ -11,13 +11,13 @@ import DatePickerTime from './DatePickerTime';
 
 import { AxiosError } from 'axios';
 import { createRecurringTask } from '@/api/createTask';
-import { createTaskList } from '@/api/tasklist.api';
+// import { createTaskList } from '@/api/tasklist.api';
 import { useMutation } from '@tanstack/react-query';
 import { CreateRecurringTaskBody } from '@/api/createTask';
 import { useTaskReload } from '@/context/TaskReloadContext';
 import { DateTime } from 'luxon';
 import { toast } from 'react-hot-toast';
-import { format } from 'date-fns';
+// import { format } from 'date-fns';
 
 export interface TodoFullCreateModalProps {
   isOpen: boolean;
@@ -45,7 +45,7 @@ export default function TodoFullCreateModal({
   taskListId,
   disabled = false,
   groupId,
-  selectedTaskList,
+  // selectedTaskList,
 }: TodoFullCreateModalProps) {
   const [title, setTitle] = useState('');
   const [repeat, setRepeat] = useState(todoRepeatOptions[0]);
@@ -143,7 +143,7 @@ export default function TodoFullCreateModal({
       onSubmit={handleCreate}
       disabled={disabled || title.trim() === ''}
     >
-      <div className="scrollbar-hide h-[50vh] mt-6 mb-5 flex flex-col gap-6 overflow-y-auto">
+      <div className="scrollbar-hide mt-6 mb-5 flex h-[50vh] flex-col gap-6 overflow-y-auto">
         {/* 제목 */}
         <div className="flex flex-col gap-4">
           <label htmlFor="todo-title" className="text-lg-medium">

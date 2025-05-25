@@ -275,7 +275,7 @@ export default function TaskListPage() {
     router.push(`/${teamId}/tasklist?${params.toString()}`);
   };
 
-  const dateKey = format(currentDate, 'yyyy-MM-dd');
+  // const dateKey = format(currentDate, 'yyyy-MM-dd');
 
   const [taskLists, setTaskLists] = useState<TaskList[]>([]);
   const [selectedTaskList, setSelectedTaskList] = useState<TaskList | null>(null);
