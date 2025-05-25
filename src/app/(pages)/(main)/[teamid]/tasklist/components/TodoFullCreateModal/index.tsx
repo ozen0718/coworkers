@@ -156,7 +156,7 @@ export default function TodoFullCreateModal({
       onSubmit={handleCreate}
       disabled={disabled || title.trim() === ''}
     >
-      <div className="scrollbar-hide h-[50vh] mt-6 mb-5 flex flex-col gap-6 overflow-y-auto">
+      <div className="scrollbar-hide mt-6 mb-5 flex h-[50vh] flex-col gap-6 overflow-y-auto">
         {/* 제목 */}
         <div className="flex flex-col gap-4">
           <label htmlFor="todo-title" className="text-lg-medium">
