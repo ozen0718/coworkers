@@ -80,12 +80,10 @@ export default function BoardComment({
   const deleteMutation = useMutation({
     mutationFn: () => deleteComment(commentId),
     onSuccess: () => {
-      console.log('댓글 삭제 성공');
       onChange?.();
       queryClient.invalidateQueries({ queryKey: ['comments', id] });
       queryClient.invalidateQueries({
         predicate: (query) => {
-          console.log('invalidate:', query.queryKey);
           return query.queryKey[0] === 'task';
         },
       });
@@ -105,12 +103,10 @@ export default function BoardComment({
       return deleteDetailComment(taskId, commentId);
     },
     onSuccess: () => {
-      console.log('상세 카드 댓글 삭제 성공');
       onChange?.();
       queryClient.invalidateQueries({ queryKey: ['comments', taskId] });
       queryClient.invalidateQueries({
         predicate: (query) => {
-          console.log('invalidate:', query.queryKey);
           return query.queryKey[0] === 'task';
         },
       });
@@ -125,7 +121,6 @@ export default function BoardComment({
   /* 댓글 수정*/
   const handleEditComment = async () => {
     if (!editedContent) {
-      console.log('눌림3');
       return;
     }
     try {
@@ -135,17 +130,14 @@ export default function BoardComment({
         }
         await editDetailComment(taskId, commentId, { content: editedContent });
         queryClient.invalidateQueries({ queryKey: ['comments', taskId] });
-        console.log('눌림1');
       } else {
         await editComment(commentId, { content: editedContent });
-        console.log('눌림2');
       }
-      console.log('댓글 수정 성공');
       setIsEditing(false);
       onChange?.();
     } catch (err) {
       const error = err as AxiosError;
-      console.log('댓글 수정 에러', error.response?.data);
+      console.error('댓글 수정 에러', error.response?.data);
     }
   };
 

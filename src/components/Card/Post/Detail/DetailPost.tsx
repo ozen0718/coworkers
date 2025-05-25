@@ -78,7 +78,6 @@ export default function DetailPost({
 
   const handleSubmit = (content: string) => {
     if (!taskid) {
-      console.log('아이디 없음');
       return;
     }
     if (!content.trim()) {
@@ -105,7 +104,6 @@ export default function DetailPost({
     queryKey: ['task', groupId, tasklistid, taskid],
     queryFn: () => {
       if (!groupId || !tasklistid || !taskid) throw new Error('필수값 없음');
-      console.log('fetchTask called22');
       return fetchTask(groupId, tasklistid, taskid);
     },
     enabled: !!groupId && !!tasklistid && !!taskid,

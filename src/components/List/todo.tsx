@@ -63,7 +63,6 @@ export default function TodoItem({
 
   /* 할 일 수정 */
   const handleEdit: () => void = () => {
-    console.log('수정 눌렀따');
     setIsDropDownOpen(false);
     setEditModalOpen(true);
   };
@@ -73,7 +72,6 @@ export default function TodoItem({
     queryKey: ['task', groupId, tasklistid, taskid],
     queryFn: () => {
       if (!groupId || !tasklistid || !taskid) throw new Error('필수값 없음');
-      console.log('fetchTask called11');
       return fetchTask(groupId, tasklistid, taskid);
     },
     enabled: !!groupId && !!tasklistid && !!taskid,
