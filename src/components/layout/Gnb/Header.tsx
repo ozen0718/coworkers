@@ -1,4 +1,3 @@
-// src/components/layout/Gnb/Header.tsx
 'use client';
 
 import Image from 'next/image';
@@ -25,17 +24,14 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
   const { showTeamSelector, showFreeBoardLink, showProfile } = useHeader();
   const accessToken = useAuthStore((s) => s.accessToken);
 
-  // teams는 항상 배열로 보장 (undefined → 빈 배열)
   const teams = useUserStore((s) => s.teams) ?? [];
   const setUserInfo = useUserStore((s) => s.setUserInfo);
 
   const selectedTeam = useSelectedTeamStore((s) => s.selectedTeam);
   const setSelectedTeam = useSelectedTeamStore((s) => s.setSelectedTeam);
 
-  // URL 파라미터로 넘어오는 teamid (초기엔 undefined일 수 있음)
   const { teamid } = useParams() as { teamid?: string };
 
-  // 로그인된 상태일 때만 /user 조회
   const { data: userData } = useQuery({
     queryKey: QUERY_KEYS.user.me,
     queryFn: getUserInfo,
@@ -43,7 +39,6 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
     enabled: !!accessToken,
   });
 
-  // 1) React Query로 받아온 유저정보 → Zustand 업데이트
   useEffect(() => {
     if (userData) {
       setUserInfo({
@@ -54,28 +49,26 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
     }
   }, [userData, setUserInfo]);
 
-  // 2) 새로고침 등으로 teamid가 URL에 있으면 selectedTeam 복원
   useEffect(() => {
     if (!selectedTeam && teams.length > 0 && typeof teamid === 'string') {
       const matched = teams.find((t) => t.id === teamid);
-      if (matched) {
-        setSelectedTeam(matched);
-      }
+      if (matched) setSelectedTeam(matched);
     }
   }, [teams, teamid, selectedTeam, setSelectedTeam]);
 
-  // 3) 선택된 팀이 삭제되었거나 유효하지 않으면 첫 번째 팀으로 fallback
   useEffect(() => {
     if (teams.length > 0) {
       const exists = teams.some((t) => t.id === selectedTeam?.id);
-      if (!exists) {
-        setSelectedTeam(teams[0]);
-      }
+      if (!exists) setSelectedTeam(teams[0]);
     } else {
-      // 팀 목록이 비어있으면 selectedTeam 초기화
       setSelectedTeam(null);
     }
   }, [teams, selectedTeam, setSelectedTeam]);
+
+  const hoverEffect = `
+    transition-transform transition-shadow duration-200 ease-out
+    hover:shadow-xl hover:scale-105 hover:-translate-y-0.5
+  `;
 
   return (
     <header className="bg-bg200 border-border sticky top-0 z-50 flex h-15 w-full justify-center border-b-1 py-[14px]">
@@ -83,7 +76,11 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
         {/* 왼쪽 로고 & 메뉴 버튼 */}
         <div className="flex items-center gap-8 lg:gap-10">
           <div className="flex items-center gap-4">
-            <button className="block md:hidden" title="메뉴 열기" onClick={onOpenSideMenu}>
+            <button
+              className={`block rounded p-1 md:hidden ${hoverEffect}`}
+              title="메뉴 열기"
+              onClick={onOpenSideMenu}
+            >
               <Image src="/icons/gnb_menu.svg" alt="메뉴" width={24} height={24} />
             </button>
             <Logo />
@@ -91,21 +88,26 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
 
           <div className="text-lg-md hidden items-center gap-8 md:flex lg:gap-10">
             {showTeamSelector && (
-              <div className="relative">
+              <div className={`inline-block rounded p-1 ${hoverEffect}`}>
                 <TeamSelector />
               </div>
             )}
             {showFreeBoardLink && (
-              <Link href="/boards" className="cursor-pointer">
+              <Link
+                href="/boards"
+                className={`inline-block cursor-pointer rounded p-1 ${hoverEffect}`}
+              >
                 자유게시판
               </Link>
             )}
           </div>
         </div>
 
+        {/* 우측 프로필 드롭다운 */}
         <div className="relative ml-auto">{showProfile && <ProfileDropdown />}</div>
       </div>
 
+      {/* 사이드 메뉴 (언제든 열 수 있도록 렌더링) */}
       <SideMenu isOpen={false} onClose={() => {}} />
     </header>
   );
