@@ -64,8 +64,6 @@ export default function ImgUpload({ onImageUpload, previewUrl }: ImgUploadProps)
           const file = e.target.files?.[0];
           if (!file) return;
 
-          console.log('file', file);
-
           // 10MB 초과 검사
           if (file.size > 10 * 1024 * 1024) {
             toast.error('10MB 이하의 이미지만 업로드 가능합니다.');
