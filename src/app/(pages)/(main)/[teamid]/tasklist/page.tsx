@@ -313,6 +313,18 @@ export default function TaskListPage() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // 캘린더 모달이 열릴 때 body 스크롤 방지
+  useEffect(() => {
+    if (isCalendarOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isCalendarOpen]);
+
   useEffect(() => {
     const fetchTaskLists = async () => {
       setIsLoading(true);
@@ -701,7 +713,7 @@ export default function TaskListPage() {
           color: #ffffff !important;
           padding: 8px 12px;
           border-radius: 12px;
-          font-size: 0.85rem;
+          font-size: 0.83rem;
           max-width: 110px; /* 최대 너비 제한 */
           white-space: normal !important; /* 줄바꿈 허용 */
           text-align: center;
