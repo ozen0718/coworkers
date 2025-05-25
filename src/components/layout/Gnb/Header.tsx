@@ -1,3 +1,4 @@
+// src/components/layout/Gnb/Header.tsx
 'use client';
 
 import Image from 'next/image';
@@ -10,8 +11,8 @@ import SideMenu from './SideMenu';
 import TeamSelector from './TeamSelector';
 import ProfileDropdown from './ProfileSelector';
 import { useHeader } from './HeaderContext';
-import { useUserStore } from '@/stores/useUserStore';
 import { useAuthStore } from '@/stores/useAuthStore';
+import { useUserStore } from '@/stores/useUserStore';
 import { useSelectedTeamStore } from '@/stores/useSelectedTeamStore';
 import { QUERY_KEYS } from '@/constants/queryKeys';
 import { getUserInfo } from '@/api/user';
@@ -23,10 +24,18 @@ interface HeaderProps {
 export default function Header({ onOpenSideMenu }: HeaderProps) {
   const { showTeamSelector, showFreeBoardLink, showProfile } = useHeader();
   const accessToken = useAuthStore((s) => s.accessToken);
-  const { teams, setUserInfo } = useUserStore();
-  const { selectedTeam, setSelectedTeam } = useSelectedTeamStore();
-  const { teamid } = useParams() as { teamid: string };
 
+  // teams는 항상 배열로 보장 (undefined → 빈 배열)
+  const teams = useUserStore((s) => s.teams) ?? [];
+  const setUserInfo = useUserStore((s) => s.setUserInfo);
+
+  const selectedTeam = useSelectedTeamStore((s) => s.selectedTeam);
+  const setSelectedTeam = useSelectedTeamStore((s) => s.setSelectedTeam);
+
+  // URL 파라미터로 넘어오는 teamid (초기엔 undefined일 수 있음)
+  const { teamid } = useParams() as { teamid?: string };
+
+  // 로그인된 상태일 때만 /user 조회
   const { data: userData } = useQuery({
     queryKey: QUERY_KEYS.user.me,
     queryFn: getUserInfo,
@@ -34,7 +43,7 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
     enabled: !!accessToken,
   });
 
-  // 유저 정보 받아오면 상태 반영
+  // 1) React Query로 받아온 유저정보 → Zustand 업데이트
   useEffect(() => {
     if (userData) {
       setUserInfo({
@@ -45,27 +54,28 @@ export default function Header({ onOpenSideMenu }: HeaderProps) {
     }
   }, [userData, setUserInfo]);
 
-  // 새로고침 시 URL의 teamid로 selectedTeam 복원
+  // 2) 새로고침 등으로 teamid가 URL에 있으면 selectedTeam 복원
   useEffect(() => {
-    if (!selectedTeam && teams.length > 0 && teamid) {
-      const matchedTeam = teams.find((t) => t.id === teamid);
-      if (matchedTeam) {
-        setSelectedTeam(matchedTeam);
+    if (!selectedTeam && teams.length > 0 && typeof teamid === 'string') {
+      const matched = teams.find((t) => t.id === teamid);
+      if (matched) {
+        setSelectedTeam(matched);
       }
     }
-  }, [selectedTeam, teams, teamid, setSelectedTeam]);
+  }, [teams, teamid, selectedTeam, setSelectedTeam]);
 
-  // 선택된 팀이 삭제되었거나 유효하지 않으면 fallback
+  // 3) 선택된 팀이 삭제되었거나 유효하지 않으면 첫 번째 팀으로 fallback
   useEffect(() => {
-    if (teams && teams.length > 0) {
-      const stillExists = teams.find((team) => team.id === selectedTeam?.id);
-      if (!stillExists) {
-        setSelectedTeam(teams[0]); // fallback to 첫 번째 팀
+    if (teams.length > 0) {
+      const exists = teams.some((t) => t.id === selectedTeam?.id);
+      if (!exists) {
+        setSelectedTeam(teams[0]);
       }
     } else {
+      // 팀 목록이 비어있으면 selectedTeam 초기화
       setSelectedTeam(null);
     }
-  }, [teams]);
+  }, [teams, selectedTeam, setSelectedTeam]);
 
   return (
     <header className="bg-bg200 border-border sticky top-0 z-50 flex h-15 w-full justify-center border-b-1 py-[14px]">
