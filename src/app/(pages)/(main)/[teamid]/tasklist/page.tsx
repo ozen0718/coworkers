@@ -114,7 +114,8 @@ const DraggableTaskList: React.FC<DraggableTaskListProps> = ({
         'cursor-pointer pb-1 text-xs font-medium transition-all duration-200 sm:text-sm',
         isSelected ? 'border-b-2 border-white text-white' : 'text-gray400',
         isDragging ? 'scale-95 opacity-50' : '',
-        isOver ? 'border-b-2 border-gray-500' : ''
+        isOver ? 'border-b-2 border-gray-500' : '',
+        'max-w-[120px] truncate'
       )}
       onClick={() => onSelect(taskList)}
     >
@@ -565,7 +566,7 @@ export default function TaskListPage() {
               className="flex items-center border-b border-slate-700 pb-2"
               onDragEnd={handleDragEnd}
             >
-              <div className="flex flex-1 items-center gap-x-6 overflow-x-auto">
+              <div className="scrollbar-hide flex flex-1 items-center gap-x-6 overflow-x-auto">
                 {taskLists.slice(0, isMobile ? 3 : 10).map((taskList, index) => (
                   <DraggableTaskList
                     key={taskList.id}
@@ -719,6 +720,15 @@ export default function TaskListPage() {
           text-align: center;
           animation: bounce-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
           transform-origin: left center; /* 기본 발생축 */
+        }
+
+        /* 스크롤바 숨기기 */
+        .scrollbar-hide {
+          -ms-overflow-style: none; /* IE and Edge */
+          scrollbar-width: none; /* Firefox */
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none; /* Chrome, Safari and Opera */
         }
 
         /* 모바일(767px 이하)에서 transform-origin을 아래 중앙으로 변경 */
