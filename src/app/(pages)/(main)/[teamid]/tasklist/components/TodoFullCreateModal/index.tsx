@@ -160,7 +160,7 @@ export default function TodoFullCreateModal({
         {/* 제목 */}
         <div className="flex flex-col gap-4">
           <label htmlFor="todo-title" className="text-lg-medium">
-            <span className="text-primary">*</span> 할 일 제목 {taskListId}
+            <span className="text-primary">*</span> 할 일 제목
           </label>
           <TextInput
             id="todo-title"
