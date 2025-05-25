@@ -339,22 +339,13 @@ export default function TaskListPage() {
   useEffect(() => {
     const loadTasksForList = async (taskList: TaskList) => {
       try {
-        // 현재 날짜의 ISO 문자열 생성 (서울 시간 기준)
-        const isoDate = new Date(
-          currentDate.getFullYear(),
-          currentDate.getMonth(),
-          currentDate.getDate(),
-          0,
-          0,
-          0
-        ).toISOString();
+        const kstDateString = format(currentDate, 'yyyy-MM-dd');
 
-        // date 파라미터로 해당 날짜의 할일 조회 (반복 할일 포함)
-        const tasks = await getTasksByTaskList(groupId, taskList.id, isoDate);
+        const tasks = await getTasksByTaskList(groupId, taskList.id, kstDateString);
         const todos = tasks.map(convertTaskToTodo);
         setTodoList(todos);
       } catch (error) {
-        console.error(`Failed to load tasks for list ${taskList.name}:`, error);
+        console.error(`목록 불러오는 거 실패 ${taskList.name}:`, error);
         toast.error(`${taskList.name} 목록의 할 일을 불러오는데 실패했습니다.`);
       }
     };
