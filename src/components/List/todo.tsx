@@ -201,7 +201,7 @@ export default function TodoItem({
         </div>
         <div className="flex items-center space-x-1">
           <Image src="/icons/icon_time.svg" alt="시간" width={12} height={12} className="h-3 w-3" />
-          <span>{taskData?.data.recurring.createdAt.slice(11, 16)}</span>
+          <span>{taskData?.data.recurring.startDate.slice(11, 16)}</span>
         </div>
         <div className="flex items-center space-x-1">
           <Image
