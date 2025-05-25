@@ -35,7 +35,7 @@ export default function CreateBoard() {
         return;
       }
 
-      const response = await createArticle(payload);
+      await createArticle(payload);
 
       router.push('/boards');
       queryClient.invalidateQueries({ queryKey: ['generalPosts'] });
