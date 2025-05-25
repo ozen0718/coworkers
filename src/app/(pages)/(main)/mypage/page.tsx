@@ -8,10 +8,7 @@ import EditableProfileSection from './components/EditableProfileSection';
 import { useUserInfo } from '@/hooks/useUserInfo';
 
 export default function MyPage() {
-  const { data: user, isLoading, error } = useUserInfo();
-
-  if (isLoading) return <p>로딩 중...</p>;
-  if (error) return <p>에러 발생</p>;
+  const { data: user } = useUserInfo();
 
   return (
     <div className="mx-auto flex max-w-[792px] flex-col gap-6 py-10">

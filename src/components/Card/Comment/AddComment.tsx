@@ -18,11 +18,9 @@ export default function AddComment({ articleId, onSuccess }: AddCommentProps) {
   /* 댓글 작성 */
   const handleSubmit = async () => {
     if (!articleId) {
-      console.log('아이디 없음');
       return;
     }
     if (!content.trim()) {
-      console.log('내용 없음');
       toast.error('댓글 내용이 없습니다');
       return;
     }
@@ -32,7 +30,6 @@ export default function AddComment({ articleId, onSuccess }: AddCommentProps) {
   const mutation = useMutation({
     mutationFn: (content: string) => createComment(articleId, { content }),
     onSuccess: () => {
-      console.log('댓글 작성 성공');
       setContent('');
       onSuccess?.();
     },
