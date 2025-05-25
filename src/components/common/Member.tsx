@@ -17,7 +17,8 @@ export default function Member({
   email,
   onClick,
   userId,
-  hideMenu,
+  isCurrentUserAdmin,
+  isTargetAdmin,
 }: MemberProps) {
   const { teamid } = useParams() as { teamid: string };
   const queryClient = useQueryClient();
@@ -50,14 +51,18 @@ export default function Member({
         </div>
       </button>
 
-      {!hideMenu ? (
-        <ActionMenu
-          trigger={<Image src="/icons/kebab.svg" alt="멤버 메뉴" width={16} height={16} />}
-          onDelete={() => setDeleteModalOpen(true)}
-        />
-      ) : (
-        <Image src="/icons/crown.svg" alt="관리자" width={16} height={16} className="" />
-      )}
+      {isCurrentUserAdmin ? (
+        isTargetAdmin ? (
+          <Image src="/icons/crown.svg" alt="관리자" width={16} height={16} />
+        ) : (
+          <ActionMenu
+            trigger={<Image src="/icons/kebab.svg" alt="멤버 메뉴" width={16} height={16} />}
+            onDelete={() => setDeleteModalOpen(true)}
+          />
+        )
+      ) : isTargetAdmin ? (
+        <Image src="/icons/crown.svg" alt="관리자" width={16} height={16} />
+      ) : null}
 
       <DeleteConfirmModal
         isOpen={isDeleteModalOpen}
