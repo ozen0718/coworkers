@@ -51,7 +51,7 @@ export default function EditButton({ name, image, imageFile, onSuccess }: EditBu
       await queryClient.invalidateQueries({ queryKey: ['groupPageInfo', teamid] });
       await queryClient.invalidateQueries({ queryKey: ['groupDetail', Number(teamid)] });
 
-      toast.success('팀 이름이 수정되었습니다.');
+      toast.success('팀 정보가 수정되었습니다.');
 
       onSuccess?.(); //selectedTeam 업데이트 처리
 
