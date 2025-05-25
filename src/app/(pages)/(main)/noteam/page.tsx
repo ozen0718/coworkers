@@ -11,8 +11,6 @@ export default function NoTeamPageWrapper() {
   const { accessToken } = useAuthStore();
   const router = useRouter();
 
-  console.log(accessToken)
-
   useEffect(() => {
     if (!isInitialized) return;
 
