@@ -70,7 +70,6 @@ export default function ArticleDetail() {
   const { mutate: deleteMutate } = useMutation({
     mutationFn: () => deleteArticle(Number(id)),
     onSuccess: () => {
-      console.log('게시글 삭제 성공');
       router.push('/boards');
     },
     onError: (err: AxiosError) => {
