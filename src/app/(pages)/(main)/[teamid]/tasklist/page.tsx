@@ -493,7 +493,7 @@ export default function TaskListPage() {
                         onClick={() => setIsCalendarOpen(false)}
                       />
 
-                      <div className="fixed right-0 bottom-0 left-0 max-h-[80vh] overflow-y-auto rounded-t-2xl bg-gray-800 p-4">
+                      <div className="fixed right-0 bottom-0 left-0 h-[60vh] max-h-[80vh] overflow-y-auto rounded-t-2xl bg-gray-800 p-4">
                         <div className="mb-4 flex items-center justify-between">
                           <h3 className="text-lg font-medium text-white">날짜 선택</h3>
                           <button
@@ -515,18 +515,23 @@ export default function TaskListPage() {
                             </svg>
                           </button>
                         </div>
-                        <DatePickerCalendar
-                          dateTime={currentDate}
-                          setDate={(date) => {
-                            if (date) {
-                              setCurrentDate(date);
-                              const params = new URLSearchParams(searchParams.toString());
-                              params.set('date', format(date, 'yyyy-MM-dd'));
-                              router.push(`/${teamId}/tasklist?${params.toString()}`);
-                              setIsCalendarOpen(false);
-                            }
-                          }}
-                        />
+
+                        <div className="relative">
+                          <DatePickerCalendar
+                            dateTime={currentDate}
+                            setDate={(date) => {
+                              if (date) {
+                                setCurrentDate(date);
+                                const params = new URLSearchParams(searchParams.toString());
+                                params.set('date', format(date, 'yyyy-MM-dd'));
+                                router.push(`/${teamId}/tasklist?${params.toString()}`);
+                                setIsCalendarOpen(false);
+                              }
+                            }}
+                          />
+
+                          <div className="pointer-events-none h-[320px]" />
+                        </div>
                       </div>
                     </div>
                   </>
