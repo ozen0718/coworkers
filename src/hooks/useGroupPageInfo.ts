@@ -31,12 +31,14 @@ export const useAllTaskListTasks = (
   }, [groupId, taskListIds, futureDate]);
 
   const todayDefs = useMemo(() => {
-    return taskListIds.map((taskListId) => ({
-      taskListId,
-      queryKey: ['tasks', groupId, taskListId, 'today', todayDate],
-      queryFn: () => getTasksByTaskList(groupId!, taskListId, todayDate),
-      enabled: !!groupId && !!todayDate,
-    }));
+    return taskListIds.map((taskListId) => {
+      return {
+        taskListId,
+        queryKey: ['tasks', groupId, taskListId, 'today', todayDate],
+        queryFn: () => getTasksByTaskList(groupId!, taskListId, todayDate),
+        enabled: !!groupId && !!todayDate,
+      };
+    });
   }, [groupId, taskListIds, todayDate]);
 
   const futureQueryResults = useQueries({

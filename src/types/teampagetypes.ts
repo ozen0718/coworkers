@@ -14,19 +14,26 @@ export type ProgressProp = {
   percentage: number;
 };
 
-export interface NewestTaskProps {
-  title: string;
-  startDate?: string;
+export interface TaskTotalAndDoneProps {
+  total: number;
+  completed: number;
+}
+
+export interface RecurringCountBoxProps {
+  label: string;
+  count: number | 0;
+  imageSrc: string;
+}
+
+export interface RecurringTasksReportColumnProps {
+  weeklyCount: number | 0;
+  monthlyCount: number | 0;
 }
 
 export type GroupPageInfo = Pick<Membership, 'role'> & {
   group: Pick<Membership['group'], 'id' | 'name'>;
 };
 
-export type TaskInfo = Pick<Task, 'id' | 'name' | 'description' | 'date' | 'doneAt'>;
+export type TaskInfo = Pick<Task, 'id' | 'name' | 'description' | 'date' | 'doneAt' | 'frequency'>;
 
-export interface ReportProps {
-  total: number;
-  completed: number;
-  newestTasks?: NewestTaskProps[];
-}
+export interface ReportProps extends TaskTotalAndDoneProps, RecurringTasksReportColumnProps {}
