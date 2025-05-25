@@ -151,14 +151,6 @@ export default function TeamPage() {
     );
   }, [futureTasks]);
 
-  const totalTaskCount = useMemo(() => {
-    let total = 0;
-    taskMap.forEach((tasks) => {
-      total += tasks.length;
-    });
-    return total;
-  }, [taskMap]);
-
   const todayTaskList = todayTasks.flatMap((entry) => entry.data ?? []);
   const totalTodayTasks = todayTaskList.length;
   const completedTodayTasks = todayTaskList.filter((task) => task.doneAt !== null).length;
@@ -253,7 +245,6 @@ export default function TeamPage() {
         <header className={sectionHeaderStyle}>
           <div className={sectionHeaderTitleStyle}>
             <h2 className={sectionHeaderH2Style}>할 일 목록</h2>
-            <p className={sectionHeaderPSTyle}>({totalTaskCount}개)</p>
           </div>
           {isClient && isAdmin && (
             <button className={sectionHeaderButtonStyle} onClick={() => open('createList')}>
@@ -371,7 +362,8 @@ export default function TeamPage() {
               email={member.userEmail}
               profileUrl={member.userImage}
               userId={member.userId}
-              hideMenu={member.userId === groupDetail?.members[0]?.userId}
+              isCurrentUserAdmin={isAdmin}
+              isTargetAdmin={member.role === 'ADMIN'}
               onClick={() =>
                 handleOpenProfile({
                   name: member.userName,
