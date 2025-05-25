@@ -14,8 +14,12 @@ export default function BoardPage() {
   const { data: bestPosts } = useQuery({
     queryKey: QUERY_KEYS.bestPosts(keyword),
     queryFn: () => fetchBest(keyword),
-    select: (response) =>
-      response.data.list.filter((post: BestPostProps) => post.likeCount && post.likeCount > 0),
+    select: (response) => {
+      const filtered = response.data.list.filter(
+        (post: BestPostProps) => post.likeCount && post.likeCount > 0
+      );
+      return filtered;
+    },
     refetchOnMount: 'always',
   });
 

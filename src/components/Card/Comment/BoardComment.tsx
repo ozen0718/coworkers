@@ -137,7 +137,7 @@ export default function BoardComment({
       onChange?.();
     } catch (err) {
       const error = err as AxiosError;
-      console.log('댓글 수정 에러', error.response?.data);
+      console.error('댓글 수정 에러', error.response?.data);
     }
   };
 
