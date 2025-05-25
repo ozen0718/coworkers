@@ -362,7 +362,8 @@ export default function TeamPage() {
               email={member.userEmail}
               profileUrl={member.userImage}
               userId={member.userId}
-              hideMenu={member.userId === groupDetail?.members[0]?.userId}
+              isCurrentUserAdmin={isAdmin}
+              isTargetAdmin={member.role === 'ADMIN'}
               onClick={() =>
                 handleOpenProfile({
                   name: member.userName,
