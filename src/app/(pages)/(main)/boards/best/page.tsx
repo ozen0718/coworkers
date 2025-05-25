@@ -14,8 +14,14 @@ export default function BoardPage() {
   const { data: bestPosts } = useQuery({
     queryKey: QUERY_KEYS.bestPosts(keyword),
     queryFn: () => fetchBest(keyword),
-    select: (response) =>
-      response.data.list.filter((post: BestPostProps) => post.likeCount && post.likeCount > 0),
+    select: (response) => {
+      console.log('서버 응답 전체:', response.data.list);
+      const filtered = response.data.list.filter(
+        (post: BestPostProps) => post.likeCount && post.likeCount > 0
+      );
+      console.log('필터링된 결과:', filtered);
+      return filtered;
+    },
     refetchOnMount: 'always',
   });
 
